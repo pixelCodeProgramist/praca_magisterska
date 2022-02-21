@@ -1,0 +1,101 @@
+.my-dark-blue {
+  color: #0090d9;
+}
+
+.my-second-blue {
+  color: #1bc6f5;;
+}
+
+.my-second-bg-blue {
+  background: #1bc6f5;
+  color: white;
+}
+
+.my-second-bg-blue:hover {
+  background: #0090d9;
+}
+
+.large-size {
+  font-size: 60px;
+}
+
+.large-second-size {
+  font-size: 40px;
+}
+
+@media (max-width: 1650px) {
+  .large-size {
+    font-size: 50px;
+  }
+
+  .large-second-size {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .large-size {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .large-size {
+    font-size: 30px;
+  }
+  .large-second-size {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .center-position {
+    text-align: center;
+  }
+}
+
+@media (max-width: 440px) {
+  .large-size {
+    font-size: 20px;
+  }
+  .large-second-size {
+    font-size: 15px;
+  }
+}
+
+img {
+  cursor: pointer;
+}
+
+.photo:hover img{
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+
+.fa {
+  display: none;
+}
+
+.photo:hover .fa {
+  display: block;
+  cursor: pointer;
+}
+
+
+.img-wrapper {
+  position: relative;
+}
+
+
+.img-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+}

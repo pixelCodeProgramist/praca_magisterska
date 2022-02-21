@@ -1,0 +1,28 @@
+<div class="clip-me">
+  <div class="img-wrapper bg-light">
+    <img src="{{flipCardSectionInfo?.background}}">
+    <div class="img-overlay justify-content-around align-items-center">
+      <div class="row h-100">
+        <div class="text-center my-nav">
+          <span class="col-12 fs-1 text-white text-center bg-dark bg-opacity-25">{{flipCardSectionInfo?.title}}</span>
+        </div>
+        <div class="row w-75 mx-auto justify-content-around align-items-center">
+          <div *ngFor="let flipCard of flipCardSectionInfo?.flipCards" class="col-12 col-md-6 col-lg-3 row justify-content-around align-items-center">
+            <div class="bg-primary flip-card">
+              <div class="flip-card-inner row h-100 justify-content-around align-items-center">
+                <div class="flip-card-front row h-100 justify-content-around align-items-center">
+                  <span class="row col-12 circle d-block"><i class="{{flipCard.faClass}} text-white"
+                                                             aria-hidden="true"></i></span>
+                  <span class="col-12 card-description">{{flipCard.cardFrontDescription}}</span>
+                </div>
+                <div class="flip-card-back row justify-content-around align-items-center">
+                  <p>{{flipCard.cardBackDescription}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

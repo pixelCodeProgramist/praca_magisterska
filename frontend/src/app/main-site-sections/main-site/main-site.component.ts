@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Lightbox} from "ngx-lightbox";
+import {PhotoMainSiteSecondSection} from "../../../models/PhotoMainSiteSecondSection";
 
 @Component({
   selector: 'app-main-site',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainSiteComponent implements OnInit {
 
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
+
   }
 
 }
