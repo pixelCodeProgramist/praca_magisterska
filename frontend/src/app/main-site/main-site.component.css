@@ -1,0 +1,108 @@
+.clip-me {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+}
+
+.img-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.img-wrapper img {
+  width: 100%;
+}
+
+.img-overlay {
+  width: 100%;
+  height: 80%;
+  position: absolute;
+  top: 0;
+}
+
+.flip-card {
+  width: 200px;
+  height: 200px;
+  background-color: transparent;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 110%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateX(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  background-color: dodgerblue;
+  color: white;
+  -webkit-transform: rotateX( 180deg);
+  transform: rotateX( 180deg);
+}
+
+.flip-card-back p{
+  font-size: medium;
+}
+
+.my-nav {
+  margin-top: 0%;
+}
+
+@media screen and (max-width: 768px) {
+
+  .img-wrapper {
+    height: 1200px;
+  }
+
+  .img-wrapper img {
+    height: 1200px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .img-wrapper {
+    height: 800px;
+  }
+
+  .img-wrapper img {
+    height: 800px;
+  }
+}
+
+
+@media (min-width: 768px) {
+  .my-nav {
+    margin-top: 100px;
+  }
+}
+
+.circle {
+  width: 50px;
+  height: 50px;
+  background: #00f5cf;
+  border-radius: 50%;
+  z-index: 1;
+
+}
+
+.card-description {
+  position: relative;
+  bottom: 0;
+  text-align: center;
+  color: white;
+  font-size: medium;
+}
