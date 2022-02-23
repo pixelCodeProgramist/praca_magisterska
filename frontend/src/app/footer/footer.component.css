@@ -1,0 +1,43 @@
+.line {
+  background: #ff8e00;
+  height: 5px;
+  width: 40px
+}
+
+.circle {
+  border-size: 2px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.circle-hover {
+  background-color:rgba(1, 1, 1, 0.5);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+}
+
+.circle-hover:hover {
+  background: #fa8457;
+  cursor: pointer;
+}
+
+i {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.my-card:hover {
+    background: #0090d9;
+    cursor: pointer;
+}
+
+.small-font {
+  font-size: 10px;
+}

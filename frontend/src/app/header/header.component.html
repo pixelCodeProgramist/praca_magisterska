@@ -18,27 +18,30 @@
   </button>
 
   <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed">
-    <div class="mx-auto"></div>
+    <div class="mx-auto logo" routerLink="/" routerLinkActive="active"><span class="text-primary">Nx</span>Bike</div>
     <ul class="navbar-nav me-auto mt-2 mt-lg-0 text-center">
       <li class="nav-item active">
-        <a class="nav-link p-4 fs-3" href="#">O nas</a>
+        <a class="nav-link p-4 fs-3" routerLink="/about" routerLinkActive="active">O nas</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link p-4 fs-3" href="#">Oferta</a>
+        <a class="nav-link p-4 fs-3" routerLink="/offer" routerLinkActive="active">Oferta</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link p-4 fs-3" href="#">Cennik</a>
+        <a class="nav-link p-4 fs-3" routerLink="/prices" routerLinkActive="active">Cennik</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link p-4 fs-3" href="#">Kontakt</a>
+        <a class="nav-link p-4 fs-3" routerLink="/rules" routerLinkActive="active">Regulamin</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link p-4 fs-3" routerLink="/contact" routerLinkActive="active">Kontakt</a>
       </li>
     </ul>
     <ul class="navbar-nav ms-auto text-center">
       <li class="nav-item">
-        <a class="nav-link p-4 fs-5" href="#">Zaloguj się</a>
+        <a class="nav-link p-4 fs-5" routerLink="/login" routerLinkActive="active">Zaloguj się</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link p-4 fs-5" href="#">Zarejestruj się</a>
+        <a class="nav-link p-4 fs-5" routerLink="/register" href="#">Zarejestruj się</a>
       </li>
     </ul>
   </div>

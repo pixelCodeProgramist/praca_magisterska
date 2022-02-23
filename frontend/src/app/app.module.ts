@@ -12,6 +12,14 @@ import {LightboxModule} from "ngx-lightbox";
 import { PhotoSectionComponent } from './main-site-sections/photo-section/photo-section.component';
 import { MainProductsPriceComponentComponent } from './main-site-sections/main-products-price-component/main-products-price-component.component';
 import { CarouselComponent } from './main-site-sections/carousel/carousel.component';
+import { TimeSectionComponent } from './main-site-sections/time-section/time-section.component';
+import { AboutUsComponent } from './main-navbar-links/about-us/about-us.component';
+import { RulesComponent } from './main-navbar-links/rules/rules.component';
+import { OfferComponent } from './main-navbar-links/offer/offer.component';
+import { ContactComponent } from './main-navbar-links/contact/contact.component';
+import { PriceListComponent } from './main-navbar-links/price-list/price-list.component';
+import { LoginComponent } from './main-navbar-links/login/login.component';
+import { RegisterComponent } from './main-navbar-links/register/register.component';
 
 
 @NgModule({
@@ -23,7 +31,15 @@ import { CarouselComponent } from './main-site-sections/carousel/carousel.compon
     FlipCardSectionComponent,
     PhotoSectionComponent,
     MainProductsPriceComponentComponent,
-    CarouselComponent
+    CarouselComponent,
+    TimeSectionComponent,
+    AboutUsComponent,
+    RulesComponent,
+    OfferComponent,
+    ContactComponent,
+    PriceListComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
