@@ -6,13 +6,15 @@
           <h1 class="fw-bold large-size my-dark-blue first-h-unactive animate-delay-1">Wypożyczalnia</h1>
           <h1 class="fw-bold large-size my-second-blue first-h-unactive animate-delay-2">ROWERÓW</h1>
           <h1 class="fw-bold large-second-size my-dark-blue first-h-unactive animate-delay-3">GÓRY ŚWIĘTOKRZYSKIE</h1>
-          <p class="h5 p-3 first-h-unactive animate-delay-3">Przeżyj z nami wspaniałą przygodę</p>
-          <p class="h5 p-3 first-h-unactive animate-delay-3">Wypożyczalnia z największym asortymentem rowerów i akcesoriów dla dorosłych i dla
-            dzieci.</p>
-          <p class="h5 p-3 first-h-unactive animate-delay-3">Przeżyj z nami wspaniałą przygodę</p>
-          <p class="h5 p-3 first-h-unactive animate-delay-3">Skorzystaj i przekonaj się sam!</p>
-          <button class="btn my-second-bg-blue p-3 first-h-unactive animate-delay-3"><i class="fa fa-arrow-right text-white me-3" aria-hidden="true"></i>Więcej
-          </button>
+          <div class="first-h-unactive animate-delay-3">
+            <p class="h5 p-3">Przeżyj z nami wspaniałą przygodę</p>
+            <p class="h5 p-3">Wypożyczalnia z największym asortymentem rowerów i akcesoriów dla dorosłych i dla
+              dzieci.</p>
+            <p class="h5 p-3">Przeżyj z nami wspaniałą przygodę</p>
+            <p class="h5 p-3">Skorzystaj i przekonaj się sam!</p>
+            <button class="btn my-second-bg-blue p-3"><i class="fa fa-arrow-right text-white me-3" aria-hidden="true"></i>Więcej
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -20,10 +22,10 @@
       <div class="row h-100 justify-content-center align-items-center">
         <div class="container h-100">
           <div class="row h-100">
-            <div class="row col-md-6 col-12 mb-4 bg-light photo" *ngFor="let album of _albums">
-              <img src="{{album.src}}" class="col" (click)="open()">
+            <div class="row col-md-6 col-12 mb-4 bg-light photo" *ngFor="let album of _albums; index as i">
+              <img src="{{album.src}}" class="col" (click)="open(i)">
               <div class="img-overlay text-center align-items-center text-white">
-                <i class="fa fa-search" aria-hidden="true" (click)="open()"></i>
+                <i class="fa fa-search" aria-hidden="true" (click)="open(i)"></i>
               </div>
             </div>
           </div>

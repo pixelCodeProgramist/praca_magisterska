@@ -30,8 +30,8 @@ export class PhotoSectionComponent implements OnInit {
 
 
 
-  open() {
-    this._lightbox.open(this._albums, 1);
+  open(i: number) {
+    this._lightbox.open(this._albums, i);
   }
 
 
