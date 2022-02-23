@@ -2,7 +2,56 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 
 
+.first-h {
+  opacity: 0;
+  animation: fadeIn 2s ease;
+  animation-fill-mode:forwards;
+}
+
+@-webkit-keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-delay-1 { animation-delay: 0.5s;}
+.animate-delay-2 { animation-delay: 1.5s;}
+.animate-delay-3 { animation-delay: 2.5s;}
+
+
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 48px;
+  min-width: 498px;
+}
+
+.my-dark-blue {
+  color: #0090d9;
+}
+
+.my-second-blue {
+  color: #1bc6f5;;
+}
+
+.large-size {
+  font-size: 60px;
+}
+
+.large-second-size {
+  font-size: 40px;
+}
+
+.my-dark-bg-blue {
+  background: #0090d9;
+}
+
+.my-dark-bg-blue:hover {
+  background: #1bc6f5;;
+}
+
+.my-gray {
+  background: #5e5e5e;
 }

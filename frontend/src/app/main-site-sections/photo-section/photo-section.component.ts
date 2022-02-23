@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {PhotoMainSiteSecondSection} from "../../../models/PhotoMainSiteSecondSection";
 import {Lightbox} from "ngx-lightbox";
+import {Element} from "@angular/compiler";
 
 @Component({
   selector: 'app-photo-section',
@@ -9,9 +10,10 @@ import {Lightbox} from "ngx-lightbox";
 })
 export class PhotoSectionComponent implements OnInit {
   _albums: PhotoMainSiteSecondSection[] = [];
+
   constructor(private _lightbox: Lightbox) {
     for (let i = 1; i <= 4; i++) {
-      const src = 'assets/photo'+i+ '.png';
+      const src = 'assets/photo' + i + '.png';
       let album: PhotoMainSiteSecondSection = new class implements PhotoMainSiteSecondSection {
         caption: string = '';
         src: string = src;
@@ -22,13 +24,16 @@ export class PhotoSectionComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
 
+  ngOnInit(): void {
   }
+
+
 
   open() {
     this._lightbox.open(this._albums, 1);
   }
+
 
 
 }

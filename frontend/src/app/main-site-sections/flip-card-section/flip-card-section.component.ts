@@ -12,7 +12,10 @@ export class FlipCardSectionComponent implements OnInit {
   constructor() {
   }
 
+
   ngOnInit(): void {
+
+
     this.flipCardSectionInfo = new class implements FlipCardSectionInfo {
       background: string = 'assets/photo.png';
       title: string = 'Wypożyczalnia rowerów NxBike';

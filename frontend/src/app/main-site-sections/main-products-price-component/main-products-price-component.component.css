@@ -1,0 +1,70 @@
+.clip-me {
+  clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+  /* Created with https://www.css-gradient.com */
+  /* Created with https://www.css-gradient.com */
+  background: #0176FF;
+  background: -webkit-linear-gradient(top left, #0176FF, #010101);
+  background: -moz-linear-gradient(top left, #0176FF, #010101);
+  background: linear-gradient(to bottom right, #0176FF, #010101);
+  min-height: 150vmin;
+}
+
+.width-55 {
+  width: 25%;
+}
+
+.my-dark-bg-blue-not-button {
+  background: #0090d9;
+}
+
+th, td{
+  font-size: 12px;
+}
+
+@media screen and (max-width: 1800px) {
+  .large-size {
+    font-size: 50px;
+  }
+
+  .width-55 {
+    width: 35%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .width-55 {
+    width: 45%;
+  }
+}
+
+
+@media screen and (max-width: 1000px) {
+  .clip-me {
+    min-height: 230vmin;
+  }
+  .width-55 {
+    width: 90%;
+  }
+}
+
+
+@media screen and (max-width: 730px) {
+  .clip-me {
+    min-height: 300vmin;
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .clip-me {
+    min-height: 400vmin;
+  }
+}
+
+.circle {
+  width: 50px;
+  height: 50px;
+  background: #00f5cf;
+  border-radius: 50%;
+  z-index: 1;
+
+}

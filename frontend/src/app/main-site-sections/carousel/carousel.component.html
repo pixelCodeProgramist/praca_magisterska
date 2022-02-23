@@ -1,0 +1,45 @@
+<div class="clip-me">
+  <app-main-products-price-component></app-main-products-price-component>
+  <div class="row justify-content-center">
+    <div class="w-75 row">
+      <div class="col-12 col-lg-6 row justify-content-center align-content-center">
+        <ngb-carousel #carousel [showNavigationArrows]="false"
+                      [showNavigationIndicators]="false">
+          <ng-template ngbSlide *ngFor="let image of images">
+            <div class="img-wrapper">
+              <img src="{{image}}">
+
+              <div class="img-overlay d-flex d-flex justify-content-between">
+                <div class="left-indicator d-flex justify-content-center" (click)="prev()"><i class="fa fa-angle-left text-white"
+                                                                                              aria-hidden="true"></i></div>
+                <div class="right-indicator d-flex justify-content-center" (click)="next()"><i class="fa fa-angle-right text-white"
+                                                                                               aria-hidden="true"></i></div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-carousel>
+
+
+      </div>
+      <div class="col-12 col-lg-6 row justify-content-center align-content-center">
+        <p class="large-second-size text-white fw-bold first-h-unactive animate-delay-1">Z NAMI </p>
+        <p class="large-size text-white fw-bold first-h-unactive animate-delay-2">W GÓRY</p>
+        <p class="display-4 text-white fw-bold first-h-unactive animate-delay-3">Co nas wyróżnia?</p>
+        <ul class="h4 text-white first-h-unactive animate-delay-3" style="list-style-position: outside;">
+          <li>Stojaki przy Obiekcie– jako jedyna wypożyczalnia rowerów posiadamy stanowiska dla naszych Klientów przy
+            Obiekcie w Górach Świętokrzyskich
+          </li>
+          <li>Punkt 1 - darmowy parking dla klientów wypożyczalni 400m przed wejściem do obiektu w Górach
+            Świętokrzyskich
+          </li>
+          <li>Punkt 2 - znajduje się bezpośrednio przed kasami biletowymi tuż przed wejściem do obiektu w Górach
+            Świętokrzyskich
+          </li>
+          <li>Dowóz sprzętu do klienta</li>
+          <li>Możliwość wcześniejszej rezerwacji sprzętu</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>

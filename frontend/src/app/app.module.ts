@@ -10,6 +10,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlipCardSectionComponent } from './main-site-sections/flip-card-section/flip-card-section.component';
 import {LightboxModule} from "ngx-lightbox";
 import { PhotoSectionComponent } from './main-site-sections/photo-section/photo-section.component';
+import { MainProductsPriceComponentComponent } from './main-site-sections/main-products-price-component/main-products-price-component.component';
+import { CarouselComponent } from './main-site-sections/carousel/carousel.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { PhotoSectionComponent } from './main-site-sections/photo-section/photo-
     HeaderComponent,
     FooterComponent,
     FlipCardSectionComponent,
-    PhotoSectionComponent
+    PhotoSectionComponent,
+    MainProductsPriceComponentComponent,
+    CarouselComponent
   ],
   imports: [
     BrowserModule,

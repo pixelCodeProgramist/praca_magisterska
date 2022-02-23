@@ -1,0 +1,47 @@
+.clip-me {
+  clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 100%);
+  background: #b4b4b4;
+  background: -webkit-linear-gradient(top left, #818181, #130c0c);
+  background: -moz-linear-gradient(top left, #494949, #000000);
+  background: linear-gradient(to bottom right, #cbcbcb, #000000);
+  min-height: 500px;
+  height: 100%;
+  width: 100%;
+}
+
+li {
+  margin: 20px;
+}
+
+img {
+  width: 400px;
+  height: 350px;
+}
+
+.img-wrapper {
+  max-width: 400px;
+  position: relative;
+  height: 100%;
+}
+
+.img-overlay {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.img-wrapper:hover .right-indicator, .img-wrapper:hover .left-indicator {
+  width: 50px;
+  height: 50px;
+  background: #130c0c;
+  visibility: visible;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.left-indicator, .right-indicator {
+  visibility: hidden;
+}
+
