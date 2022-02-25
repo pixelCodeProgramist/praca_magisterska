@@ -20,6 +20,9 @@ import { ContactComponent } from './main-navbar-links/contact/contact.component'
 import { PriceListComponent } from './main-navbar-links/price-list/price-list.component';
 import { LoginComponent } from './main-navbar-links/login/login.component';
 import { RegisterComponent } from './main-navbar-links/register/register.component';
+import {LeafletModule} from "@asymmetrik/ngx-leaflet";
+import {ReactiveFormsModule} from "@angular/forms";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -45,7 +48,11 @@ import { RegisterComponent } from './main-navbar-links/register/register.compone
     BrowserModule,
     AppRoutingModule,
     LightboxModule,
-    NgbModule
+    LeafletModule,
+    NgbModule,
+
+    BrowserAnimationsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

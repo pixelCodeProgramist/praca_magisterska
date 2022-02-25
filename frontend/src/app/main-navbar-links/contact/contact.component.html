@@ -1,1 +1,102 @@
-<p>contact works!</p>
+<div class="clip-me">
+  <div class="img-wrapper">
+    <img class="scrollable" src="assets/photo8.png">
+    <div class="img-overlay h-100 row justify-content-around align-items-center">
+      <div class="row h-50">
+        <span class="scrollable col-12 text-white text-center first-nav">MASZ JAKIEŚ PYTANIA?</span>
+        <span class="scrollable col-12 text-primary text-center fw-bold second-nav">SKONTAKTUJ SIĘ Z NAMI</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-around align-content-center" style="min-height: 500px">
+  <div class="row w-75">
+    <div *ngFor="let flipCard of flipCards"
+         class="col-12 col-lg-6 col-xl-3 row justify-content-around align-items-center">
+      <div class="bg-primary flip-card mb-3">
+        <div class="flip-card-inner row h-100 justify-content-around align-items-center">
+          <div class="flip-card-front row h-100 justify-content-around align-items-center">
+            <i class="{{flipCard.faClass}} text-white" aria-hidden="true"></i>
+            <span class="col-12 card-description">{{flipCard.cardFrontDescription}}</span>
+          </div>
+          <div class="flip-card-back row justify-content-around align-items-center">
+            <div style="font-size: medium" [innerHTML]="flipCard.cardBackDescription"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-around align-content-center mb-3">
+  <div class="row w-75">
+    <div class="col-12 text-center my-dark-blue">
+      Jak do nas dojechać?
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-6">
+        <img class="w-100" style="height: 300px" src="assets/photo9.png">
+        <p class="text-center">Punkt 1</p>
+        <div class="mb-3" id="map1" style="height: 300px"></div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <img class="w-100" style="height: 300px" src="assets/photo10.png">
+        <p class="text-center">Punkt 2</p>
+        <div class="mb-3" id="map2" style="height: 300px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-time-section></app-time-section>
+<div class="row justify-content-around align-content-center mb-3" style="min-height: 100vmin">
+  <div class="row w-75">
+    <div class="row justify-content-around align-content-center">
+      <div class="w-50 text-center">
+<!--        <div class="card m-3 p-3">-->
+<!--          <div class="row justify-content-around align-content-center" style="min-height: 30vmin">-->
+<!--            <strong class="h2 fw-bold pb-3 myHeader">SKONTAKTUJ SIĘ Z NAMI WYPEŁNIAJĄC FORMULARZ</strong>-->
+<!--            <div class="line"></div>-->
+<!--          </div>-->
+
+<!--          <form [formGroup]="addShopFormGroup">-->
+<!--            <p>-->
+<!--              <mat-form-field appearance="outline" class="w-75">-->
+<!--                <mat-label>Imię i nazwisko</mat-label>-->
+<!--                <input matInput formControlName="shopName" >-->
+<!--                <mat-error *ngIf="checkError('shopName', 'required')">Shop Name is required</mat-error>-->
+<!--                <mat-error *ngIf="checkError('shopName', 'minlength')">Shop Name should be more than 5 characters</mat-error>-->
+<!--                <mat-error *ngIf="checkError('shopName', 'maxlength')">Shop Name should be less than 20 characters</mat-error>-->
+<!--              </mat-form-field>-->
+<!--            </p>-->
+<!--            <p>-->
+<!--              <mat-form-field appearance="outline" class="w-75">-->
+<!--                <mat-label>Email</mat-label>-->
+<!--                <input matInput formControlName="shopName" >-->
+<!--                <mat-error *ngIf="checkError('shopName', 'required')">Shop Name is required</mat-error>-->
+<!--                <mat-error *ngIf="checkError('shopName', 'minlength')">Shop Name should be more than 5 characters</mat-error>-->
+<!--                <mat-error *ngIf="checkError('shopName', 'maxlength')">Shop Name should be less than 20 characters</mat-error>-->
+<!--              </mat-form-field>-->
+<!--            </p>-->
+<!--            <p>-->
+<!--              <mat-form-field appearance="outline" class="w-75">-->
+<!--                <mat-label>Temat</mat-label>-->
+<!--                <input matInput formControlName="shopName" >-->
+<!--                <mat-error *ngIf="checkError('shopName', 'required')">Shop Name is required</mat-error>-->
+<!--                <mat-error *ngIf="checkError('shopName', 'minlength')">Shop Name should be more than 5 characters</mat-error>-->
+<!--                <mat-error *ngIf="checkError('shopName', 'maxlength')">Shop Name should be less than 20 characters</mat-error>-->
+<!--              </mat-form-field>-->
+<!--            </p>-->
+<!--            <p>-->
+<!--              <mat-form-field appearance="outline" class="w-75">-->
+<!--                <mat-label>Wiadomość</mat-label>-->
+<!--                <textarea matInput  formControlName="shopAddress" rows="10"></textarea>-->
+<!--                <mat-error *ngIf="checkError('shopAddress', 'required')">Shop Address is required</mat-error>-->
+<!--                <mat-error *ngIf="checkError('shopAddress', 'maxlength')">Shop Address should be less than 200 characters</mat-error>-->
+<!--              </mat-form-field>-->
+<!--            </p>-->
+<!--            <button type="submit" class="btn my-dark-bg-blue text-white">Submit</button>-->
+<!--          </form>-->
+<!--        </div>-->
+      </div>
+    </div>
+  </div>
+</div>
