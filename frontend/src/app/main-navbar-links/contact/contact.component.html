@@ -50,52 +50,41 @@
 <div class="row justify-content-around align-content-center mb-3" style="min-height: 100vmin">
   <div class="row w-75">
     <div class="row justify-content-around align-content-center">
-      <div class="w-50 text-center">
-<!--        <div class="card m-3 p-3">-->
-<!--          <div class="row justify-content-around align-content-center" style="min-height: 30vmin">-->
-<!--            <strong class="h2 fw-bold pb-3 myHeader">SKONTAKTUJ SIĘ Z NAMI WYPEŁNIAJĄC FORMULARZ</strong>-->
-<!--            <div class="line"></div>-->
-<!--          </div>-->
+      <div class="col-12 col-lg-6">
+        <form [formGroup]="contactFormGroup">
+          <div class="card m-3 p-3">
+            <div class="row justify-content-around align-content-center" style="min-height: 30vmin">
+              <strong class="h2 fw-bold pb-3 myHeader text-center">SKONTAKTUJ SIĘ Z NAMI WYPEŁNIAJĄC FORMULARZ</strong>
+              <div class="line"></div>
+            </div>
+            <div class="row mb-3">
+              <input class="form-control" type="text" placeholder="Imię i nazwisko" formControlName="firstLastName" [ngClass]="{activeRedBorder: hasError('firstLastName')}"/>
+              <div *ngIf="contactFormGroup.controls['firstLastName']?.touched" class="row">
+                <small  class="text-danger h5" *ngIf="checkError('firstLastName', 'required')">Pole nie może być puste</small>
+                <small  class="text-danger h5" *ngIf="checkError('firstLastName', 'minlength')">Pole powinno zawierać minimum 5 znaków</small>
+                <small  class="text-danger h5" *ngIf="checkError('firstLastName', 'maxlength')">Pole powinno zawierać maximum 100 znaków</small>
+              </div>
+            </div>
 
-<!--          <form [formGroup]="addShopFormGroup">-->
-<!--            <p>-->
-<!--              <mat-form-field appearance="outline" class="w-75">-->
-<!--                <mat-label>Imię i nazwisko</mat-label>-->
-<!--                <input matInput formControlName="shopName" >-->
-<!--                <mat-error *ngIf="checkError('shopName', 'required')">Shop Name is required</mat-error>-->
-<!--                <mat-error *ngIf="checkError('shopName', 'minlength')">Shop Name should be more than 5 characters</mat-error>-->
-<!--                <mat-error *ngIf="checkError('shopName', 'maxlength')">Shop Name should be less than 20 characters</mat-error>-->
-<!--              </mat-form-field>-->
-<!--            </p>-->
-<!--            <p>-->
-<!--              <mat-form-field appearance="outline" class="w-75">-->
-<!--                <mat-label>Email</mat-label>-->
-<!--                <input matInput formControlName="shopName" >-->
-<!--                <mat-error *ngIf="checkError('shopName', 'required')">Shop Name is required</mat-error>-->
-<!--                <mat-error *ngIf="checkError('shopName', 'minlength')">Shop Name should be more than 5 characters</mat-error>-->
-<!--                <mat-error *ngIf="checkError('shopName', 'maxlength')">Shop Name should be less than 20 characters</mat-error>-->
-<!--              </mat-form-field>-->
-<!--            </p>-->
-<!--            <p>-->
-<!--              <mat-form-field appearance="outline" class="w-75">-->
-<!--                <mat-label>Temat</mat-label>-->
-<!--                <input matInput formControlName="shopName" >-->
-<!--                <mat-error *ngIf="checkError('shopName', 'required')">Shop Name is required</mat-error>-->
-<!--                <mat-error *ngIf="checkError('shopName', 'minlength')">Shop Name should be more than 5 characters</mat-error>-->
-<!--                <mat-error *ngIf="checkError('shopName', 'maxlength')">Shop Name should be less than 20 characters</mat-error>-->
-<!--              </mat-form-field>-->
-<!--            </p>-->
-<!--            <p>-->
-<!--              <mat-form-field appearance="outline" class="w-75">-->
-<!--                <mat-label>Wiadomość</mat-label>-->
-<!--                <textarea matInput  formControlName="shopAddress" rows="10"></textarea>-->
-<!--                <mat-error *ngIf="checkError('shopAddress', 'required')">Shop Address is required</mat-error>-->
-<!--                <mat-error *ngIf="checkError('shopAddress', 'maxlength')">Shop Address should be less than 200 characters</mat-error>-->
-<!--              </mat-form-field>-->
-<!--            </p>-->
-<!--            <button type="submit" class="btn my-dark-bg-blue text-white">Submit</button>-->
-<!--          </form>-->
-<!--        </div>-->
+            <div class="row mb-3">
+              <input class="form-control" type="email" placeholder="Email" formControlName="email" [ngClass]="{activeRedBorder: hasError('email')}"/>
+              <div *ngIf="contactFormGroup.controls['email']?.touched" class="row">
+                <small class="text-danger h5" *ngIf="checkError('email', 'required')">Pole nie może być puste</small>
+                <small class="text-danger h5" *ngIf="checkError('email', 'email')">Nieprawidłowa forma maila</small>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <textarea class="form-control" id="message" type="text" placeholder="Message" rows="10" formControlName="message" [ngClass]="{activeRedBorder: hasError('message')}"></textarea>
+              <div *ngIf="contactFormGroup.controls['message']?.touched" class="row">
+                <small class="text-danger h5" *ngIf="checkError('message', 'required')">Pole nie może być puste</small>
+              </div>
+            </div>
+            <div class="row" style="max-width: 10vmin">
+              <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>

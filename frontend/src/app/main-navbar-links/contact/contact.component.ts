@@ -14,7 +14,7 @@ export class ContactComponent implements OnInit {
   flipCards!: FlipCard[];
   map1: MapForContact | undefined;
   map2: MapForContact | undefined;
-  public addShopFormGroup!: FormGroup;
+  public contactFormGroup!: FormGroup;
   constructor() {
   }
 
@@ -45,26 +45,21 @@ export class ContactComponent implements OnInit {
     this.map2 = new MapForContact([50.8780711,20.8994074],'map2', 'Punkt 2 - Kakonin 6b, 26-004 Kakonin');
     this.map1.initMap();
     this.map2.initMap();
-    this.addShopFormGroup = new FormGroup({
-      shopName : new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]),
-      shopAddress : new FormControl('', [Validators.required, Validators.maxLength(200)])
+    this.contactFormGroup = new FormGroup({
+      firstLastName : new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
+      email : new FormControl('', [Validators.required, Validators.email]),
+      message : new FormControl('', [Validators.required])
     });
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: any) {
-    let scrollableList = Array.from(document.getElementsByClassName('scrollable') as HTMLCollectionOf<HTMLElement>);
-    let value: number = -window.scrollY;
-    if (value > -250 && scrollableList[0].clientWidth > 1210) {
-      scrollableList.forEach((scrollable, index) => {
-        if (index > 0) value *= 0.01;
-        scrollable!.style.transform = 'translateY(calc(-25% - ' + value + 'px)';
-      })
-    }
-  }
+
 
   public checkError = (controlName: string, errorName: string) => {
-    return this.addShopFormGroup.controls[controlName].hasError(errorName);
+    return this.contactFormGroup.controls[controlName].hasError(errorName);
+  }
+
+  public hasError = (controlName: string) => {
+    return this.contactFormGroup!.controls[controlName].errors!=null && this.contactFormGroup!.controls[controlName].touched;
   }
 
 

@@ -38,4 +38,16 @@ export class AppComponent {
     var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
     return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
   }
+
+  @HostListener('window:scroll', ['$event'])
+  onScrollImageBackgorund(event: any) {
+    let scrollableList = Array.from(document.getElementsByClassName('scrollable') as HTMLCollectionOf<HTMLElement>);
+    let value: number = -window.scrollY;
+    if (value > -250 && scrollableList[0].clientWidth > 1210) {
+      scrollableList.forEach((scrollable, index) => {
+        if (index > 0) value *= 0.01;
+        scrollable!.style.transform = 'translateY(calc(-25% - ' + value + 'px)';
+      })
+    }
+  }
 }
