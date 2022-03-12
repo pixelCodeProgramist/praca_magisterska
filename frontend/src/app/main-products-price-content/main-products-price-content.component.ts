@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {TimePriceModel} from "../../../models/TimePriceModel";
-import {MainProduct} from "../../../models/MainProduct";
+import {TimePriceModel} from "../../models/TimePriceModel";
+import {MainProduct} from "../../models/MainProduct";
 
 
 @Component({
-  selector: 'app-main-products-price-component',
-  templateUrl: './main-products-price-component.component.html',
-  styleUrls: ['./main-products-price-component.component.css']
+  selector: 'app-main-products-price-content',
+  templateUrl: './main-products-price-content.component.html',
+  styleUrls: ['./main-products-price-content.component.css']
 })
-export class MainProductsPriceComponentComponent implements OnInit {
+export class MainProductsPriceContentComponent implements OnInit {
+
   isBikeActive: boolean = true;
   timePrices: TimePriceModel[] = [
     new class implements TimePriceModel {

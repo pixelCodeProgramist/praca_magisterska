@@ -10,7 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlipCardSectionComponent } from './main-site-sections/flip-card-section/flip-card-section.component';
 import {LightboxModule} from "ngx-lightbox";
 import { PhotoSectionComponent } from './main-site-sections/photo-section/photo-section.component';
-import { MainProductsPriceComponentComponent } from './main-site-sections/main-products-price-component/main-products-price-component.component';
+import { MainProductsPriceOverflowComponent } from './main-site-sections/main-products-price-overflow/main-products-price-overflow.component';
 import { CarouselComponent } from './main-site-sections/carousel/carousel.component';
 import { TimeSectionComponent } from './main-site-sections/time-section/time-section.component';
 import { AboutUsComponent } from './main-navbar-links/about-us/about-us.component';
@@ -23,6 +23,7 @@ import { RegisterComponent } from './main-navbar-links/register/register.compone
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {ReactiveFormsModule} from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MainProductsPriceContentComponent } from './main-products-price-content/main-products-price-content.component';
 
 
 @NgModule({
@@ -33,7 +34,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FooterComponent,
     FlipCardSectionComponent,
     PhotoSectionComponent,
-    MainProductsPriceComponentComponent,
+    MainProductsPriceOverflowComponent,
     CarouselComponent,
     TimeSectionComponent,
     AboutUsComponent,
@@ -42,7 +43,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ContactComponent,
     PriceListComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    MainProductsPriceContentComponent
   ],
   imports: [
     BrowserModule,

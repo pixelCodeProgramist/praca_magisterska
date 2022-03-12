@@ -13,14 +13,6 @@
   width: 25%;
 }
 
-.my-dark-bg-blue-not-button {
-  background: #0090d9;
-}
-
-th, td{
-  font-size: 12px;
-}
-
 @media screen and (max-width: 1800px) {
   .large-size {
     font-size: 50px;
@@ -60,11 +52,4 @@ th, td{
   }
 }
 
-.circle {
-  width: 50px;
-  height: 50px;
-  background: #00f5cf;
-  border-radius: 50%;
-  z-index: 1;
 
-}
