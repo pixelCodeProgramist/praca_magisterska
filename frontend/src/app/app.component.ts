@@ -43,7 +43,7 @@ export class AppComponent {
   onScrollImageBackgorund(event: any) {
     let scrollableList = Array.from(document.getElementsByClassName('scrollable') as HTMLCollectionOf<HTMLElement>);
     let value: number = -window.scrollY;
-    if (value > -250 && scrollableList[0].clientWidth > 1210) {
+    if (value > -250 && scrollableList[0]?.clientWidth > 1210) {
       scrollableList.forEach((scrollable, index) => {
         if (index > 0) value *= 0.01;
         scrollable!.style.transform = 'translateY(calc(-25% - ' + value + 'px)';

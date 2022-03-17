@@ -1,0 +1,15 @@
+.img-overlay {
+  width: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.img-wrapper {
+  position: relative;
+  max-height: 500px;
+}
+
+.img-wrapper img{
+  position: relative;
+  max-height: 95%;
+}
