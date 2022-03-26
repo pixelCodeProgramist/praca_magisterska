@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-center">
+  <ul class="navbar-nav h3" style="cursor: pointer" (click)="clickNavItem($event)">
+    <li class="nav-item">
+      <a class="nav-link active" id="standard">Standard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="plus">Plus</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="premium">Premium</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="accessories">Akcesoria</a>
+    </li>
+  </ul>
+</nav>
+<div class="row justify-content-center align-content-center" style="min-height: 200px">
+  <div class="col-8 text-uppercase">
+    <nav>{{currentNav}}</nav>
+    <div class="row justify-content-around">
+      <div class="card h4 col-12 col-md-5 col-lg-3 m-1 mt-5" *ngFor="let product of productList.products">
+        <div class="card-body">
+          <h5 class="card-title" style="cursor: pointer">{{product.name}}</h5>
+          <img class="text-center img-fluid" src="{{product.image}}">
+          <div style="display: flex; align-items: center;">
+            <ngx-stars [color]="'#F6BE00'" [readonly]="true" [size]="0.1" [maxStars]="5" [initialStars]="product.grade" (ratingOutput)="onRatingSet($event)"></ngx-stars>
+          </div>
+
+          <div class="text-right">
+            <span class="h2 d-block">{{product.price | currency:'PLN':'code' }}</span>
+            <button class="btn btn-primary">Zarezerwuj</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-5">
+  <app-paging [MAX_PAGINATION]="10" (currentPageEmitter)="getCurrentPage($event)"></app-paging>
+</div>
+
