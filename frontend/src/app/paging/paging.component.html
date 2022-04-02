@@ -1,1 +1,21 @@
-<p>paging works!</p>
+<nav aria-label="Page navigation example" class="d-grid justify-content-center">
+  <ul class="pagination" *ngIf="buttonNumber>0">
+    <li class="page-item" *ngIf="buttonNumber>5" (click)="decrease()">
+      <a class="page-link h3" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    <li class="page-item" *ngFor="let button of buttonsValueList; index as i" >
+      <button id="button{{i+1}}" class="page-link active-non-active h3" [ngClass]="{'active-button': i===0}"
+              (click)="select('button'.concat((i+1).toString()), button)">{{button}}
+      </button>
+    </li>
+    <li class="page-item" (click)="increase()" *ngIf="buttonNumber>5">
+      <a class="page-link h3" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>

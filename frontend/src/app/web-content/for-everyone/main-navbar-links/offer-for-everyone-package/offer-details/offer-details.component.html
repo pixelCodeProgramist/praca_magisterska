@@ -1,1 +1,73 @@
-<p>offer-details works!</p>
+<div class="row justify-content-center align-content-center">
+  <div class="row col-10">
+    <div class="col-12 col-lg-6 justify-content-center">
+      <img class="row img-fluid" src="{{productDetails.image}}">
+    </div>
+    <div class="col-12 col-lg-6">
+      <strong style="font-size: medium">{{productDetails.name}}</strong>
+      <div class="row">
+        <div class="row align-content-center col-4" style="width: fit-content">
+          <ngx-stars class="col-2" [color]="'#F6BE00'" [readonly]="!productDetails.canGrade" [size]="1" [maxStars]="5"
+                     [initialStars]="productDetails.grade" (ratingOutput)="onRatingSet($event)"></ngx-stars>
+        </div>
+        <div class="row align-content-center col">
+          <span
+            class="h4 mt-4">({{productDetails.gradesNumber}} {{getCorrectGradeInPolishForm(productDetails.gradesNumber)}}
+            )</span>
+        </div>
+      </div>
+      <div>
+        <div class="btn text-white p-3" [ngClass]="{'my-dark-bg-blue': isBikeActive, 'my-gray': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
+                                                                                                                                                 aria-hidden="true"></i>Rowery</div>
+        <div class="btn text-white p-3" [ngClass]="{'my-gray': isBikeActive, 'my-dark-bg-blue': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-plug text-white me-2"
+                                                                                                                                                 aria-hidden="true"></i>Rowery elektryczne</div>
+
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label style="font-size: medium" for="frame_filter">Rozmiar ramy</label>
+          <select id="frame_filter" class="form-select col-8" aria-label="Default select example" [(ngModel)]="selectedFrameOption">
+            <option *ngFor="let frame of productDetails.availableFrameSize" value="{{frame}}">{{frame}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-8" style="font-size: medium">
+          <label>Data wypożyczenia</label>
+          <input class="form-control" placeholder="Wybierz datę"
+                 [ngxDatePicker]="dateInstanceSingle"
+                 (valueChange)="onChangeDate($event)">
+          <ngx-date-picker #dateInstanceSingle [options]="options"></ngx-date-picker>
+        </div>
+      </div>
+      <div class="row" *ngIf="chosenDate">
+        <div class="form-group col-12" style="font-size: medium">
+          <label for="time_filter">Ilość czasu</label>
+          <select id="time_filter" class="form-select col-8" [(ngModel)]="selectedTimeOption" (change)="fillBeginHours()">
+            <option value="">-</option>
+            <option *ngFor="let price of filteredPriceClassic.priceBikeDetails" value="{{price.range}}">{{getRange(price.range)}}</option>
+          </select>
+        </div>
+        <div class="form-check ms-3" style="font-size: medium">
+          <input class="form-check-input" type="checkbox" id="flexCheckDefault" [ngModel]="withBikeTripCheckbox" (click)="changeTripState()">
+          <label class="form-check-label" for="flexCheckDefault">
+            Wycieczka z przewodnikiem
+          </label>
+        </div>
+        <div *ngIf="selectedTimeOption&&selectedTimeOption!='-'" class="form-group col-12" style="font-size: medium">
+          <label for="begin_hour_filter">Godzina rozpoczęcia</label>
+          <select id="begin_hour_filter" class="form-select col-8" [(ngModel)]="selectedHourBeginTripOption">
+            <option value="">-</option>
+            <option *ngFor="let productTime of productTimeDetails.hours" value="{{productTime}}">{{productTime}}</option>
+          </select>
+        </div>
+        <strong *ngIf="selectedTimeOption != '-' && selectedTimeOption && productTimeDetails.hours.length>0" style="font-size: xx-large">{{getPrice() | number:'1.2-2'}} PLN</strong>
+        <button *ngIf="selectedTimeOption != '-' && selectedTimeOption && selectedHourBeginTripOption != '-' &&
+          selectedHourBeginTripOption && productTimeDetails.hours.length>0" class="btn btn-primary h5 p-3 col-3 mt-3">Zamów</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

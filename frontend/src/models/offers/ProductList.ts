@@ -1,15 +1,11 @@
-export class Product {
-  image: string;
-  name: string;
-  price: number;
-  canRent: boolean;
-  grade: boolean;
+import {ClassicProduct, Product} from "./Product";
 
-  constructor(image: string, name: string, price: number, canRent: boolean, grade: boolean) {
-    this.image = image;
-    this.name = name;
-    this.price = price;
-    this.canRent = canRent;
-    this.grade = grade;
+export class ProductList {
+  products: ClassicProduct[];
+  maxPageNumber: number;
+
+  constructor(products: ClassicProduct[], maxPageNumber: number) {
+    this.products = products;
+    this.maxPageNumber = maxPageNumber;
   }
 }

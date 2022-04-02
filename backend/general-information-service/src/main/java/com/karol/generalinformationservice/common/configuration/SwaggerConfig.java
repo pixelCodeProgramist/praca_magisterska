@@ -1,4 +1,4 @@
-package com.karol.generalinformationservice.Configuration;
+package com.karol.generalinformationservice.common.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

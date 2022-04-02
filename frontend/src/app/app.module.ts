@@ -3,27 +3,35 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MainSiteComponent } from './main-site-sections/main-site/main-site.component';
+import { MainSiteComponent } from './web-content/for-everyone/main-site-sections/main-site/main-site.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FlipCardSectionComponent } from './main-site-sections/flip-card-section/flip-card-section.component';
+import { FlipCardSectionComponent } from './web-content/for-everyone/main-site-sections/flip-card-section/flip-card-section.component';
 import {LightboxModule} from "ngx-lightbox";
-import { PhotoSectionComponent } from './main-site-sections/photo-section/photo-section.component';
-import { MainProductsPriceOverflowComponent } from './main-site-sections/main-products-price-overflow/main-products-price-overflow.component';
-import { CarouselComponent } from './main-site-sections/carousel/carousel.component';
-import { TimeSectionComponent } from './main-site-sections/time-section/time-section.component';
-import { AboutUsComponent } from './main-navbar-links/about-us/about-us.component';
-import { RulesComponent } from './main-navbar-links/rules/rules.component';
-import { OfferComponent } from './main-navbar-links/offer/offer.component';
-import { ContactComponent } from './main-navbar-links/contact/contact.component';
-import { PriceListComponent } from './main-navbar-links/price-list/price-list.component';
-import { LoginComponent } from './main-navbar-links/login/login.component';
-import { RegisterComponent } from './main-navbar-links/register/register.component';
+import { PhotoSectionComponent } from './web-content/for-everyone/main-site-sections/photo-section/photo-section.component';
+import { MainProductsPriceOverflowComponent } from './web-content/for-everyone/main-site-sections/main-products-price-overflow/main-products-price-overflow.component';
+import { CarouselComponent } from './web-content/for-everyone/main-site-sections/carousel/carousel.component';
+import { TimeSectionComponent } from './web-content/for-everyone/main-site-sections/time-section/time-section.component';
+import { AboutUsComponent } from './web-content/for-everyone/main-navbar-links/about-us/about-us.component';
+import { RulesComponent } from './web-content/for-everyone/main-navbar-links/rules/rules.component';
+import { OfferComponent } from './web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer/offer.component';
+import { ContactComponent } from './web-content/for-everyone/main-navbar-links/contact/contact.component';
+import { PriceListComponent } from './web-content/for-everyone/main-navbar-links/price-list/price-list.component';
+import { LoginComponent } from './web-content/for-everyone/main-navbar-links/login/login.component';
+import { RegisterComponent } from './web-content/for-everyone/main-navbar-links/register/register.component';
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
-import {ReactiveFormsModule} from "@angular/forms";
+import { ReactiveFormsModule} from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MainProductsPriceContentComponent } from './main-products-price-content/main-products-price-content.component';
+import { MainProductsPriceContentComponent } from './web-content/for-everyone/main-products-price-content/main-products-price-content.component';
+import { PagingComponent } from './paging/paging.component';
+import {NgxStarsModule} from "ngx-stars";
+import { OfferDetailsComponent } from './web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer-details/offer-details.component';
+import {DatepickerModule} from "ng2-datepicker";
+import {NgxDatePickerModule} from "@ngx-tiny/date-picker";
+import {TimepickerModule} from "ngx-bootstrap/timepicker";
+import {HttpClientModule} from "@angular/common/http";
+
 
 
 @NgModule({
@@ -44,7 +52,9 @@ import { MainProductsPriceContentComponent } from './main-products-price-content
     PriceListComponent,
     LoginComponent,
     RegisterComponent,
-    MainProductsPriceContentComponent
+    MainProductsPriceContentComponent,
+    PagingComponent,
+    OfferDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,9 +62,12 @@ import { MainProductsPriceContentComponent } from './main-products-price-content
     LightboxModule,
     LeafletModule,
     NgbModule,
-
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxStarsModule,
+    DatepickerModule,
+    NgxDatePickerModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

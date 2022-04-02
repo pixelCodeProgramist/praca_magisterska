@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {TimePriceModel} from "../../models/TimePriceModel";
-import {MainProduct} from "../../models/MainProduct";
+import {TimePriceModel} from "../../../../models/TimePriceModel";
+import {MainProduct} from "../../../../models/MainProduct";
 
 
 @Component({

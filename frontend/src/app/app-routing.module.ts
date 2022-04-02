@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {MainSiteComponent} from "./main-site-sections/main-site/main-site.component";
-import {AboutUsComponent} from "./main-navbar-links/about-us/about-us.component";
-import {RulesComponent} from "./main-navbar-links/rules/rules.component";
-import {OfferComponent} from "./main-navbar-links/offer/offer.component";
-import {ContactComponent} from "./main-navbar-links/contact/contact.component";
-import {PriceListComponent} from "./main-navbar-links/price-list/price-list.component";
-import {LoginComponent} from "./main-navbar-links/login/login.component";
-import {RegisterComponent} from "./main-navbar-links/register/register.component";
+import {MainSiteComponent} from "./web-content/for-everyone/main-site-sections/main-site/main-site.component";
+import {AboutUsComponent} from "./web-content/for-everyone/main-navbar-links/about-us/about-us.component";
+import {RulesComponent} from "./web-content/for-everyone/main-navbar-links/rules/rules.component";
+import {OfferComponent} from "./web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer/offer.component";
+import {ContactComponent} from "./web-content/for-everyone/main-navbar-links/contact/contact.component";
+import {PriceListComponent} from "./web-content/for-everyone/main-navbar-links/price-list/price-list.component";
+import {LoginComponent} from "./web-content/for-everyone/main-navbar-links/login/login.component";
+import {RegisterComponent} from "./web-content/for-everyone/main-navbar-links/register/register.component";
+import {
+  OfferDetailsComponent
+} from "./web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer-details/offer-details.component";
 
 const routes: Routes = [
   {
@@ -46,6 +49,10 @@ const routes: Routes = [
   {
     component: RegisterComponent,
     path: 'register'
+  },
+  {
+    component: OfferDetailsComponent,
+    path: 'offer/offer-details'
   }
 ];
 

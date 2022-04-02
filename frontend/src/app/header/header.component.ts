@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {GeneralInformationService} from "../../shared/general-information.service";
+import {GeneralInformationResponse} from "../../models/general-information/response/GeneralInformationResponse";
 
 @Component({
   selector: 'app-header',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
   isCollapsed = true;
-  constructor() { }
+  phones: string[] = [];
+
+  constructor(private generalInformationService: GeneralInformationService) { }
 
   ngOnInit(): void {
+    this.generalInformationService.getGeneralInfo().subscribe(
+      data=>{
+        this.phones = data.branches.map(branch=>branch.phone.replace(/(?=(?:.{3})*$)/g, ' '));
+
+      },error => {
+
+      }
+    )
   }
 
 }

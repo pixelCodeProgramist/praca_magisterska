@@ -1,12 +1,8 @@
 <nav class="navbar bg-primary navbar-light">
   <div class="d-flex justify-content-center">
-    <div class="text-white ms-2 fs-4 me-3">
+    <div class="text-white ms-2 fs-4 me-3" *ngFor="let phone of phones">
       <span class="glyphicon glyphicon-phone-alt me-2"></span>
-      <span>123456778</span>
-    </div>
-    <div class="text-white ms-2 fs-4">
-      <span class="glyphicon glyphicon-phone-alt me-2"></span>
-      <span>123456778</span>
+      <span>{{phone}}</span>
     </div>
   </div>
 </nav>

@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {FlipCard, FlipCardSectionInfo} from "../../../models/FlipCardSectionInfo";
+import {FlipCard, FlipCardSectionInfo} from "../../../../../models/FlipCardSectionInfo";
+import {GeneralInformationService} from "../../../../../shared/general-information.service";
+import {SafeResourceUrl, SafeUrl} from "@angular/platform-browser";
+import {ImageFromByteSanitizerService} from "../../../../../shared/ImageFromByteSanitizer.service";
 
 @Component({
   selector: 'app-flip-card-section',
@@ -9,15 +12,36 @@ import {FlipCard, FlipCardSectionInfo} from "../../../models/FlipCardSectionInfo
 export class FlipCardSectionComponent implements OnInit {
   flipCardSectionInfo: FlipCardSectionInfo | undefined;
 
-  constructor() {
+
+
+  constructor(private generalInformationService: GeneralInformationService, private imageFromByteSanitizer: ImageFromByteSanitizerService) {
   }
 
-
   ngOnInit(): void {
+    this.generalInformationService.getLinks('flip-card-section').subscribe(
+      links=>{
+        for(let i=0; i<links.length;i++) {
+          this.generalInformationService.getPhoto(links[i].url).subscribe(
+            data=>{
+              let image = this.imageFromByteSanitizer.convertToSaveUrl(data);
+              this.fillFlipCardSectionInfo(image);
+            },error => {
+
+            }
+          )
+        }
+
+      },error => {
+
+      }
+    )
 
 
+  }
+
+  fillFlipCardSectionInfo(image: SafeUrl) {
     this.flipCardSectionInfo = new class implements FlipCardSectionInfo {
-      background: string = 'assets/photo.png';
+      background: SafeResourceUrl = image;
       title: string = 'Wypożyczalnia rowerów NxBike';
       flipCards: FlipCard[] = [
         new class implements FlipCard {

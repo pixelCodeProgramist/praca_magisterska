@@ -1,6 +1,6 @@
 <div class="clip-me">
   <div class="img-wrapper">
-    <img class="scrollable" src="assets/photo8.png">
+    <img *ngFor="let url of sectionUrlsMap.get('background')" class="scrollable" [src]="url">
     <div class="img-overlay h-100 row justify-content-around align-items-center">
       <div class="row h-50">
         <span class="scrollable col-12 text-white text-center first-nav">MASZ JAKIEŚ PYTANIA?</span>
@@ -33,16 +33,12 @@
       Jak do nas dojechać?
     </div>
     <div class="row">
-      <div class="col-12 col-lg-6">
-        <img class="w-100" style="height: 300px" src="assets/photo9.png">
-        <p class="text-center">Punkt 1</p>
-        <div class="mb-3" id="map1" style="height: 300px"></div>
+      <div class="col-12 col-lg-6" *ngFor="let place of placesSection; index as i">
+        <img [src]="place.imageSafeUrl" class="w-100" style="height: 300px">
+        <p class="text-center">{{displayPlaceName(place.fileName)}}</p>
+        <div class="mb-3 mymap" id="map{{i+1}}" style="height: 300px"></div>
       </div>
-      <div class="col-12 col-lg-6">
-        <img class="w-100" style="height: 300px" src="assets/photo10.png">
-        <p class="text-center">Punkt 2</p>
-        <div class="mb-3" id="map2" style="height: 300px"></div>
-      </div>
+
     </div>
   </div>
 </div>
@@ -52,7 +48,7 @@
     <div class="row justify-content-around align-content-center">
       <div class="col-12 col-lg-6">
         <form [formGroup]="contactFormGroup">
-          <div class="card m-3 p-3">
+                    <div class="card m-3 p-3">
             <div class="row justify-content-around align-content-center" style="min-height: 30vmin">
               <strong class="h2 fw-bold pb-3 myHeader text-center">SKONTAKTUJ SIĘ Z NAMI WYPEŁNIAJĄC FORMULARZ</strong>
               <div class="line"></div>

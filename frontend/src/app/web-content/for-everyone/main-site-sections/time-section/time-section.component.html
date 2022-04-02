@@ -1,14 +1,14 @@
 <div class="img-wrapper">
-  <img src="assets/photo6.png">
+  <img [src]="image">
   <div class="img-overlay  align-items-center">
     <div class="row h-100">
       <div class="row w-75 mx-auto align-items-center">
         <div class="row col-12 col-md-6 row align-items-center  text-white fw-bold">
           <p class="my-dark-blue middle-font first-h-unactive animate-delay-1">WYPOŻYCZALNIA</p>
           <p class="my-second-blue big-font first-h-unactive animate-delay-2">ROWERÓW</p>
-          <div class="first-h-unactive animate-delay-3">
+          <div class="first-h-unactive animate-delay-3" *ngIf="generalInformation">
             <p>GODZINY OTWARCIA</p>
-            <p class="h4">6:00 - 18:00</p>
+            <p class="h4">{{generalInformation.hourFrom}} - {{generalInformation.hourTo}}</p>
             <p class="h4 pt-3">W razie pytań prosimy o kontakt mailowy lub telefoniczny</p>
             <p class="h3 pt-3">UWAGA! Przy wcześniejszej informacji (przy wypożyczeniu rowera), istnieje możliwość oddania roweru po zamknięciu wypożyczalni</p>
             <button routerLink="/contact" routerLinkActive="active" class="btn my-second-bg-blue p-3 col-lg-3 col-md-4 col-12 mt-0 mt-md-3"><i

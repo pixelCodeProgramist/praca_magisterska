@@ -7,7 +7,7 @@
                       [showNavigationIndicators]="false">
           <ng-template ngbSlide *ngFor="let image of images">
             <div class="img-wrapper">
-              <img src="{{image}}">
+              <img [src]="image">
 
               <div class="img-overlay d-flex d-flex justify-content-between">
                 <div class="left-indicator d-flex justify-content-center" (click)="prev()"><i class="fa fa-angle-left text-white"

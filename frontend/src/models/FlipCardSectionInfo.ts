@@ -1,5 +1,7 @@
+import {SafeResourceUrl} from "@angular/platform-browser";
+
 export interface FlipCardSectionInfo {
-  background: string;
+  background: SafeResourceUrl;
   title: string;
   flipCards: FlipCard[];
 }

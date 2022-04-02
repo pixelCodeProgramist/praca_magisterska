@@ -24,6 +24,11 @@ module.exports = function (config) {
     jasmineHtmlReporter: {
       suppressAll: true // removes the duplicated traces
     },
+    "/api": {
+      "target": "http://localhost:5000",
+      "secure": false
+    },
+
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/frontend'),
       subdir: '.',
