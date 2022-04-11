@@ -19,18 +19,12 @@ export class CarouselComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.generalInformationService.getLinks('carousel-section').subscribe(
-      links=>{
-        for(let i=0; i<links.length;i++) {
-          this.generalInformationService.getPhoto(links[i].url).subscribe(
-            data=>{
-              let image: SafeUrl = this.imageFromByteSanitizer.convertToSaveUrl(data);
-
-              this.images.push(image);
-            },error => {
-
-            }
-          )
+    this.generalInformationService.getPhotosForSection('carousel-section').subscribe(
+      data=>{
+        for(let i=0; i<data.length;i++) {
+          let objectURL = 'data:image/png;base64,' + data[i]?.image;
+          let image = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
+          this.images.push(image);
         }
 
       },error => {

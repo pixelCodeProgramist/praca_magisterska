@@ -1,6 +1,6 @@
 <div class="clip-me">
   <div class="img-wrapper">
-    <img *ngFor="let url of sectionUrlsMap.get('background')" class="scrollable" [src]="url">
+    <img *ngFor="let image of filterImagesForSectionResponse('background')" class="scrollable" [src]="image.imageSafeUrl">
     <div class="img-overlay h-100 row justify-content-around align-items-center">
       <div class="row h-50">
         <span class="scrollable col-12 text-white text-center first-nav">MASZ JAKIEŚ PYTANIA?</span>
@@ -33,7 +33,7 @@
       Jak do nas dojechać?
     </div>
     <div class="row">
-      <div class="col-12 col-lg-6" *ngFor="let place of placesSection; index as i">
+      <div class="col-12 col-lg-6" *ngFor="let place of filterImagesForSectionResponse('place'); index as i">
         <img [src]="place.imageSafeUrl" class="w-100" style="height: 300px">
         <p class="text-center">{{displayPlaceName(place.fileName)}}</p>
         <div class="mb-3 mymap" id="map{{i+1}}" style="height: 300px"></div>

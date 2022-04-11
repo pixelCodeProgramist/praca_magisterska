@@ -14,19 +14,13 @@ export class RulesComponent implements OnInit {
   constructor(private generalInformationService: GeneralInformationService, private imageFromByteSanitizer: ImageFromByteSanitizerService) { }
 
   ngOnInit(): void {
-    this.generalInformationService.getLinks('rules-section').subscribe(
-      links => {
-        for (let i = 0; i < links.length; i++) {
-          this.generalInformationService.getPhoto(links[i].url).subscribe(
-            data => {
-              this.background = this.imageFromByteSanitizer.convertToSaveUrl(data);
 
-            }, error => {
-
-            }
-          )
+    this.generalInformationService.getPhotosForSection('rules-section').subscribe(
+      data => {
+        for (let i = 0; i < data.length; i++) {
+          let objectURL = 'data:image/png;base64,' + data[i].image;
+          this.background = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);;
         }
-
       }, error => {
 
       }

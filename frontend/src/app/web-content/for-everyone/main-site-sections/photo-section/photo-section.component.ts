@@ -18,33 +18,24 @@ export class PhotoSectionComponent implements OnInit {
   }
 
 
-
-
-
   ngOnInit(): void {
-    this.generalInformationService.getLinks('photo-section').subscribe(
-      links=>{
-        for(let i=0; i<links.length;i++) {
-          this.generalInformationService.getPhoto(links[i].url).subscribe(
-            data=>{
+    this.generalInformationService.getPhotosForSection('photo-section').subscribe(
+      data => {
+        for (let i = 0; i < data.length; i++) {
+          let objectURL = 'data:image/png;base64,' + data[i]?.image;
+          let image = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
 
-              let image: SafeUrl = this.imageFromByteSanitizer.convertToSaveUrl(data);
+          let album: PhotoMainSiteSecondSection = new class implements PhotoMainSiteSecondSection {
+            caption: string = '';
+            src: SafeResourceUrl = image;
+            thumb: string = '';
+          }
 
+          this._albums.push(album);
 
-              let album: PhotoMainSiteSecondSection = new class implements PhotoMainSiteSecondSection {
-                caption: string = '';
-                src: SafeResourceUrl = image;
-                thumb: string = '';
-              }
-
-              this._albums.push(album);
-            },error => {
-
-            }
-          )
         }
 
-      },error => {
+      }, error => {
 
       }
     )

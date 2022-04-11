@@ -1,6 +1,16 @@
 spring:
   cloud:
     gateway:
+      routes:
+        - id: GENERAL-INFORMATION-SERVICE
+          predicates:
+            - Path=/general-information/**
+          uri: "lb://GENERAL-INFORMATION-SERVICE"
+        - id: OFFER-SERVICE
+          predicates:
+            - Path=/offer/**
+          uri: "lb://OFFER-SERVICE"
+
       globalcors:
         cors-configurations:
           '[/**]':
@@ -10,6 +20,8 @@ spring:
               - POST
             allowedHeaders:
               - Content-Type
+
+
 
 
 

@@ -18,20 +18,13 @@ export class FlipCardSectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.generalInformationService.getLinks('flip-card-section').subscribe(
-      links=>{
-        for(let i=0; i<links.length;i++) {
-          this.generalInformationService.getPhoto(links[i].url).subscribe(
-            data=>{
-              let image = this.imageFromByteSanitizer.convertToSaveUrl(data);
-              this.fillFlipCardSectionInfo(image);
-            },error => {
-
-            }
-          )
-        }
-
+    this.generalInformationService.getPhotosForSection('flip-card-section').subscribe(
+      data=>{
+        let objectURL = 'data:image/png;base64,' + data[0]?.image;
+        let image = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
+        this.fillFlipCardSectionInfo(image);
       },error => {
+
 
       }
     )

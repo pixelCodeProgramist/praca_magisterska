@@ -5,7 +5,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {SafeResourceUrl} from "@angular/platform-browser";
 import {GeneralInformationService} from "../../../../../shared/general-information.service";
 import {ImageFromByteSanitizerService} from "../../../../../shared/ImageFromByteSanitizer.service";
-import {ImagesForSectionResponse} from "../../../../../models/general-information/response/ImagesForSectionResponse";
+import {ImageForSectionResponse} from "../../../../../models/general-information/response/ImageForSectionResponse";
 import {
   GeneralInformationResponse
 } from "../../../../../models/general-information/response/GeneralInformationResponse";
@@ -22,48 +22,35 @@ export class ContactComponent implements OnInit {
   maps: MapForContact[] = [];
   map1: MapForContact | undefined;
   map2: MapForContact | undefined;
-  public contactFormGroup!: FormGroup;
-  sectionUrlsMap: Map<string, SafeResourceUrl[]> = new Map<string, SafeResourceUrl[]>();
+  contactFormGroup!: FormGroup;
 
-  placesSection: ImagesForSectionResponse[] = [];
+  imagesForSectionResponse: ImageForSectionResponse[] = [];
 
   generalInfo!: GeneralInformationResponse;
   constructor(private generalInformationService: GeneralInformationService, private imageFromByteSanitizer: ImageFromByteSanitizerService) {
   }
 
   ngOnInit(): void {
-    this.generalInformationService.getLinks('contact-section').subscribe(
-      links => {
-        this.generalInformationService.getPhotos(links.filter(e=>e.fileName.includes('place'))).subscribe(
-          data=>{
-            this.placesSection = data;
-            for(let placeSection of this.placesSection) {
-              let objectURL = 'data:image/png;base64,' + placeSection.image;
-              let safeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
-              placeSection.imageSafeUrl = safeUrl;
-            }
-            setTimeout( () => {
-              this.generalInformationService.getGeneralInfo().subscribe(generalInfo=>{
-                this.generalInfo = generalInfo
-                this.setMapInfo();
-                this.setFlipCards();
-              },error => {
+    this.generalInformationService.getPhotosForSection('contact-section').subscribe(
+      data => {
+        this.imagesForSectionResponse = data;
 
-              })}, 100 );
-          },error => {
-          }
-        )
-        for (let i = 0; i < links.length; i++) {
-          let safeUrls: SafeResourceUrl[] = [];
-
-          this.generalInformationService.getPhoto(links[i].url).subscribe(
-            data => {
-              safeUrls.push(this.imageFromByteSanitizer.convertToSaveUrl(data));
-              this.sectionUrlsMap.set(links[i].fileName, safeUrls);
-            }, error => {
-            }
-          )
+        for(let placeSection of this.imagesForSectionResponse) {
+          let objectURL = 'data:image/png;base64,' + placeSection.image;
+          let safeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
+          placeSection.imageSafeUrl = safeUrl;
         }
+        this.generalInformationService.getGeneralInfo().subscribe(generalInfo=>{
+          this.generalInfo = generalInfo
+          this.setMapInfo();
+          this.setFlipCards();
+        },error => {
+
+        });
+
+
+
+
       }, error => {
       }
     );
@@ -134,5 +121,9 @@ export class ContactComponent implements OnInit {
 
     }
 
+  }
+
+  filterImagesForSectionResponse(type: string) {
+    return this.imagesForSectionResponse.filter(place=> place.fileName.includes(type))
   }
 }

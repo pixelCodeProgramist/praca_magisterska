@@ -2,12 +2,12 @@
 <p class="my-second-blue large-size fw-bold">WYPOŻYCZALNI</p>
 <p class="my-second-blue large-size fw-bold">ROWERÓW</p>
 <div class="text-center">
-  <div class="btn text-white p-3" [ngClass]="{'my-dark-bg-blue': isBikeActive, 'my-gray': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
-                                                                                                                                           aria-hidden="true"></i>Rowery</div>
-  <div class="btn text-white p-3" [ngClass]="{'my-gray': isBikeActive, 'my-dark-bg-blue': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-plug text-white me-2"
-                                                                                                                                           aria-hidden="true"></i>Rowery elektryczne</div>
+  <div class="btn text-white p-3" [ngClass]="{'my-dark-bg-blue': isClassicOfferButtonActive, 'my-gray': !isClassicOfferButtonActive}" (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
+                                                                                                                                                                       aria-hidden="true"></i>Klasyczne</div>
+  <div class="btn text-white p-3" [ngClass]="{'my-gray': isClassicOfferButtonActive, 'my-dark-bg-blue': !isClassicOfferButtonActive}" (click)="changeStateButton()"><i class="fa fa-plug text-white me-2"
+                                                                                                                                                                       aria-hidden="true"></i>Elektryczne</div>
 </div>
-<table class="table table-striped" *ngIf="isBikeActive">
+<table class="table table-striped" *ngIf="isClassicOfferButtonActive">
   <thead class="my-dark-bg-blue-not-button text-white">
   <tr>
     <th></th>
@@ -18,16 +18,16 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let mainProduct of mainProducts; index as i">
+  <tr *ngFor="let mainProduct of generalInfoClassicProducts; index as i">
     <th scope="row">{{i + 1}}</th>
-    <td>{{mainProduct.type}}</td>
-    <td>{{mainProduct.everyBeginHour}} <span *ngIf="isNumber(mainProduct.everyBeginHour)">zł</span></td>
-    <td>{{mainProduct.day}} zł</td>
-    <td>{{mainProduct.dayAndNight}} zł</td>
+    <td>{{mainProduct.productName}}</td>
+    <td class="text-center">{{mainProduct.everyBeginHourPrice}} {{mainProduct.currency}}</td>
+    <td class="text-center">{{mainProduct.dayPrice}} {{mainProduct.currency}}</td>
+    <td class="text-center">{{mainProduct.dayAndNightPrice}} {{mainProduct.currency}}</td>
   </tr>
   </tbody>
 </table>
-<table class="table table-striped" *ngIf="!isBikeActive">
+<table class="table table-striped" *ngIf="!isClassicOfferButtonActive">
   <thead class="my-dark-bg-blue-not-button text-white">
   <tr>
     <th></th>
@@ -36,10 +36,10 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let timePrice of timePrices; index as i">
+  <tr *ngFor="let generalInfoElectricProduct of generalInfoElectricProducts; index as i">
     <th scope="row">{{i + 1}}</th>
-    <td>{{timePrice.time}}</td>
-    <td>{{timePrice.price}} zł</td>
+    <td>{{generalInfoElectricProduct.time}}</td>
+    <td>{{generalInfoElectricProduct.price}} {{generalInfoElectricProduct.currency}}</td>
   </tr>
   </tbody>
 </table>

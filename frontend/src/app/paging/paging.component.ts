@@ -12,7 +12,7 @@ export class PagingComponent implements OnInit, OnChanges {
   private status$: Subject<number>;
   @Output() currentPageEmitter = new EventEmitter<number>();
   buttonNumber = 0;
-  private currentPage: number = 1;
+  @Input() CURRENT_PAGE: number = 1;
 
 
   constructor() {
@@ -27,7 +27,7 @@ export class PagingComponent implements OnInit, OnChanges {
 
 
   select(id: string, buttonValue: number) {
-    if (this.currentPage !== buttonValue) {
+    if (this.CURRENT_PAGE !== buttonValue) {
       let selectors = document.getElementsByClassName('active-non-active');
       for (let i = 0; i < selectors.length; i++) {
         selectors[i].className = selectors[i].className.replace(' active-button', '');
@@ -35,7 +35,7 @@ export class PagingComponent implements OnInit, OnChanges {
       let selector: HTMLElement | null = document.getElementById(id);
       if (selector !== null)
         selector.className += ' active-button';
-      this.currentPage = buttonValue;
+      this.CURRENT_PAGE = buttonValue;
       this.currentPageEmitter.emit(buttonValue);
 
     }
@@ -60,6 +60,13 @@ export class PagingComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(this.CURRENT_PAGE == 1) {
+      let selectors = document.getElementsByClassName('active-non-active');
+      for (let i = 0; i < selectors.length; i++) {
+        selectors[i]!.className = selectors[i].className.replace(' active-button', '');
+      }
+      if (selectors[0] != undefined) selectors[0].className+= ' active-button'
+    }
     this.buttonsValueList = [1, 2, 3, 4, 5];
     this.status$.next(this.MAX_PAGINATION);
     this.buttonNumber = this.MAX_PAGINATION;

@@ -1,12 +1,15 @@
 <nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-center">
   <ul class="navbar-nav h3" style="cursor: pointer" (click)="clickNavItem($event)">
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="!isBikeActive">
+      <a class="nav-link active" id="bike">Rowery</a>
+    </li>
+    <li class="nav-item" *ngIf="isBikeActive">
       <a class="nav-link active" id="standard">Standard</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="isBikeActive">
       <a class="nav-link" id="plus">Plus</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="isBikeActive">
       <a class="nav-link" id="premium">Premium</a>
     </li>
     <li class="nav-item">
@@ -16,7 +19,7 @@
 </nav>
 <div class="row justify-content-center align-content-center" style="min-height: 200px">
   <div class="col-8 text-uppercase">
-    <nav>{{currentNav}}</nav>
+    <nav>{{getCurrentNavInRightForm(currentNav)}}</nav>
     <div class="row justify-content-around">
       <div *ngIf="currentNav!= 'accessories'" class="text-center mt-3">
         <div class="btn text-white p-3" [ngClass]="{'my-dark-bg-blue': isBikeActive, 'my-gray': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
@@ -24,25 +27,45 @@
         <div class="btn text-white p-3" [ngClass]="{'my-gray': isBikeActive, 'my-dark-bg-blue': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-plug text-white me-2"
                                                                                                                                                  aria-hidden="true"></i>Rowery elektryczne</div>
       </div>
-      <div class="card h4 col-12 col-md-5 col-lg-3 m-1 mt-5" *ngFor="let product of productList.products">
-        <div class="card-body">
-          <h5 routerLink="/offer/offer-details" [queryParams]="{id: product.id, type: getBikeTypeName()}" class="card-title" style="cursor: pointer">{{product.name}}</h5>
-          <img class="text-center img-fluid" src="{{product.image}}">
-          <div style="display: flex; align-items: center;">
-            <ngx-stars [color]="'#F6BE00'" [readonly]="true" [size]="0.1" [maxStars]="5" [initialStars]="product.grade" (ratingOutput)="onRatingSet($event)"></ngx-stars>
-          </div>
+      <ng-container class="w-100 h-100" *ngIf="currentNav!='accessories'">
+        <div class="card h4 col-12 col-md-5 col-lg-3 m-1 mt-5" *ngFor="let product of productGeneralOfferResponse?.products">
+          <div class="card-body">
+            <h5 routerLink="/offer/offer-details" [queryParams]="{id: product.id, type: getBikeTypeName()}" class="card-title" style="cursor: pointer">{{product.name}}</h5>
+            <img style="height: 250px; width: 300px" class="text-center img-fluid" [src]="product.imageSafeUrl">
+            <div style="display: flex; align-items: center;">
+              <ngx-stars [color]="'#F6BE00'" [readonly]="true" [size]="0.1" [maxStars]="5" [initialStars]="product.rating" (ratingOutput)="onRatingSet($event)"></ngx-stars>
+            </div>
 
-          <div class="text-right">
-            <span class="h2 d-block"><span class="text-lowercase">od</span> {{getPrice(product.prices) | number:'1.2-2'}} PLN</span>
-            <button routerLink="/offer/offer-details" [queryParams]="{id: product.id, type: getBikeTypeName()}" class="btn btn-primary">Szczegóły</button>
-          </div>
+            <div class="text-right">
+              <span class="h2 d-block"><span class="text-lowercase">od</span> {{productGeneralOfferResponse.minimalPrice | number:'1.2-2'}} PLN</span>
+              <button routerLink="/offer/offer-details" [queryParams]="{id: product.id, type: getBikeTypeName()}" class="btn btn-primary">Szczegóły</button>
+            </div>
 
+          </div>
         </div>
-      </div>
+      </ng-container>
+      <ng-container class="w-100 h-100" *ngIf="currentNav==='accessories'">
+        <div class="card h4 col-12 col-md-5 col-lg-3 m-1 mt-5" *ngFor="let accessory of accessoryGeneralOfferResponse?.products">
+          <div class="card-body">
+            <h5 routerLink="/offer/offer-details" [queryParams]="{id: accessory.id, type: getBikeTypeName()}" class="card-title" style="cursor: pointer">{{accessory.name}}</h5>
+            <img style="height: 250px; width: 300px" class="text-center img-fluid" [src]="accessory.imageSafeUrl">
+            <div style="display: flex; align-items: center;">
+              <ngx-stars [color]="'#F6BE00'" [readonly]="true" [size]="0.1" [maxStars]="5" [initialStars]="accessory.rating" (ratingOutput)="onRatingSet($event)"></ngx-stars>
+            </div>
+
+            <div class="text-right">
+              <span class="h2 d-block"><span class="text-lowercase">od</span> {{accessory.minimalPrice | number:'1.2-2'}} PLN</span>
+              <button routerLink="/offer/offer-details" [queryParams]="{id: accessory.id, type: getBikeTypeName()}" class="btn btn-primary">Szczegóły</button>
+            </div>
+
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
 <div class="mt-5">
-  <app-paging [MAX_PAGINATION]="10" (currentPageEmitter)="getCurrentPage($event)"></app-paging>
+  <app-paging *ngIf="currentNav!=='accessories'" [CURRENT_PAGE]="currentPage" [MAX_PAGINATION]="productGeneralOfferResponse.maxPages" (currentPageEmitter)="clickOnPage($event)"></app-paging>
+  <app-paging *ngIf="currentNav==='accessories'" [CURRENT_PAGE]="currentPage" [MAX_PAGINATION]="accessoryGeneralOfferResponse.maxPages" (currentPageEmitter)="clickOnPage($event)"></app-paging>
 </div>
 

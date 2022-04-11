@@ -1,6 +1,6 @@
 <div class="clip-me">
   <div class="img-wrapper">
-    <img *ngFor="let url of sectionUrls.get('background')" class="scrollable" [src]="url">
+    <img *ngFor="let imageObj of filterImages('background')" class="scrollable" [src]="imageObj.imageSafeUrl">
     <div class="img-overlay h-100 row justify-content-around align-items-center">
       <div class="row h-50">
         <span class="scrollable col-12 text-white text-center first-nav">Z nami jeszcze szybciej</span>
@@ -16,7 +16,7 @@
         <strong class="d-block">Wypożyczalnia</strong>
         <strong class="d-block"><span class="text-primary">Nx</span>Bike</strong>
         <div class="row justify-content-center mt-5">
-          <img *ngFor="let url of sectionUrls.get('first_section')" class="scrollable" [src]="url" class="col">
+          <img *ngFor="let imageObj of filterImages('first_section')" class="scrollable" [src]="imageObj.imageSafeUrl" class="col">
         </div>
       </div>
     </div>
