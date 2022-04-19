@@ -9,6 +9,18 @@ export class ProductGeneralOfferResponse {
   minimalPrice!: number;
 }
 
+export class SearchBikeResponse {
+  id!: number;
+
+  name!: string;
+
+  image!: Byte[];
+
+  imageSafeUrl!: SafeResourceUrl;
+
+  type!: string;
+}
+
 export interface ProductGeneralOffer {
   id: number;
 

@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {ProductList} from "../../../../../../models/offers/ProductList";
 import {
   AccessoryGeneralOfferResponse,
-  ProductGeneralOfferResponse
+  ProductGeneralOfferResponse,
+  SearchBikeResponse
 } from "../../../../../../models/offers/ProductGeneralOfferResponse";
 import {OfferService} from "../../../../../../shared/offer.service";
 import {ImageFromByteSanitizerService} from "../../../../../../shared/ImageFromByteSanitizer.service";
 import {ViewportScroller} from "@angular/common";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -17,13 +18,18 @@ import {ViewportScroller} from "@angular/common";
 export class OfferComponent implements OnInit {
   currentPage: number = 1;
   currentNav: string = 'standard';
-  productList: ProductList = new ProductList([], 0);
   isBikeActive: boolean = true;
   productGeneralOfferResponse: ProductGeneralOfferResponse = new ProductGeneralOfferResponse();
   accessoryGeneralOfferResponse: AccessoryGeneralOfferResponse = new AccessoryGeneralOfferResponse();
+  bikes: SearchBikeResponse[] = [];
+  keyword = 'name';
 
-  constructor(private offerService: OfferService, private imageFromByteSanitizer: ImageFromByteSanitizerService, private viewportScroller: ViewportScroller) {
+  constructor(private offerService: OfferService, private imageFromByteSanitizer: ImageFromByteSanitizerService, private viewportScroller: ViewportScroller, private router: Router) {
   }
+
+
+
+
 
   loadProducts() {
     if (this.isBikeActive && this.currentNav == 'bike') this.currentNav = 'standard';
@@ -58,6 +64,17 @@ export class OfferComponent implements OnInit {
   ngOnInit(): void {
     this.isBikeActive = true;
     this.loadProducts();
+    this.offerService.getSearchBikes().subscribe(
+      data=>{
+        this.bikes = data;
+        for (let i = 0; i < this.bikes.length; i++) {
+          let objectURL = 'data:image/png;base64,' + this.bikes[i].image;
+          this.bikes[i].imageSafeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
+        }
+      },error => {
+
+      }
+    )
   }
 
   clickNavItem($event: MouseEvent) {
@@ -95,13 +112,17 @@ export class OfferComponent implements OnInit {
   }
 
 
-  getBikeTypeName() {
-    if (this.isBikeActive) return 'classic';
-    return 'electric';
-  }
 
   getCurrentNavInRightForm(currentNav: string) {
     if (currentNav.toLowerCase() == 'accessories') return 'Akcesoria';
     return currentNav;
   }
+
+  search($event: any) {
+
+   this.router.navigate(['offer/offer-details'],{ queryParams: { id: $event.id }});
+
+  }
+
+
 }

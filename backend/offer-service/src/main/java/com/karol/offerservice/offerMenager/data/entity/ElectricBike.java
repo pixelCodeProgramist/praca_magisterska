@@ -6,6 +6,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -30,5 +32,10 @@ public class ElectricBike {
     @Column(precision=10, scale=2)
     private BigDecimal rating;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "ElectricBikeFrame",
+            joinColumns = {@JoinColumn(name = "electricBikeId")},
+            inverseJoinColumns = {@JoinColumn(name = "frameId")})
+    private Set<Frame> frames = new HashSet<>();
 
 }

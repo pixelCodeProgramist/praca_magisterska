@@ -31,6 +31,7 @@ import {DatepickerModule} from "ng2-datepicker";
 import {NgxDatePickerModule} from "@ngx-tiny/date-picker";
 import {TimepickerModule} from "ngx-bootstrap/timepicker";
 import {HttpClientModule} from "@angular/common/http";
+import {AutocompleteLibModule} from "angular-ng-autocomplete";
 
 
 
@@ -67,7 +68,8 @@ import {HttpClientModule} from "@angular/common/http";
     NgxStarsModule,
     DatepickerModule,
     NgxDatePickerModule,
-    HttpClientModule
+    HttpClientModule,
+    AutocompleteLibModule
   ],
   providers: [],
   bootstrap: [AppComponent]

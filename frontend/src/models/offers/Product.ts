@@ -25,7 +25,7 @@ export class ClassicProduct extends Product {
 
 export class PriceClassic {
   bikeType: string;
-  priceBikeDetails: PriceClassicDetails[];
+  priceBikeDetails: PriceClassicDetails[] = [];
 
   constructor(bikeType: string, priceBikeDetails: PriceClassicDetails[]) {
     this.bikeType = bikeType;

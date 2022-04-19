@@ -6,6 +6,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -32,4 +34,10 @@ public class ClassicBike {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "bike_type_id", nullable = false)
     private BikeType bikeType;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "ClassicBikeFrame",
+            joinColumns = {@JoinColumn(name = "classicBikeId")},
+            inverseJoinColumns = {@JoinColumn(name = "frameId")})
+    private Set<Frame> frames = new HashSet<>();
 }

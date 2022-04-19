@@ -19,7 +19,35 @@
 </nav>
 <div class="row justify-content-center align-content-center" style="min-height: 200px">
   <div class="col-8 text-uppercase">
-    <nav>{{getCurrentNavInRightForm(currentNav)}}</nav>
+    <nav class="row">
+      <div class="col-md-6 col-12">{{getCurrentNavInRightForm(currentNav)}}</div>
+      <div class="col-lg-1 col-md-6 col-12 h5 mt-2">
+        <div class="ng-autocomplete">
+          <ng-autocomplete
+            [data]="bikes"
+            [searchKeyword]="keyword"
+            placeholder="Wyszukaj roweru"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate"
+            historyHeading="{{null}}"
+            (selected)='search($event)'>
+          </ng-autocomplete>
+
+          <ng-template #itemTemplate let-item>
+            <div class="item p-3">
+              <img [src]="item.imageSafeUrl" height="25" width="25" class="me-2 ms-2">
+              <span [innerHTML]="item.name"></span>&nbsp; | &nbsp;
+              <small>{{item.type}}</small>
+            </div>
+          </ng-template>
+
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+        </div>
+      </div>
+    </nav>
+
     <div class="row justify-content-around">
       <div *ngIf="currentNav!= 'accessories'" class="text-center mt-3">
         <div class="btn text-white p-3" [ngClass]="{'my-dark-bg-blue': isBikeActive, 'my-gray': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
@@ -30,7 +58,7 @@
       <ng-container class="w-100 h-100" *ngIf="currentNav!='accessories'">
         <div class="card h4 col-12 col-md-5 col-lg-3 m-1 mt-5" *ngFor="let product of productGeneralOfferResponse?.products">
           <div class="card-body">
-            <h5 routerLink="/offer/offer-details" [queryParams]="{id: product.id, type: getBikeTypeName()}" class="card-title" style="cursor: pointer">{{product.name}}</h5>
+            <h5 routerLink="/offer/offer-details" [queryParams]="{id: product.id}" class="card-title" style="cursor: pointer">{{product.name}}</h5>
             <img style="height: 250px; width: 300px" class="text-center img-fluid" [src]="product.imageSafeUrl">
             <div style="display: flex; align-items: center;">
               <ngx-stars [color]="'#F6BE00'" [readonly]="true" [size]="0.1" [maxStars]="5" [initialStars]="product.rating" (ratingOutput)="onRatingSet($event)"></ngx-stars>
@@ -38,7 +66,7 @@
 
             <div class="text-right">
               <span class="h2 d-block"><span class="text-lowercase">od</span> {{productGeneralOfferResponse.minimalPrice | number:'1.2-2'}} PLN</span>
-              <button routerLink="/offer/offer-details" [queryParams]="{id: product.id, type: getBikeTypeName()}" class="btn btn-primary">Szczegóły</button>
+              <button routerLink="/offer/offer-details" [queryParams]="{id: product.id}" class="btn btn-primary">Szczegóły</button>
             </div>
 
           </div>
@@ -47,15 +75,14 @@
       <ng-container class="w-100 h-100" *ngIf="currentNav==='accessories'">
         <div class="card h4 col-12 col-md-5 col-lg-3 m-1 mt-5" *ngFor="let accessory of accessoryGeneralOfferResponse?.products">
           <div class="card-body">
-            <h5 routerLink="/offer/offer-details" [queryParams]="{id: accessory.id, type: getBikeTypeName()}" class="card-title" style="cursor: pointer">{{accessory.name}}</h5>
+            <h5 class="card-title" style="cursor: pointer">{{accessory.name}}</h5>
             <img style="height: 250px; width: 300px" class="text-center img-fluid" [src]="accessory.imageSafeUrl">
             <div style="display: flex; align-items: center;">
-              <ngx-stars [color]="'#F6BE00'" [readonly]="true" [size]="0.1" [maxStars]="5" [initialStars]="accessory.rating" (ratingOutput)="onRatingSet($event)"></ngx-stars>
+              <ngx-stars [color]="'#F6BE00'" [readonly]="false" [size]="0.1" [maxStars]="5" [initialStars]="accessory.rating" (ratingOutput)="onRatingSet($event)"></ngx-stars>
             </div>
 
             <div class="text-right">
               <span class="h2 d-block"><span class="text-lowercase">od</span> {{accessory.minimalPrice | number:'1.2-2'}} PLN</span>
-              <button routerLink="/offer/offer-details" [queryParams]="{id: accessory.id, type: getBikeTypeName()}" class="btn btn-primary">Szczegóły</button>
             </div>
 
           </div>

@@ -10,6 +10,10 @@ spring:
           predicates:
             - Path=/offer/**
           uri: "lb://OFFER-SERVICE"
+        - id: MAIL-SERVICE
+          predicates:
+            - Path=/mail/**
+          uri: "lb://MAIL-SERVICE"
 
       globalcors:
         cors-configurations:
@@ -18,6 +22,9 @@ spring:
             allowedMethods:
               - GET
               - POST
+              - PATCH
+              - DELETE
+              - PUT
             allowedHeaders:
               - Content-Type
 

@@ -1,6 +1,7 @@
 <div class="clip-me">
   <div class="img-wrapper">
-    <img *ngFor="let image of filterImagesForSectionResponse('background')" class="scrollable" [src]="image.imageSafeUrl">
+    <img *ngFor="let image of filterImagesForSectionResponse('background')" class="scrollable"
+         [src]="image.imageSafeUrl">
     <div class="img-overlay h-100 row justify-content-around align-items-center">
       <div class="row h-50">
         <span class="scrollable col-12 text-white text-center first-nav">MASZ JAKIEŚ PYTANIA?</span>
@@ -48,22 +49,38 @@
     <div class="row justify-content-around align-content-center">
       <div class="col-12 col-lg-6">
         <form [formGroup]="contactFormGroup">
-                    <div class="card m-3 p-3">
+          <div class="card m-3 p-3">
             <div class="row justify-content-around align-content-center" style="min-height: 30vmin">
               <strong class="h2 fw-bold pb-3 myHeader text-center">SKONTAKTUJ SIĘ Z NAMI WYPEŁNIAJĄC FORMULARZ</strong>
               <div class="line"></div>
             </div>
             <div class="row mb-3">
-              <input class="form-control" type="text" placeholder="Imię i nazwisko" formControlName="firstLastName" [ngClass]="{activeRedBorder: hasError('firstLastName')}"/>
+              <input class="form-control" type="subject" placeholder="Temat" formControlName="subject" [ngClass]="{activeRedBorder: hasError('subject')}"/>
+              <div *ngIf="contactFormGroup.controls['subject']?.touched" class="row">
+                <small class="text-danger h5" *ngIf="checkError('subject', 'required')">Pole nie może być
+                  puste</small>
+                <small class="text-danger h5" *ngIf="checkError('subject', 'minlength')">Pole powinno zawierać
+                  minimum 5 znaków</small>
+                <small class="text-danger h5" *ngIf="checkError('subject', 'maxlength')">Pole powinno zawierać
+                  maximum 100 znaków</small>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <input class="form-control" type="text" placeholder="Imię i nazwisko"
+                     formControlName="firstLastName" [ngClass]="{activeRedBorder: hasError('firstLastName')}"/>
               <div *ngIf="contactFormGroup.controls['firstLastName']?.touched" class="row">
-                <small  class="text-danger h5" *ngIf="checkError('firstLastName', 'required')">Pole nie może być puste</small>
-                <small  class="text-danger h5" *ngIf="checkError('firstLastName', 'minlength')">Pole powinno zawierać minimum 5 znaków</small>
-                <small  class="text-danger h5" *ngIf="checkError('firstLastName', 'maxlength')">Pole powinno zawierać maximum 100 znaków</small>
+                <small class="text-danger h5" *ngIf="checkError('firstLastName', 'required')">Pole nie może być
+                  puste</small>
+                <small class="text-danger h5" *ngIf="checkError('firstLastName', 'minlength')">Pole powinno zawierać
+                  minimum 5 znaków</small>
+                <small class="text-danger h5" *ngIf="checkError('firstLastName', 'maxlength')">Pole powinno zawierać
+                  maximum 100 znaków</small>
               </div>
             </div>
 
             <div class="row mb-3">
-              <input class="form-control" type="email" placeholder="Email" formControlName="email" [ngClass]="{activeRedBorder: hasError('email')}"/>
+              <input class="form-control" type="email" placeholder="Email"
+                     formControlName="email" [ngClass]="{activeRedBorder: hasError('email')}"/>
               <div *ngIf="contactFormGroup.controls['email']?.touched" class="row">
                 <small class="text-danger h5" *ngIf="checkError('email', 'required')">Pole nie może być puste</small>
                 <small class="text-danger h5" *ngIf="checkError('email', 'email')">Nieprawidłowa forma maila</small>
@@ -71,13 +88,17 @@
             </div>
 
             <div class="row mb-3">
-              <textarea class="form-control" id="message" type="text" placeholder="Message" rows="10" formControlName="message" [ngClass]="{activeRedBorder: hasError('message')}"></textarea>
+              <textarea class="form-control" id="message" type="text"
+                        placeholder="Message" rows="10" formControlName="message"
+                        [ngClass]="{activeRedBorder: hasError('message')}"></textarea>
               <div *ngIf="contactFormGroup.controls['message']?.touched" class="row">
                 <small class="text-danger h5" *ngIf="checkError('message', 'required')">Pole nie może być puste</small>
+                <small class="text-danger h5" *ngIf="checkError('message', 'minlength')">Pole powinno zawierać minimum 5 znaków</small>
+                <small class="text-danger h5" *ngIf="checkError('message', 'maxlength')">Pole powinno zawierać maximum 1000 znaków</small>
               </div>
             </div>
             <div class="row" style="max-width: 10vmin">
-              <button class="btn btn-primary" type="submit">Submit</button>
+              <button (click)="sendMail()" class="btn btn-primary" type="submit">Wyślij</button>
             </div>
           </div>
         </form>

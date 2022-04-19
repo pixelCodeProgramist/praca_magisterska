@@ -9,6 +9,8 @@ import {ImageForSectionResponse} from "../../../../../models/general-information
 import {
   GeneralInformationResponse
 } from "../../../../../models/general-information/response/GeneralInformationResponse";
+import {ContactRequest} from "../../../../../models/contact/ContactRequest";
+import {ContactService} from "../../../../../shared/contact.service";
 
 
 @Component({
@@ -23,11 +25,11 @@ export class ContactComponent implements OnInit {
   map1: MapForContact | undefined;
   map2: MapForContact | undefined;
   contactFormGroup!: FormGroup;
-
   imagesForSectionResponse: ImageForSectionResponse[] = [];
 
   generalInfo!: GeneralInformationResponse;
-  constructor(private generalInformationService: GeneralInformationService, private imageFromByteSanitizer: ImageFromByteSanitizerService) {
+
+  constructor(private generalInformationService: GeneralInformationService, private imageFromByteSanitizer: ImageFromByteSanitizerService, private contactService: ContactService) {
   }
 
   ngOnInit(): void {
@@ -35,20 +37,18 @@ export class ContactComponent implements OnInit {
       data => {
         this.imagesForSectionResponse = data;
 
-        for(let placeSection of this.imagesForSectionResponse) {
+        for (let placeSection of this.imagesForSectionResponse) {
           let objectURL = 'data:image/png;base64,' + placeSection.image;
           let safeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
           placeSection.imageSafeUrl = safeUrl;
         }
-        this.generalInformationService.getGeneralInfo().subscribe(generalInfo=>{
+        this.generalInformationService.getGeneralInfo().subscribe(generalInfo => {
           this.generalInfo = generalInfo
           this.setMapInfo();
           this.setFlipCards();
-        },error => {
+        }, error => {
 
         });
-
-
 
 
       }, error => {
@@ -60,21 +60,21 @@ export class ContactComponent implements OnInit {
 
   private setFlipCards() {
     let address = ''
-    for(let branch of this.generalInfo.branches) {
-      address += '<p>'+branch.street+', '+branch.zipCode+' '+branch.city+'</p>';
+    for (let branch of this.generalInfo.branches) {
+      address += '<p>' + branch.street + ', ' + branch.zipCode + ' ' + branch.city + '</p>';
     }
 
-    let faClassesTypes = ['address','email']
-    let cardFrontDescriptions = ['Adres','Email']
+    let faClassesTypes = ['address', 'email']
+    let cardFrontDescriptions = ['Adres', 'Email']
     let cardBackDescriptions = [address, this.generalInfo.email];
 
     this.generalInfo.branches.forEach((branch, index) => {
       cardBackDescriptions.push(branch.phone.replace(/(?=(?:.{3})*$)/g, ' '))
       faClassesTypes.push('phone')
-      cardFrontDescriptions.push('Telefon '+(index+1));
+      cardFrontDescriptions.push('Telefon ' + (index + 1));
     });
 
-    for(let i=0; i<faClassesTypes.length;i++) {
+    for (let i = 0; i < faClassesTypes.length; i++) {
       let faClass = this.getFaClass(faClassesTypes[i]);
       this.flipCards.push(new class implements FlipCard {
         cardBackDescription: string = cardBackDescriptions[i];
@@ -85,17 +85,18 @@ export class ContactComponent implements OnInit {
   }
 
   private getFaClass(type: string) {
-    if(type == 'address') return 'fa fa-map-marker';
-    if(type == 'phone') return 'fa fa-map-marker';
-    if(type == 'email') return 'fa fa-envelope';
+    if (type == 'address') return 'fa fa-map-marker';
+    if (type == 'phone') return 'fa fa-map-marker';
+    if (type == 'email') return 'fa fa-envelope';
     return '';
   }
 
   private setReactiveFormGroup() {
     this.contactFormGroup = new FormGroup({
       firstLastName: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
+      subject: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      message: new FormControl('', [Validators.required])
+      message: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)])
     });
   }
 
@@ -108,14 +109,14 @@ export class ContactComponent implements OnInit {
   }
 
   displayPlaceName(fileName: string) {
-    return fileName.replace('place','Punkt ');
+    return fileName.replace('place', 'Punkt ');
   }
 
   private setMapInfo() {
 
-    for(let branch of this.generalInfo.branches) {
-      let map = new MapForContact([branch.latitude, branch.longitude],'map'+branch.branchId,
-        'Punkt '+branch.branchId+' - ' + branch.street + ', ' + branch.zipCode + ' ' + branch.city);
+    for (let branch of this.generalInfo.branches) {
+      let map = new MapForContact([branch.latitude, branch.longitude], 'map' + branch.branchId,
+        'Punkt ' + branch.branchId + ' - ' + branch.street + ', ' + branch.zipCode + ' ' + branch.city);
       map.initMap();
       this.maps.push(map);
 
@@ -124,6 +125,23 @@ export class ContactComponent implements OnInit {
   }
 
   filterImagesForSectionResponse(type: string) {
-    return this.imagesForSectionResponse.filter(place=> place.fileName.includes(type))
+    return this.imagesForSectionResponse.filter(place => place.fileName.includes(type))
+  }
+
+  sendMail() {
+    if (this.contactFormGroup.valid) {
+      let contact: ContactRequest = new ContactRequest(
+        this.contactFormGroup.controls['subject']?.value, this.contactFormGroup.controls['message']?.value,
+        this.contactFormGroup.controls['email']?.value, this.contactFormGroup.controls['firstLastName']?.value
+      );
+      this.contactService.sendMailForContact(contact).subscribe(
+        data=>{
+          this.contactFormGroup.reset();
+        },error => {
+
+        }
+      )
+
+    }
   }
 }
