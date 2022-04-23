@@ -16,6 +16,7 @@ import javax.mail.MessagingException;
 @EnableEurekaClient
 @EnableEncryptableProperties
 public class MailServiceApplication {
+	public final static String MAIN_SITE = "http://localhost:9000/";
 	public static void main(String[] args) {
 		SpringApplication.run(MailServiceApplication.class, args);
 	}

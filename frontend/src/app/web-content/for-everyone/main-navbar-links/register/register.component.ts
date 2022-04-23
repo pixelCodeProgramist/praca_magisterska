@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
+import {UserService} from "../../../../../shared/user.service";
+import {RegisterModel} from "../../../../../models/user/RegisterModel";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {PopupInformationViewComponent} from "../popup-information-view/popup-information-view.component";
 
 @Component({
   selector: 'app-register',
@@ -10,7 +14,7 @@ export class RegisterComponent implements OnInit {
 
   public registerFormGroup!: FormGroup;
 
-  constructor() { }
+  constructor(private userService: UserService, private ngbModal: NgbModal) { }
 
   ngOnInit(): void {
     this.registerFormGroup = new FormGroup({
@@ -72,7 +76,25 @@ export class RegisterComponent implements OnInit {
 
   submit() {
     if(this.registerFormGroup.valid&&this.isRulesAcceptedCheckbox) {
-
+      let registerModel: RegisterModel = new RegisterModel(
+        this.registerFormGroup.controls['firstName']?.value,
+        this.registerFormGroup.controls['lastName']?.value,
+        this.registerFormGroup.controls['phone']?.value,
+        this.registerFormGroup.controls['email']?.value,
+        this.registerFormGroup.controls['password']?.value
+      )
+      this.userService.register(registerModel).subscribe(
+        data=>{
+          const modalRef = this.ngbModal.open(PopupInformationViewComponent);
+          modalRef.componentInstance.message = 'Zarejestrowano pomyślnie';
+          this.isRulesAcceptedCheckbox = false;
+          this.registerFormGroup.reset();
+        },error => {
+          console.log(error)
+        }
+      )
+    } else {
+      this.registerFormGroup.markAllAsTouched();
     }
   }
 

@@ -2,8 +2,7 @@ package com.karol.generalinformationservice.generalInformationMenager.business.s
 
 import com.karol.generalinformationservice.generalInformationMenager.api.mapper.GeneralInfoMapper;
 import com.karol.generalinformationservice.generalInformationMenager.api.response.GeneralInfoView;
-import com.karol.generalinformationservice.generalInformationMenager.business.exception.GeneralInfoError;
-import com.karol.generalinformationservice.generalInformationMenager.business.exception.GeneralInfoException;
+import com.karol.generalinformationservice.generalInformationMenager.business.exception.generalInfo.GeneralInformationNotFoundException;
 import com.karol.generalinformationservice.generalInformationMenager.data.entity.GeneralInformation;
 import com.karol.generalinformationservice.generalInformationMenager.data.repository.GeneralInformationRepo;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ public class GeneralInformationService {
 
     public GeneralInfoView getAllGeneralInfo() {
         GeneralInformation generalInformation = generalInformationRepo.findFirstRecord()
-                .orElseThrow(() -> new GeneralInfoException(GeneralInfoError.INFO_NOT_FOUND_EXCEPTION));
+                .orElseThrow(GeneralInformationNotFoundException::new);
         return GeneralInfoMapper.mapDataToResponse(generalInformation);
     }
 }

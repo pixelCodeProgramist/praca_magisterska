@@ -32,6 +32,7 @@ import {NgxDatePickerModule} from "@ngx-tiny/date-picker";
 import {TimepickerModule} from "ngx-bootstrap/timepicker";
 import {HttpClientModule} from "@angular/common/http";
 import {AutocompleteLibModule} from "angular-ng-autocomplete";
+import { PopupInformationViewComponent } from './web-content/for-everyone/main-navbar-links/popup-information-view/popup-information-view.component';
 
 
 
@@ -55,7 +56,8 @@ import {AutocompleteLibModule} from "angular-ng-autocomplete";
     RegisterComponent,
     MainProductsPriceContentComponent,
     PagingComponent,
-    OfferDetailsComponent
+    OfferDetailsComponent,
+    PopupInformationViewComponent
   ],
   imports: [
     BrowserModule,

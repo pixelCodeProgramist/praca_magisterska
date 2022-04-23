@@ -6,8 +6,7 @@ import com.karol.offerservice.offerMenager.api.mapper.generalOfferMapper.General
 import com.karol.offerservice.offerMenager.api.mapper.generalOfferMapper.SearchBikeMapper;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
-import com.karol.offerservice.offerMenager.business.exception.OfferError;
-import com.karol.offerservice.offerMenager.business.exception.OfferException;
+import com.karol.offerservice.offerMenager.business.exception.offer.OfferNotFoundException;
 import com.karol.offerservice.offerMenager.business.service.detailBikeFactory.DetailBikeFactory;
 import com.karol.offerservice.offerMenager.business.service.generalBikeFactory.GeneralBikeFactory;
 import com.karol.offerservice.offerMenager.data.entity.*;
@@ -87,12 +86,12 @@ public class OfferService {
     }
 
     public DetailBikeInfoView getBikeInformation(Long id) {
-        Product product = productRepo.findById(id).orElseThrow(() -> new OfferException(OfferError.OFFER_NOT_FOUND_EXCEPTION));
+        Product product = productRepo.findById(id).orElseThrow(OfferNotFoundException::new);
         String type = product.getProductType().getType();
         if("bike".equalsIgnoreCase(type)) {
             ClassicBike classicBike = classicBikeRepo.findByProduct(product).orElse(null);
             ElectricBike electricBike = electricBikeRepo.findByProduct(product).orElse(null);
-            if(classicBike == null && electricBike == null) throw new OfferException(OfferError.OFFER_NOT_FOUND_EXCEPTION);
+            if(classicBike == null && electricBike == null) throw new OfferNotFoundException();
 
 
             if(classicBike != null) {

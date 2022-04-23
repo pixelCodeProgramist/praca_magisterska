@@ -1,7 +1,6 @@
 package com.karol.offerservice.offerMenager.business.service;
 
-import com.karol.offerservice.offerMenager.business.exception.ImageError;
-import com.karol.offerservice.offerMenager.business.exception.ImageException;
+import com.karol.offerservice.offerMenager.business.exception.image.ImageNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -22,7 +21,7 @@ public class ImageService {
             byte[] fileContent = Files.readAllBytes(file.toPath());
             return fileContent;
         } catch (Exception exception) {
-            throw new ImageException(ImageError.IMAGE_NOT_FOUND_EXCEPTION);
+            throw new ImageNotFoundException(url);
         }
     }
 }

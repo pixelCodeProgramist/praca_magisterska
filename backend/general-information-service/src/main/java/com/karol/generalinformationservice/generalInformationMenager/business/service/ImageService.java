@@ -3,8 +3,8 @@ package com.karol.generalinformationservice.generalInformationMenager.business.s
 
 import com.karol.generalinformationservice.generalInformationMenager.api.mapper.ImageMapper;
 import com.karol.generalinformationservice.generalInformationMenager.api.response.ImageView;
-import com.karol.generalinformationservice.generalInformationMenager.business.exception.ImageError;
-import com.karol.generalinformationservice.generalInformationMenager.business.exception.ImageException;
+import com.karol.generalinformationservice.generalInformationMenager.business.exception.image.ImageNotFoundException;
+import com.karol.generalinformationservice.generalInformationMenager.business.exception.image.ImageSectionException;
 import com.karol.generalinformationservice.generalInformationMenager.data.entity.ImageForSection;
 import com.karol.generalinformationservice.generalInformationMenager.data.repository.ImageForSectionRepo;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class ImageService {
 
     public List<ImageForSection> getImagesForSection(String name) {
         if(StringUtils.isEmpty(name) || StringUtils.isBlank(name))
-            throw new ImageException(ImageError.MAIN_SECTION_NULL_EMPTY_BLANK_EXCEPTION);
+            throw new ImageSectionException(name);
 
         return imageForSectionRepo.findAllBySectionName(name);
     }
@@ -42,7 +42,7 @@ public class ImageService {
                 ImageView imageView = ImageMapper.mapDataToResponse(imageForSections.get(i), fileContent);
                 imageViews.add(imageView);
             }catch (Exception exception) {
-                throw new ImageException(ImageError.IMAGE_NOT_FOUND_EXCEPTION);
+                throw new ImageNotFoundException(imageForSections.get(i).getUrl());
             }
 
         }

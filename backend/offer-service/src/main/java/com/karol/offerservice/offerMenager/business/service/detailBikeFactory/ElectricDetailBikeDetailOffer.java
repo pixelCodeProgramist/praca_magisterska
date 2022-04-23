@@ -3,8 +3,7 @@ package com.karol.offerservice.offerMenager.business.service.detailBikeFactory;
 import com.karol.offerservice.offerMenager.api.dto.TimePriceDto;
 import com.karol.offerservice.offerMenager.api.mapper.detailOfferMapper.DetailOfferMapper;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
-import com.karol.offerservice.offerMenager.business.exception.OfferError;
-import com.karol.offerservice.offerMenager.business.exception.OfferException;
+import com.karol.offerservice.offerMenager.business.exception.offer.OfferNotFoundException;
 import com.karol.offerservice.offerMenager.business.service.ImageService;
 import com.karol.offerservice.offerMenager.data.entity.ElectricBike;
 import com.karol.offerservice.offerMenager.data.entity.ElectricBikePrice;
@@ -13,7 +12,6 @@ import com.karol.offerservice.offerMenager.data.repository.ElectricBikePriceRepo
 import com.karol.offerservice.offerMenager.data.repository.ServiceRepo;
 import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +29,7 @@ public class ElectricDetailBikeDetailOffer implements IDetailBikeDetailOffer {
 
         Service guide = serviceRepo
                 .findByProductIgnoreCase_Name("Wycieczka z przewodnikiem")
-                .orElseThrow(()-> new OfferException(OfferError.OFFER_NOT_FOUND_EXCEPTION));
+                .orElseThrow(OfferNotFoundException::new);
         List<ElectricBikePrice> electricBikePrices = electricBikePriceRepo.findAll();
         List<TimePriceDto> timePriceDtoList = electricBikePrices.stream()
                 .map(electricBikePrice -> new TimePriceDto(electricBikePrice.getTime(), electricBikePrice.getPrice()))
