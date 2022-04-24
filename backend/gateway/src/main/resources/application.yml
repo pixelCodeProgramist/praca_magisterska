@@ -18,6 +18,10 @@ spring:
           predicates:
             - Path=/user/**
           uri: "lb://USER-SERVICE"
+        - id: AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+          uri: "lb://AUTH-SERVICE"
 
       globalcors:
         cors-configurations:
