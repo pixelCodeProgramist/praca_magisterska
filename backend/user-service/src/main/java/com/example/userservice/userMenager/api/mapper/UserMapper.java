@@ -33,9 +33,6 @@ public class UserMapper {
                 .password(user.getPassword())
                 .phone(user.getPhone())
                 .role(RoleMapper.mapRoleToData(user.getRole()))
-                .expiredJwts(user.getExpiredJwts().stream()
-                        .map(jwt->ExpiredViewMapper.mapDataToResponse(jwt))
-                        .collect(Collectors.toSet()))
                 .active(user.isActive())
                 .token(TokenMapper.mapTokenToData(user.getToken()))
                 .build();

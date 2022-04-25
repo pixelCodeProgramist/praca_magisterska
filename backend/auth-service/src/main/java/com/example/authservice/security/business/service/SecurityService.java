@@ -2,10 +2,11 @@ package com.example.authservice.security.business.service;
 
 import com.example.authservice.security.api.request.AuthenticationRequest;
 import com.example.authservice.security.api.response.AuthenticationResponse;
-import com.example.authservice.security.data.entity.ExpiredJwt;
 
 import com.example.authservice.userMenager.business.exception.user.UserNotFoundException;
 import com.example.authservice.userMenager.api.request.User;
+import com.example.authservice.userMenager.data.entity.ExpiredJwt;
+import com.example.authservice.userMenager.data.repository.ExpiredJwtRepo;
 import com.example.authservice.userMenager.feignClient.UserServiceFeignClient;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,8 @@ public class SecurityService {
     private UserServiceFeignClient userServiceFeignClient;
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
+
+    private ExpiredJwtRepo expiredJwtRepo;
 
     public AuthenticationResponse logIn(AuthenticationRequest authenticationRequest) {
         try {
@@ -57,10 +60,10 @@ public class SecurityService {
             User user = userServiceFeignClient.getUserById(tokenProvider.extractUserId(jwt));
             if (user == null) throw new UserNotFoundException(" with id: " + tokenProvider.extractUserId(jwt));
             ExpiredJwt expiredJwt = new ExpiredJwt().builder()
-                    .user(user)
+                    .userId(user.getUserId())
                     .jwt(jwt)
                     .build();
-            //jwtRepo.save(expiredJwt);
+            expiredJwtRepo.save(expiredJwt);
         }
     }
 }

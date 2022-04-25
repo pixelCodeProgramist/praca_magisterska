@@ -1,11 +1,8 @@
 package com.example.userservice.userMenager.api.response;
 
-import com.example.userservice.userMenager.data.entity.Role;
 import lombok.*;
 
 import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.Set;
 
 @Builder
 @Getter
@@ -30,6 +27,4 @@ public class UserView {
     private TokenView token;
 
     private boolean active;
-
-    Set<ExpiredJwtView> expiredJwts = new HashSet<>();
 }

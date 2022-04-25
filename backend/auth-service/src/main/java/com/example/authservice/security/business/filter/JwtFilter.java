@@ -2,8 +2,9 @@ package com.example.authservice.security.business.filter;
 
 import com.example.authservice.security.business.filter.error.FilterError;
 import com.example.authservice.security.business.service.JwtTokenProvider;
-import com.example.authservice.security.data.entity.ExpiredJwt;
 import com.example.authservice.userMenager.api.request.User;
+import com.example.authservice.userMenager.data.entity.ExpiredJwt;
+import com.example.authservice.userMenager.data.repository.ExpiredJwtRepo;
 import com.example.authservice.userMenager.feignClient.UserServiceFeignClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -30,6 +31,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private UserServiceFeignClient userServiceFeignClient;
     private JwtTokenProvider tokenProvider;
 
+    private ExpiredJwtRepo expiredJwtRepo;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
@@ -46,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        ExpiredJwt token = userServiceFeignClient.getExpiredJwtByJwt(jwt);
+        ExpiredJwt token = expiredJwtRepo.findByJwt(jwt).orElse(null);
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null && token == null) {
             User user = userServiceFeignClient.getUserById(userId);
@@ -54,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (tokenProvider.validateToken(jwt, user)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                             new UsernamePasswordAuthenticationToken(user.getEmail(), null,
-                                    Collections.singleton(new SimpleGrantedAuthority(user.getRole().getRole())));
+                                    Collections.singleton(new SimpleGrantedAuthority("ROLE_"+user.getRole().getRole())));
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource()
                             .buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

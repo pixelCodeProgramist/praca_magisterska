@@ -1,6 +1,6 @@
 package com.example.authservice.userMenager.api.request;
 
-import com.example.authservice.security.data.entity.ExpiredJwt;
+
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,8 +36,6 @@ public class User implements UserDetails, Serializable {
     private Token token;
 
     private boolean active;
-
-    Set<ExpiredJwt> expiredJwts = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()

@@ -1,10 +1,7 @@
 package com.example.userservice.userMenager.business.service;
 
-import com.example.userservice.security.data.entity.ExpiredJwt;
 import com.example.userservice.security.data.repository.ExpiredJwtRepo;
-import com.example.userservice.userMenager.api.mapper.ExpiredViewMapper;
 import com.example.userservice.userMenager.api.mapper.UserMapper;
-import com.example.userservice.userMenager.api.response.ExpiredJwtView;
 import com.example.userservice.userMenager.api.response.UserView;
 import com.example.userservice.userMenager.data.entity.User;
 import com.example.userservice.userMenager.data.repository.UserRepo;
@@ -33,12 +30,6 @@ public class UserService {
     public UserView getUserById(Long id) {
         Optional<User> user = userRepo.findById(id);
         if(user.isPresent()) return UserMapper.mapDataToResponse(user.get());
-        return null;
-    }
-
-    public ExpiredJwtView getExpiredJwtByJwt(String jwt) {
-        Optional<ExpiredJwt> expiredJwt = expiredJwtRepo.findByJwt(jwt);
-        if(expiredJwt.isPresent()) return ExpiredViewMapper.mapDataToResponse(expiredJwt.get());
         return null;
     }
 }

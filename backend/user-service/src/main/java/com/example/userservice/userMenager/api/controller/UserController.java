@@ -1,14 +1,10 @@
 package com.example.userservice.userMenager.api.controller;
 
-import com.example.userservice.security.data.entity.ExpiredJwt;
-import com.example.userservice.security.data.repository.ExpiredJwtRepo;
 import com.example.userservice.userMenager.api.request.RegisterRequest;
-import com.example.userservice.userMenager.api.response.ExpiredJwtView;
 import com.example.userservice.userMenager.api.response.ResponseView;
 import com.example.userservice.userMenager.api.response.UserView;
 import com.example.userservice.userMenager.business.service.RegisterService;
 import com.example.userservice.userMenager.business.service.UserService;
-import com.example.userservice.userMenager.data.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -37,24 +33,12 @@ public class UserController {
 
     @GetMapping("/mail")
     public UserView getUserByMail(@RequestParam String mail) {
-
         return userService.getUserByMail(mail);
     }
 
     @GetMapping("/id")
     public UserView getUserById(@RequestParam Long id) {
-
         return userService.getUserById(id);
     }
-
-    @GetMapping("/expiredJwt")
-    public ExpiredJwtView getExpiredJwtByJwt(@RequestParam(value = "", required = false) String jwt) {
-
-        return userService.getExpiredJwtByJwt(jwt);
-    }
-
-
-
-
 
 }
