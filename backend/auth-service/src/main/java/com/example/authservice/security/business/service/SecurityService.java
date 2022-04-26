@@ -1,10 +1,10 @@
 package com.example.authservice.security.business.service;
 
 import com.example.authservice.security.api.request.AuthenticationRequest;
+import com.example.authservice.security.api.request.RequestJwt;
 import com.example.authservice.security.api.response.AuthenticationResponse;
-
-import com.example.authservice.userMenager.business.exception.user.UserNotFoundException;
 import com.example.authservice.userMenager.api.request.User;
+import com.example.authservice.userMenager.business.exception.user.UserNotFoundException;
 import com.example.authservice.userMenager.data.entity.ExpiredJwt;
 import com.example.authservice.userMenager.data.repository.ExpiredJwtRepo;
 import com.example.authservice.userMenager.feignClient.UserServiceFeignClient;
@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -65,5 +66,10 @@ public class SecurityService {
                     .build();
             expiredJwtRepo.save(expiredJwt);
         }
+    }
+
+    public ExpiredJwt getExpiredJwt(RequestJwt requestJwt) {
+        Optional<ExpiredJwt> jwt = expiredJwtRepo.findByJwt(requestJwt.getJwt());
+        return jwt.orElse(null);
     }
 }

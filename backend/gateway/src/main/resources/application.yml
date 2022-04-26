@@ -22,6 +22,11 @@ spring:
           predicates:
             - Path=/auth/**
           uri: "lb://AUTH-SERVICE"
+        - id: ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+          uri: "lb://ORDER-SERVICE"
+
 
       globalcors:
         cors-configurations:
@@ -35,6 +40,7 @@ spring:
               - PUT
             allowedHeaders:
               - Content-Type
+              - Authorization
 
 
 

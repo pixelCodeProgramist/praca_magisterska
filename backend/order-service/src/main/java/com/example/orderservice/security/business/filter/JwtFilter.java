@@ -1,11 +1,12 @@
-package com.example.authservice.security.business.filter;
+package com.example.orderservice.security.business.filter;
 
-import com.example.authservice.security.business.filter.error.FilterError;
-import com.example.authservice.security.business.service.JwtTokenProvider;
-import com.example.authservice.userMenager.api.request.User;
-import com.example.authservice.userMenager.data.entity.ExpiredJwt;
-import com.example.authservice.userMenager.data.repository.ExpiredJwtRepo;
-import com.example.authservice.userMenager.feignClient.UserServiceFeignClient;
+import com.example.orderservice.security.business.filter.error.FilterError;
+import com.example.orderservice.security.business.request.RequestJwt;
+import com.example.orderservice.security.business.response.ExpiredJwtResponse;
+import com.example.orderservice.security.business.service.JwtTokenProvider;
+import com.example.orderservice.userMenager.api.request.User;
+import com.example.orderservice.userMenager.feignClient.ExpiredJwtServiceFeignClient;
+import com.example.orderservice.userMenager.feignClient.UserServiceFeignClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ import java.util.Collections;
 public class JwtFilter extends OncePerRequestFilter {
     private UserServiceFeignClient userServiceFeignClient;
     private JwtTokenProvider tokenProvider;
-    private ExpiredJwtRepo expiredJwtRepo;
+    private ExpiredJwtServiceFeignClient expiredJwtServiceFeignClient;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -48,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        ExpiredJwt token = expiredJwtRepo.findByJwt(jwt).orElse(null);
+        ExpiredJwtResponse token = expiredJwtServiceFeignClient.getExpiredJwtByJwt(new RequestJwt(jwt));
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null && token == null) {
             User user = userServiceFeignClient.getUserById(userId);

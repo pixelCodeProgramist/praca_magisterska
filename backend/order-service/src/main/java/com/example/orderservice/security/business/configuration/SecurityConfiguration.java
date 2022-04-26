@@ -1,6 +1,6 @@
-package com.example.authservice.security.business.configuration;
+package com.example.orderservice.security.business.configuration;
 
-import com.example.authservice.security.business.filter.JwtFilter;
+import com.example.orderservice.security.business.filter.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.example.authservice.userMenager.api.request.RoleEnum.*;
+import static com.example.orderservice.userMenager.api.request.RoleEnum.*;
 
 
 @Configuration
@@ -71,9 +71,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/swagger-ui.html").permitAll()
                 //user
-                .antMatchers("/auth/user/login").permitAll()
-                .antMatchers("/auth/user/logout").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
-                .antMatchers("/auth/user/expiredJwt").permitAll()
+                .antMatchers("/order/testPublic").permitAll()
+                .antMatchers("/order/testPrivate").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

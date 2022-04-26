@@ -2,8 +2,7 @@
   <div class="row justify-content-center align-content-center" style="min-height: 100vmin">
     <div class="row col-12 h-100 justify-content-center align-content-center">
       <div class="col-12 col-lg-6 justify-content-center align-content-center">
-
-        <form class="row h-100 align-content-center">
+        <form class="row h-100 align-content-center" (ngSubmit)="submit()">
           <div class="row pb-3 h-100 align-content-center justify-content-center">
             <div class="row justify-content-around align-content-center" style="min-height: 15vmin">
               <strong class="h2 fw-bold pb-3 myHeader text-center text-uppercase">Zaloguj się</strong>
@@ -13,10 +12,10 @@
             <div class="row justify-content-center">
               <div class="row col-6">
                 <div class="row mb-3">
-                  <input class="form-control" type="text" placeholder="login"/>
+                  <input [(ngModel)]="loginRequest.login" class="form-control" name="login" type="text" placeholder="login"/>
                 </div>
                 <div class="row mb-3">
-                  <input class="form-control" type="password" placeholder="password"/>
+                  <input [(ngModel)]="loginRequest.password" class="form-control" name="password" type="password" placeholder="password"/>
                 </div>
                 <div class="row justify-content-end">
                   <div class="row justify-content-end">
@@ -24,7 +23,13 @@
                     <button class="col-12 col-lg-4 col-md-5 btn btn-primary" type="submit">Zaloguj się</button>
                   </div>
                 </div>
+                <div class="row" *ngIf="isErrorActive">
+                  <small class="text-danger h5">
+                    {{errorMsg}}
+                  </small>
+                </div>
               </div>
+
             </div>
           </div>
         </form>
