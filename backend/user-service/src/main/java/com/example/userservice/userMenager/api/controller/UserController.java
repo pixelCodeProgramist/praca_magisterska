@@ -1,5 +1,6 @@
 package com.example.userservice.userMenager.api.controller;
 
+import com.example.userservice.userMenager.api.request.ForgetAndChangerPasswordRequest;
 import com.example.userservice.userMenager.api.request.RegisterRequest;
 import com.example.userservice.userMenager.api.response.ResponseView;
 import com.example.userservice.userMenager.api.response.UserView;
@@ -22,13 +23,17 @@ public class UserController {
 
     private UserService userService;
 
-
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseView register(@Valid @RequestBody RegisterRequest registerRequest) {
         registerService.register(registerRequest);
         return new ResponseView("Użytkownik zarejestrowany poprawnie");
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseView changePassword(@Valid @RequestBody ForgetAndChangerPasswordRequest forgetAndChangerPasswordRequest) {
+        userService.changePassword(forgetAndChangerPasswordRequest);
+        return new ResponseView("Hasło zmieniono pomyślnie");
     }
 
     @GetMapping("/mail")

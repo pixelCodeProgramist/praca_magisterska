@@ -5,7 +5,6 @@ import com.example.userservice.userMenager.api.mapper.RegisterMapper;
 import com.example.userservice.userMenager.api.mapper.UserMapper;
 import com.example.userservice.userMenager.api.request.RegisterDataRequest;
 import com.example.userservice.userMenager.api.request.RegisterRequest;
-import com.example.userservice.userMenager.business.exception.*;
 import com.example.userservice.userMenager.business.exception.role.RoleNotFoundException;
 import com.example.userservice.userMenager.business.exception.user.UserMailExistsException;
 import com.example.userservice.userMenager.data.entity.Role;
@@ -27,7 +26,6 @@ public class RegisterService {
     private UserRepo userRepo;
     private RoleRepo roleRepo;
 
-    private TokenRepo tokenRepo;
     private TokenService tokenService;
     private PasswordEncoder passwordEncoder;
     private MailServiceFeignClient mailServiceFeignClient;

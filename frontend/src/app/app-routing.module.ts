@@ -17,6 +17,8 @@ import {
 import {
   ForgetPasswordResponseComponent
 } from "./web-content/for-everyone/main-navbar-links/login-package/forget-password-response/forget-password-response.component";
+import {ForgetPasswordResponseGuard} from "../shared/guard/ForgetPasswordResponseGuard";
+import {NotFoundSiteComponent} from "./not-found-site/not-found-site.component";
 
 const routes: Routes = [
   {
@@ -66,8 +68,15 @@ const routes: Routes = [
   },
   {
     component: ForgetPasswordResponseComponent,
-    path: 'forget_password_mail_response'
+    path: 'forget_password_mail_response',
+    canActivate: [ForgetPasswordResponseGuard]
   },
+  {
+    path: '404', component: NotFoundSiteComponent
+  },
+  {
+    path: '**', redirectTo: '/404'
+  }
 ];
 
 @NgModule({

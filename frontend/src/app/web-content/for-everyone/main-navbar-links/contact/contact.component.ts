@@ -22,8 +22,6 @@ export class ContactComponent implements OnInit {
 
   flipCards: FlipCard[] = [];
   maps: MapForContact[] = [];
-  map1: MapForContact | undefined;
-  map2: MapForContact | undefined;
   contactFormGroup!: FormGroup;
   imagesForSectionResponse: ImageForSectionResponse[] = [];
 

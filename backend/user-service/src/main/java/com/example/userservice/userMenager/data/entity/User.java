@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -57,6 +59,8 @@ public class User implements Serializable, UserDetails {
     @Column(nullable = false)
     private boolean active;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ExpiredJwt> expiredJwts = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()

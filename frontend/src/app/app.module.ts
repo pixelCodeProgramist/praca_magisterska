@@ -35,6 +35,7 @@ import {AutocompleteLibModule} from "angular-ng-autocomplete";
 import { PopupInformationViewComponent } from './web-content/for-everyone/main-navbar-links/popup-information-view/popup-information-view.component';
 import { ForgetPasswordComponent } from './web-content/for-everyone/main-navbar-links/login-package/forget-password/forget-password.component';
 import { ForgetPasswordResponseComponent } from './web-content/for-everyone/main-navbar-links/login-package/forget-password-response/forget-password-response.component';
+import { NotFoundSiteComponent } from './not-found-site/not-found-site.component';
 
 
 
@@ -61,7 +62,8 @@ import { ForgetPasswordResponseComponent } from './web-content/for-everyone/main
     OfferDetailsComponent,
     PopupInformationViewComponent,
     ForgetPasswordComponent,
-    ForgetPasswordResponseComponent
+    ForgetPasswordResponseComponent,
+    NotFoundSiteComponent
   ],
   imports: [
     BrowserModule,

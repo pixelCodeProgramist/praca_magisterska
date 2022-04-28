@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../../../../../shared/user.service";
 import {LoginModel} from "../../../../../../models/user/LoginModel";
 import {LoginResponseModel} from "../../../../../../models/user/LoginResponseModel";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {PopupInformationViewComponent} from "../../popup-information-view/popup-information-view.component";
 
 @Component({
   selector: 'app-login',
@@ -15,10 +17,14 @@ export class LoginComponent implements OnInit {
   errorMsg: string = '';
   authenticationResponse: LoginResponseModel = new LoginResponseModel()
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private ngbModal: NgbModal) { }
 
   ngOnInit(): void {
-
+    if(localStorage.getItem('type')==='forgetPasswordRequest') {
+      localStorage.removeItem('type');
+      const modalRef = this.ngbModal.open(PopupInformationViewComponent);
+      modalRef.componentInstance.message = 'Wysłano prośbę p zmianę hasłą pomyślnie. Proszę sprawdź swoją slrzynkę mailową.';
+    }
   }
 
   submit() {

@@ -50,7 +50,7 @@ public class EmailSenderService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(forgetPasswordRequest.getMail());
-        mimeMessageHelper.setSubject("Zmmiana hasła do konta na NxBike");
+        mimeMessageHelper.setSubject("Zmiana hasła do konta na NxBike");
         mimeMessageHelper.setText(getContentForMailConfirmation(forgetPasswordRequest, user), true);
         javaMailSender.send(mimeMessage);
         return true;

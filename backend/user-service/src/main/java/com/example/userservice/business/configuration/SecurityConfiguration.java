@@ -72,6 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //user
                 .antMatchers("/user/token/verify").permitAll()
                 .antMatchers("/user/register").permitAll()
+                .antMatchers("/user/changePassword").permitAll()
                 .antMatchers("/user/mail").permitAll()
                 .antMatchers("/user/id").permitAll()
                 .anyRequest().authenticated();
