@@ -7,6 +7,7 @@ import {
   DetailBikeInformationResponse
 } from "../../../../../../models/detail-information/response/DetailBikeInformationResponse";
 import {ImageFromByteSanitizerService} from "../../../../../../shared/ImageFromByteSanitizer.service";
+import {UserService} from "../../../../../../shared/user.service";
 
 @Component({
   selector: 'app-offer-details',
@@ -31,7 +32,8 @@ export class OfferDetailsComponent implements OnInit {
   withBikeTripCheckbox!: boolean;
   selectedHourBeginTripOption!: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private offerService: OfferService, private imageFromByteSanitizer: ImageFromByteSanitizerService) {
+  constructor(private route: ActivatedRoute, private router: Router, private offerService: OfferService,
+              private imageFromByteSanitizer: ImageFromByteSanitizerService, public userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -90,5 +92,11 @@ export class OfferDetailsComponent implements OnInit {
     this.selectedTimeOption = '-';
 
 
+  }
+
+  onFrameChange($event: any) {
+    this.selectedTimeOption = '-';
+    this.selectedHourBeginTripOption = '-';
+    this.withBikeTripCheckbox = false;
   }
 }

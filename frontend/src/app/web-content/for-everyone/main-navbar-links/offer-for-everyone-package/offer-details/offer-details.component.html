@@ -7,7 +7,7 @@
       <strong style="font-size: medium">{{bikeDetail?.name}}</strong>
       <div class="row">
         <div class="row align-content-center col-4" style="width: fit-content">
-          <ngx-stars class="col-2" [color]="'#F6BE00'" [readonly]="true" [size]="0.5" [maxStars]="5"
+          <ngx-stars class="col-2" [color]="'#F6BE00'" [readonly]="!userService.isLoggedIn()" [size]="0.5" [maxStars]="5"
                      [initialStars]="bikeDetail?.rating ? bikeDetail!.rating: 0" (ratingOutput)="onRatingSet($event)"></ngx-stars>
         </div>
         <div class="row align-content-center col">
@@ -22,7 +22,7 @@
       <div class="row">
         <div class="form-group">
           <label style="font-size: medium" for="frame_filter">Rozmiar ramy</label>
-          <select id="frame_filter" class="form-select col-8" aria-label="Default select example" [(ngModel)]="selectedFrameOption">
+          <select id="frame_filter" class="form-select col-8" aria-label="Default select example" [(ngModel)]="selectedFrameOption" (ngModelChange)="onFrameChange($event)">
             <option *ngFor="let frame of bikeDetail?.frames" value="{{frame}}">{{frame}}</option>
           </select>
         </div>

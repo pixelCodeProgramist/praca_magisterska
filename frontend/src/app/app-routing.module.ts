@@ -6,11 +6,17 @@ import {RulesComponent} from "./web-content/for-everyone/main-navbar-links/rules
 import {OfferComponent} from "./web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer/offer.component";
 import {ContactComponent} from "./web-content/for-everyone/main-navbar-links/contact/contact.component";
 import {PriceListComponent} from "./web-content/for-everyone/main-navbar-links/price-list/price-list.component";
-import {LoginComponent} from "./web-content/for-everyone/main-navbar-links/login/login.component";
+import {LoginComponent} from "./web-content/for-everyone/main-navbar-links/login-package/login/login.component";
 import {RegisterComponent} from "./web-content/for-everyone/main-navbar-links/register/register.component";
 import {
   OfferDetailsComponent
 } from "./web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer-details/offer-details.component";
+import {
+  ForgetPasswordComponent
+} from "./web-content/for-everyone/main-navbar-links/login-package/forget-password/forget-password.component";
+import {
+  ForgetPasswordResponseComponent
+} from "./web-content/for-everyone/main-navbar-links/login-package/forget-password-response/forget-password-response.component";
 
 const routes: Routes = [
   {
@@ -53,7 +59,15 @@ const routes: Routes = [
   {
     component: OfferDetailsComponent,
     path: 'offer/offer-details'
-  }
+  },
+  {
+    component: ForgetPasswordComponent,
+    path: 'forget_password'
+  },
+  {
+    component: ForgetPasswordResponseComponent,
+    path: 'forget_password_mail_response'
+  },
 ];
 
 @NgModule({

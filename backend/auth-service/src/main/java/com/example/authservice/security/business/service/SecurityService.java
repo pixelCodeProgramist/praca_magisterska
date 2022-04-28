@@ -1,8 +1,10 @@
 package com.example.authservice.security.business.service;
 
 import com.example.authservice.security.api.request.AuthenticationRequest;
+import com.example.authservice.security.api.request.ForgetPasswordRequest;
 import com.example.authservice.security.api.request.RequestJwt;
 import com.example.authservice.security.api.response.AuthenticationResponse;
+import com.example.authservice.security.api.response.TokenForUserNonLoginResponse;
 import com.example.authservice.userMenager.api.request.User;
 import com.example.authservice.userMenager.business.exception.user.UserNotFoundException;
 import com.example.authservice.userMenager.data.entity.ExpiredJwt;
@@ -25,6 +27,7 @@ public class SecurityService {
     private UserServiceFeignClient userServiceFeignClient;
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
+    private JwtTokenForUserNonLoginProvider tokenForUserNonLoginProvider;
 
     private ExpiredJwtRepo expiredJwtRepo;
 
@@ -66,6 +69,18 @@ public class SecurityService {
                     .build();
             expiredJwtRepo.save(expiredJwt);
         }
+    }
+
+    public TokenForUserNonLoginResponse generateTokenNonLoginForUser(ForgetPasswordRequest forgetPasswordRequest) {
+        User user = userServiceFeignClient.getUserByMail(forgetPasswordRequest.getMail());
+        if (user != null) {
+            String token = tokenForUserNonLoginProvider.generateToken(user,"type", "forgetPassword");
+            return new TokenForUserNonLoginResponse().builder()
+                    .token(token)
+                    .userId(user.getUserId())
+                    .build();
+        } else
+            throw new UserNotFoundException("with mail " + forgetPasswordRequest.getMail());
     }
 
     public ExpiredJwt getExpiredJwt(RequestJwt requestJwt) {

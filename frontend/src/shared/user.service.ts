@@ -15,6 +15,7 @@ export class UserService {
   private REGISTER_URL = `${GlobalService.BASE_URL}/user/register`;
   private LOGIN_URL = `${GlobalService.BASE_URL}/auth/user/login`;
   private LOGOUT_URL = `${GlobalService.BASE_URL}/auth/user/logout`;
+  private FORGET_PASSWORD_URL = `${GlobalService.BASE_URL}/mail/forgetPassword`;
 
   constructor(private http: HttpClient) {
   }

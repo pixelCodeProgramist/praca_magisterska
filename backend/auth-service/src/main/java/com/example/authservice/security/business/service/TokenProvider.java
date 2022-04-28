@@ -25,6 +25,11 @@ public interface TokenProvider {
         return "";
     }
 
+    default String generateToken(User user, String key, String value) {
+        return "";
+    }
+
+
     default boolean validateToken(String token, User user) {
         Long userId = extractUserId(token);
         return userId.equals(user.getUserId()) && !isTokenExpire(token);

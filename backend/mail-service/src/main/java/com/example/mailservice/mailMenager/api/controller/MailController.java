@@ -1,6 +1,7 @@
 package com.example.mailservice.mailMenager.api.controller;
 
 import com.example.mailservice.mailMenager.api.request.ContactRequest;
+import com.example.mailservice.mailMenager.api.request.ForgetPasswordRequest;
 import com.example.mailservice.mailMenager.api.request.RegisterDataRequest;
 import com.example.mailservice.mailMenager.business.service.EmailSenderService;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,12 @@ public class MailController {
     @PostMapping("/registerToken")
     public ResponseEntity sendRegisterToken(@Valid @RequestBody RegisterDataRequest registerDataRequest) throws MessagingException {
         if(emailSenderService.sendMail(registerDataRequest)) return ResponseEntity.ok().build();
+        return ResponseEntity.badRequest().body("Błąd w wysyłaniu maila");
+    }
+
+    @PostMapping("/forgetPassword")
+    public ResponseEntity sendRegisterToken(@Valid @RequestBody ForgetPasswordRequest forgetPasswordRequest) throws MessagingException {
+        if(emailSenderService.sendMail(forgetPasswordRequest)) return ResponseEntity.ok().build();
         return ResponseEntity.badRequest().body("Błąd w wysyłaniu maila");
     }
 

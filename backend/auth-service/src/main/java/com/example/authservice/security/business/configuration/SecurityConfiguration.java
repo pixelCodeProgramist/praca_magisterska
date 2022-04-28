@@ -74,6 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/user/login").permitAll()
                 .antMatchers("/auth/user/logout").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
                 .antMatchers("/auth/user/expiredJwt").permitAll()
+                .antMatchers("/auth/user/forgetPassword").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
