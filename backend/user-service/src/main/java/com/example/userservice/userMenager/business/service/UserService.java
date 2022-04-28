@@ -1,6 +1,4 @@
 package com.example.userservice.userMenager.business.service;
-
-import com.example.userservice.security.data.repository.ExpiredJwtRepo;
 import com.example.userservice.userMenager.api.mapper.UserMapper;
 import com.example.userservice.userMenager.api.response.UserView;
 import com.example.userservice.userMenager.data.entity.User;
@@ -14,7 +12,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
     private UserRepo userRepo;
-    private ExpiredJwtRepo expiredJwtRepo;
+
 
     public void verifyUser(User user) {
         user.setActive(true);

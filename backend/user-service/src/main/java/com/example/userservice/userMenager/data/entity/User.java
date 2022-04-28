@@ -1,6 +1,5 @@
 package com.example.userservice.userMenager.data.entity;
 
-import com.example.userservice.security.data.entity.ExpiredJwt;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,8 +11,6 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -60,8 +57,6 @@ public class User implements Serializable, UserDetails {
     @Column(nullable = false)
     private boolean active;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    Set<ExpiredJwt> expiredJwts = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
