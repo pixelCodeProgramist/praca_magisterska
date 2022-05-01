@@ -1,11 +1,15 @@
 package com.example.userservice.userMenager.business.service;
 
+import com.example.userservice.business.service.JwtTokenNonUserProvider;
 import com.example.userservice.business.service.JwtTokenProvider;
 import com.example.userservice.userMenager.api.mapper.UserMapper;
 import com.example.userservice.userMenager.api.request.DetailUserRequest;
 import com.example.userservice.userMenager.api.request.ForgetAndChangerPasswordRequest;
+import com.example.userservice.userMenager.api.request.UserByIdRequest;
+import com.example.userservice.userMenager.api.request.UserByMailRequest;
 import com.example.userservice.userMenager.api.response.DetailUserView;
 import com.example.userservice.userMenager.api.response.UserView;
+import com.example.userservice.userMenager.business.exception.authorize.AuthorizationException;
 import com.example.userservice.userMenager.business.exception.token.TokenAlreadyUsedException;
 import com.example.userservice.userMenager.business.exception.token.TokenExpiredException;
 import com.example.userservice.userMenager.business.exception.user.UserNotFoundException;
@@ -33,7 +37,7 @@ public class UserService {
     private ExpiredJwtRepo expiredJwtRepo;
     private PasswordEncoder passwordEncoder;
     private JwtTokenProvider tokenProvider;
-
+    private JwtTokenNonUserProvider jwtTokenNonUserProvider;
 
 
     public void verifyUser(User user) {
@@ -41,15 +45,25 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public UserView getUserByMail(String mail) {
-        Optional<User> user = userRepo.findByEmail(mail);
-        if (user.isPresent()) return UserMapper.mapDataToResponse(user.get());
+    public UserView getUserByMail(UserByMailRequest userByMailRequest) {
+        if (jwtTokenNonUserProvider.validateToken(userByMailRequest.getToken())) {
+            if (!jwtTokenNonUserProvider.isTokenExpire(userByMailRequest.getToken()) &&
+                    "COMPUTER".equalsIgnoreCase(jwtTokenNonUserProvider.extractUserIdName(userByMailRequest.getToken()))) {
+                Optional<User> user = userRepo.findByEmail(userByMailRequest.getMail());
+                if (user.isPresent()) return UserMapper.mapDataToResponse(user.get());
+            }else throw new AuthorizationException();
+        }else throw new AuthorizationException();
         return null;
     }
 
-    public UserView getUserById(Long id) {
-        Optional<User> user = userRepo.findById(id);
-        if (user.isPresent()) return UserMapper.mapDataToResponse(user.get());
+    public UserView getUserById(UserByIdRequest userByIdRequest) {
+        if (jwtTokenNonUserProvider.validateToken(userByIdRequest.getToken())) {
+            if (!jwtTokenNonUserProvider.isTokenExpire(userByIdRequest.getToken()) &&
+                    "COMPUTER".equalsIgnoreCase(jwtTokenNonUserProvider.extractUserIdName(userByIdRequest.getToken()))) {
+                Optional<User> user = userRepo.findById(userByIdRequest.getId());
+                if (user.isPresent()) return UserMapper.mapDataToResponse(user.get());
+            }else throw new AuthorizationException();
+        }else throw new AuthorizationException();
         return null;
     }
 
@@ -78,33 +92,33 @@ public class UserService {
     public DetailUserView getUser(Long id, HttpServletRequest httpServletRequest) {
         User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("with id: " + id));
         String token = httpServletRequest.getHeader("Authorization");
-        if(token != null){
+        if (token != null) {
             token = token.substring(7);
             Long userId = tokenProvider.extractUserId(token);
             User userFromToken = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("with id: " + userId));
-            if(user.equals(userFromToken)) {
+            if (user.equals(userFromToken)) {
                 return UserMapper.mapDataToDetailedResponse(user);
             }
         }
 
-       throw new UserNotFoundException("");
+        throw new UserNotFoundException("");
     }
 
     public boolean updateUser(DetailUserRequest detailUserView, HttpServletRequest httpServletRequest) {
         User user = userRepo.findByEmail(detailUserView.getEmail()).orElseThrow(() ->
                 new UserNotFoundException("with email: " + detailUserView.getEmail()));
         String token = httpServletRequest.getHeader("Authorization");
-        if(token != null){
+        if (token != null) {
             token = token.substring(7);
             Long userId = tokenProvider.extractUserId(token);
             User userFromToken = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("with id: " + userId));
-            if(user.equals(userFromToken)) {
+            if (user.equals(userFromToken)) {
                 user.setFirstName(detailUserView.getFirstName());
                 user.setLastName(detailUserView.getLastName());
                 user.setBirthday(detailUserView.getBirthDay());
                 user.setPhone(detailUserView.getPhone());
                 user.setEmail(detailUserView.getEmail());
-                if(isValidPassword(detailUserView.getPassword()))
+                if (isValidPassword(detailUserView.getPassword()))
                     user.setPassword(passwordEncoder.encode(detailUserView.getPassword()));
                 Address address = user.getAddress();
                 address.setCity(detailUserView.getAddressView().getCity());

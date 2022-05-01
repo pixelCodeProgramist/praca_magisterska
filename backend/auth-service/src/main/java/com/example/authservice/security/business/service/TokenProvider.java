@@ -37,6 +37,10 @@ public interface TokenProvider {
         return "";
     }
 
+    default String generateToken() {
+        return "";
+    }
+
 
     default boolean validateToken(String token, User user) {
         Long userId = extractUserId(token);

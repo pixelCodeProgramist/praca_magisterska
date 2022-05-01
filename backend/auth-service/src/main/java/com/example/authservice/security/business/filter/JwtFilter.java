@@ -1,6 +1,8 @@
 package com.example.authservice.security.business.filter;
 
+import com.example.authservice.security.api.request.UserByIdRequest;
 import com.example.authservice.security.business.filter.error.FilterError;
+import com.example.authservice.security.business.service.JwtTokenNonUserProvider;
 import com.example.authservice.security.business.service.JwtTokenProvider;
 import com.example.authservice.userMenager.api.request.User;
 import com.example.authservice.userMenager.data.entity.ExpiredJwt;
@@ -30,6 +32,7 @@ import java.util.Collections;
 public class JwtFilter extends OncePerRequestFilter {
     private UserServiceFeignClient userServiceFeignClient;
     private JwtTokenProvider tokenProvider;
+    private JwtTokenNonUserProvider jwtTokenNonUserProvider;
     private ExpiredJwtRepo expiredJwtRepo;
 
     @Override
@@ -51,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
         ExpiredJwt token = expiredJwtRepo.findByJwt(jwt).orElse(null);
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null && token == null) {
-            User user = userServiceFeignClient.getUserById(userId);
+            User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
             if (user != null) {
                 if (tokenProvider.validateToken(jwt, user)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

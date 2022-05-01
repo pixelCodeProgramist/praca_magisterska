@@ -1,8 +1,6 @@
 package com.example.authservice.security.business.service;
 
-import com.example.authservice.security.api.request.AuthenticationRequest;
-import com.example.authservice.security.api.request.ForgetPasswordRequest;
-import com.example.authservice.security.api.request.RequestJwt;
+import com.example.authservice.security.api.request.*;
 import com.example.authservice.security.api.response.AuthenticationResponse;
 import com.example.authservice.security.api.response.TokenForUserNonLoginResponse;
 import com.example.authservice.userMenager.api.request.User;
@@ -28,6 +26,8 @@ public class SecurityService {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
     private JwtTokenForUserNonLoginProvider tokenForUserNonLoginProvider;
+    private JwtTokenNonUserProvider tokenNonUserProvider;
+
 
     private ExpiredJwtRepo expiredJwtRepo;
 
@@ -40,7 +40,8 @@ public class SecurityService {
             throw new BadCredentialsException("Incorrect login or password");
         }
 
-        User user = userServiceFeignClient.getUserByMail(authenticationRequest.getLogin());
+        User user = userServiceFeignClient.getUserByMail(new UserByMailRequest(authenticationRequest.getLogin(), tokenNonUserProvider.generateToken()));
+
         if (user != null) {
             String token = tokenProvider.generateToken(user);
             return new AuthenticationResponse().builder()
@@ -61,7 +62,7 @@ public class SecurityService {
             jwt = header.substring(7);
 
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            User user = userServiceFeignClient.getUserById(tokenProvider.extractUserId(jwt));
+            User user = userServiceFeignClient.getUserById(new UserByIdRequest(tokenProvider.extractUserId(jwt),tokenNonUserProvider.generateToken()));
             if (user == null) throw new UserNotFoundException(" with id: " + tokenProvider.extractUserId(jwt));
             ExpiredJwt expiredJwt = new ExpiredJwt().builder()
                     .userId(user.getUserId())
@@ -72,7 +73,7 @@ public class SecurityService {
     }
 
     public TokenForUserNonLoginResponse generateTokenNonLoginForUser(ForgetPasswordRequest forgetPasswordRequest) {
-        User user = userServiceFeignClient.getUserByMail(forgetPasswordRequest.getMail());
+        User user = userServiceFeignClient.getUserByMail(new UserByMailRequest(forgetPasswordRequest.getMail(), tokenNonUserProvider.generateToken()));
         if (user != null) {
             String token = tokenForUserNonLoginProvider.generateToken(user,"type", "forgetPassword");
             return new TokenForUserNonLoginResponse().builder()

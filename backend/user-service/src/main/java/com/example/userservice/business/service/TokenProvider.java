@@ -7,7 +7,12 @@ import io.jsonwebtoken.Jwts;
 import java.util.Date;
 
 public interface TokenProvider {
-    Long extractUserId(String token);
+    default Long extractUserId(String token){
+        return -1L;
+    }
+    default String extractUserIdName(String token) {
+        return "";
+    }
 
     default Claims extractAllClaims(String token, String secretToken) {
         Claims body = null;
@@ -30,9 +35,16 @@ public interface TokenProvider {
     default String generateToken(User user) {
         return "";
     }
+    default String generateToken() {
+        return "";
+    }
 
     default boolean validateToken(String token, User user) {
         Long userId = extractUserId(token);
         return userId.equals(user.getUserId()) && !isTokenExpire(token);
+    }
+
+    default boolean validateToken(String token) {
+        return false;
     }
 }

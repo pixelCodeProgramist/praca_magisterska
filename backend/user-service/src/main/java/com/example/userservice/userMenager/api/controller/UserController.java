@@ -1,8 +1,6 @@
 package com.example.userservice.userMenager.api.controller;
 
-import com.example.userservice.userMenager.api.request.DetailUserRequest;
-import com.example.userservice.userMenager.api.request.ForgetAndChangerPasswordRequest;
-import com.example.userservice.userMenager.api.request.RegisterRequest;
+import com.example.userservice.userMenager.api.request.*;
 import com.example.userservice.userMenager.api.response.DetailUserView;
 import com.example.userservice.userMenager.api.response.ResponseView;
 import com.example.userservice.userMenager.api.response.UserView;
@@ -40,14 +38,14 @@ public class UserController {
         return new ResponseView("Hasło zmieniono pomyślnie");
     }
 
-    @GetMapping("/mail")
-    public UserView getUserByMail(@RequestParam String mail) {
-        return userService.getUserByMail(mail);
+    @PostMapping("/mail")
+    public UserView getUserByMail(@RequestBody UserByMailRequest userByMailRequest) {
+        return userService.getUserByMail(userByMailRequest);
     }
 
-    @GetMapping("/id")
-    public UserView getUserById(@RequestParam Long id) {
-        return userService.getUserById(id);
+    @PostMapping("/id")
+    public UserView getUserById(@RequestBody UserByIdRequest userByIdRequest) {
+        return userService.getUserById(userByIdRequest);
     }
 
     @GetMapping("/detailUser")
