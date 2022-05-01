@@ -5,6 +5,7 @@ import com.example.userservice.business.filter.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +17,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.example.userservice.userMenager.api.dto.RoleEnum.*;
 
 
 @Configuration
@@ -75,6 +78,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/changePassword").permitAll()
                 .antMatchers("/user/mail").permitAll()
                 .antMatchers("/user/id").permitAll()
+                .antMatchers("/user/detailUser").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
+                .antMatchers("/user/update").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -31,6 +31,9 @@
       <li class="nav-item">
         <a class="nav-link p-4 fs-3" routerLink="/contact" routerLinkActive="active">Kontakt</a>
       </li>
+      <li class="nav-item" *ngIf="userService.isLoggedIn()">
+        <a class="nav-link p-4 fs-3" routerLink="/user-panel" routerLinkActive="active">Panel użytkownika</a>
+      </li>
     </ul>
     <ul class="navbar-nav ms-auto text-center" *ngIf="!userService.isLoggedIn()">
       <li class="nav-item">
@@ -43,32 +46,20 @@
     <div class="col-2" *ngIf="userService.isLoggedIn()">
       <div ngbDropdown class="d-inline-block">
 
-        <button class="btn btn-outline-primary" id="sortMenu" ngbDropdownToggle>{{name}}</button>
+        <button class="btn" id="sortMenu" #userButton ngbDropdownToggle>{{name}}</button>
 
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
           <div class="d-flex">
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button routerLink="/user-panel/order-history" ngbDropdownItem>Zamówienia</button>
+              <button routerLink="/user-panel/repair-bike" ngbDropdownItem>Napraw rower</button>
+              <button routerLink="/user-panel/setting" ngbDropdownItem>Ustawienia konta</button>
               <button (click)="logout()" ngbDropdownItem>Wyloguj się</button>
             </div>
 
           </div>
         </div>
-
       </div>
-<!--      <div class="col-12">-->
-<!--        <div ngbDropdown class="d-inline-block">-->
-<!--          <div class="d-flex">-->
-<!--            <button class="btn btn-outline-success rounded text-white" id="dropdownBasic1" ngbDropdownToggle>-->
-<!--              {{name}}-->
-<!--            </button>-->
-
-<!--          </div>-->
-
-<!--          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">-->
-<!--            <button (click)="logout()" ngbDropdownItem>Wyloguj się</button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
     </div>
 
   </div>

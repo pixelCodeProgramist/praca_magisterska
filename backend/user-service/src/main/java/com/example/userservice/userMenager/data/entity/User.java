@@ -9,10 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -25,6 +22,7 @@ public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long userId;
+
 
     @NotBlank
     @Size(min = 5, max = 50)
@@ -43,6 +41,10 @@ public class User implements Serializable, UserDetails {
     @Digits(integer = 9, fraction = 0)
     private BigInteger phone;
 
+    @NotBlank(message = "Data nie może być pusta")
+    @Past(message = "Data urodzenia nie może być z przyszłości")
+    private Date birthday;
+
     @NotBlank
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$",
             message = "Hasło musi zawierać 8 znaków w tym: dużą liter, małą literę oraz cyfre")
@@ -58,6 +60,9 @@ public class User implements Serializable, UserDetails {
 
     @Column(nullable = false)
     private boolean active;
+
+    @OneToOne(mappedBy = "user")
+    private Address address;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ExpiredJwt> expiredJwts = new HashSet<>();

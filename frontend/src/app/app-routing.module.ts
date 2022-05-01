@@ -1,9 +1,11 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {MainSiteComponent} from "./web-content/for-everyone/main-site-sections/main-site/main-site.component";
 import {AboutUsComponent} from "./web-content/for-everyone/main-navbar-links/about-us/about-us.component";
 import {RulesComponent} from "./web-content/for-everyone/main-navbar-links/rules/rules.component";
-import {OfferComponent} from "./web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer/offer.component";
+import {
+  OfferComponent
+} from "./web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer/offer.component";
 import {ContactComponent} from "./web-content/for-everyone/main-navbar-links/contact/contact.component";
 import {PriceListComponent} from "./web-content/for-everyone/main-navbar-links/price-list/price-list.component";
 import {LoginComponent} from "./web-content/for-everyone/main-navbar-links/login-package/login/login.component";
@@ -17,8 +19,15 @@ import {
 import {
   ForgetPasswordResponseComponent
 } from "./web-content/for-everyone/main-navbar-links/login-package/forget-password-response/forget-password-response.component";
-import {ForgetPasswordResponseGuard} from "../shared/guard/ForgetPasswordResponseGuard";
+import {ForgetPasswordResponseGuard} from "../shared/guard/forget-password-response-guard.service";
 import {NotFoundSiteComponent} from "./not-found-site/not-found-site.component";
+import {UserPanelComponent} from "./web-content/for-logged-user/user-panel/user-panel.component";
+
+import {AuthenticationGuard} from "../shared/guard/AuthenticationGuard.guard";
+import {UnauthenticationGuard} from "../shared/guard/UnauthenticationGuard.guard";
+import {SettingAccountComponent} from "./web-content/for-logged-user/for-every-logged-user/setting-account/setting-account.component";
+import {RepairBikeComponent} from "./web-content/for-logged-user/for-every-logged-user/repair-bike/repair-bike.component";
+import {OrderComponent} from "./web-content/for-logged-user/for-every-logged-user/order/order.component";
 
 const routes: Routes = [
   {
@@ -52,11 +61,13 @@ const routes: Routes = [
   },
   {
     component: LoginComponent,
-    path: 'login'
+    path: 'login',
+    canActivate: [UnauthenticationGuard],
   },
   {
     component: RegisterComponent,
-    path: 'register'
+    path: 'register',
+    canActivate: [UnauthenticationGuard],
   },
   {
     component: OfferDetailsComponent,
@@ -64,12 +75,33 @@ const routes: Routes = [
   },
   {
     component: ForgetPasswordComponent,
-    path: 'forget_password'
+    path: 'forget_password',
+    canActivate: [UnauthenticationGuard],
   },
   {
     component: ForgetPasswordResponseComponent,
     path: 'forget_password_mail_response',
     canActivate: [ForgetPasswordResponseGuard]
+  },
+  {
+    component: UserPanelComponent,
+    path: 'user-panel',
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    component: SettingAccountComponent,
+    path: 'user-panel/setting',
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    component: RepairBikeComponent,
+    path: 'user-panel/repair-bike',
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    component: OrderComponent,
+    path: 'user-panel/order-history',
+    canActivate: [AuthenticationGuard],
   },
   {
     path: '404', component: NotFoundSiteComponent
@@ -83,4 +115,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

@@ -18,7 +18,7 @@ public class UnactiveJwtCleaner {
     private ExpiredJwtRepo expiredJwtRepo;
     private JwtTokenProvider tokenProvider;
 
-    @Scheduled(cron = "* */30 * * * *")
+    @Scheduled(cron = "* * */30 * * *")
     public void clear() {
         List<ExpiredJwt> allExpiredJwt = expiredJwtRepo.findAll();
         List<ExpiredJwt> expiredNotValidJwt = allExpiredJwt.stream()

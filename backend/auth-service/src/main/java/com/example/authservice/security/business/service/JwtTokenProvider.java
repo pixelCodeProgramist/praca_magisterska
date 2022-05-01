@@ -26,8 +26,12 @@ public class JwtTokenProvider implements TokenProvider {
     @Override
     public Date extractExpireDate(String token) {
         Claims claims = extractAllClaims(token, authProperties.getSecretToken());
-        Date expirationDate = claims.getExpiration();
-        return expirationDate;
+        if(claims!=null) {
+            Date expirationDate = claims.getExpiration();
+            return expirationDate;
+        }
+        final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+        return new Date(new Date().getTime() - MILLIS_IN_A_DAY);
     }
 
     @Override

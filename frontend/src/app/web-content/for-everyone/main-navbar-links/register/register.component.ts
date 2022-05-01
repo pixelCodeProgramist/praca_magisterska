@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {UserService} from "../../../../../shared/user.service";
 import {RegisterModel} from "../../../../../models/user/RegisterModel";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PopupInformationViewComponent} from "../popup-information-view/popup-information-view.component";
 
 @Component({
@@ -13,17 +13,24 @@ import {PopupInformationViewComponent} from "../popup-information-view/popup-inf
 export class RegisterComponent implements OnInit {
 
   public registerFormGroup!: FormGroup;
-
-  constructor(private userService: UserService, private ngbModal: NgbModal) { }
+  birthDay!: NgbDateStruct;
+  today:NgbDate = this.calendar.getToday();
+  houseNr: string = '';
+  constructor(private userService: UserService, private ngbModal: NgbModal, private calendar: NgbCalendar) { }
 
   ngOnInit(): void {
+
     this.registerFormGroup = new FormGroup({
       firstName : new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
       lastName : new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
       phone : new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9), Validators.pattern('^[0-9]*$')]),
       password : new FormControl('', [Validators.required, Validators.minLength(8), this.createPasswordStrengthValidator()]),
       repeatPassword : new FormControl('', [Validators.required, this.createPasswordSameValidator()]),
-      email : new FormControl('', [Validators.required, Validators.email])
+      email : new FormControl('', [Validators.required, Validators.email]),
+      birthdayDate : new FormControl('', [Validators.required]),
+      street : new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
+      zipCode: new FormControl('', [Validators.required, Validators.pattern("^\\d{2}[- ]{0,1}\\d{3}$")]),
+      city : new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
     });
 
   }
@@ -76,13 +83,20 @@ export class RegisterComponent implements OnInit {
 
   submit() {
     if(this.registerFormGroup.valid&&this.isRulesAcceptedCheckbox) {
+
       let registerModel: RegisterModel = new RegisterModel(
         this.registerFormGroup.controls['firstName']?.value,
         this.registerFormGroup.controls['lastName']?.value,
         this.registerFormGroup.controls['phone']?.value,
         this.registerFormGroup.controls['email']?.value,
-        this.registerFormGroup.controls['password']?.value
+        this.registerFormGroup.controls['password']?.value,
+        new Date(this.birthDay.year, this.birthDay.month - 1, this.birthDay.day),
+        this.registerFormGroup.controls['street']?.value,
+        this.houseNr,
+        this.registerFormGroup.controls['zipCode']?.value,
+        this.registerFormGroup.controls['city']?.value
       )
+
       this.userService.register(registerModel).subscribe(
         data=>{
           const modalRef = this.ngbModal.open(PopupInformationViewComponent);

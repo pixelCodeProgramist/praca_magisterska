@@ -10,9 +10,15 @@ public interface TokenProvider {
     Long extractUserId(String token);
 
     default Claims extractAllClaims(String token, String secretToken) {
-        return Jwts.parser()
-                .setSigningKey(secretToken)
-                .parseClaimsJws(token).getBody();
+        Claims body = null;
+        try {
+            body = Jwts.parser()
+                    .setSigningKey(secretToken)
+                    .parseClaimsJws(token).getBody();
+            return body;
+        }catch (Exception e) {
+            return body;
+        }
     }
 
     default  boolean isTokenExpire(String token) {

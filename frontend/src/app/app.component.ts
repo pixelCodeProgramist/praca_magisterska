@@ -40,7 +40,7 @@ export class AppComponent {
   }
 
   @HostListener('window:scroll', ['$event'])
-  onScrollImageBackgorund(event: any) {
+  onScrollImageBackground(event: any) {
     let scrollableList = Array.from(document.getElementsByClassName('scrollable') as HTMLCollectionOf<HTMLElement>);
     let value: number = -window.scrollY;
     if (value > -250 && scrollableList[0]?.clientWidth > 1210) {

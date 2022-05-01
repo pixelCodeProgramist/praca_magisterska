@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {GeneralInformationService} from "../../shared/general-information.service";
 import {UserService} from "../../shared/user.service";
 
@@ -7,18 +7,19 @@ import {UserService} from "../../shared/user.service";
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, AfterViewInit {
   isCollapsed = true;
   phones: string[] = [];
   name: string = '';
   role: string = '';
+  @ViewChild('userButton') userButton!: ElementRef<HTMLElement>;
 
   constructor(private generalInformationService: GeneralInformationService, public userService: UserService) { }
 
   ngOnInit(): void {
+
     if (this.userService.isLoggedIn() && localStorage.getItem('name') !== null) {
-      // @ts-ignore
-      this.name = localStorage.getItem('name').toString();
+      this.name = localStorage.getItem('name')!.toString();
       this.role = localStorage.getItem('role')!.toString();
     }
 
@@ -32,13 +33,6 @@ export class HeaderComponent implements OnInit {
     )
   }
 
-  isAdmin(): boolean {
-    if (this.role === 'ADMIN')
-      return true;
-    else
-      return false;
-  }
-
   logout() {
     this.userService.logout()
       .subscribe(res => {
@@ -50,4 +44,19 @@ export class HeaderComponent implements OnInit {
           console.error(error);
       })
   }
+
+  ngAfterViewInit(): void {
+    if(this.userButton!=undefined) {
+      this.userButton.nativeElement.className += this.getClassFromRole(localStorage.getItem('role'))
+    }
+  }
+
+  getClassFromRole(role: string | null) {
+    if (role === 'ADMIN') return ' btn-outline-danger';
+    if (role === 'CLIENT') return ' btn-outline-primary';
+    if (role === 'EMPLOYEE') return ' btn-outline-warning';
+    return '';
+  }
+
+
 }

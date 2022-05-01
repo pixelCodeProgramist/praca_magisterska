@@ -1,0 +1,9 @@
+.nav-item:hover {
+  background: lightblue !important;
+}
+
+.edit-btn {
+  border: 0;
+  background: transparent;
+
+}

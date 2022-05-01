@@ -7,7 +7,7 @@ import {LoginModel} from "../models/user/LoginModel";
 import {LoginResponseModel} from "../models/user/LoginResponseModel";
 import {ForgetPasswordRequest} from "../models/forget-password-package/request/ForgetPasswordRequest";
 import {PasswordChangerRequest} from "../models/forget-password-package/request/PasswordChangerRequest";
-import {ActivatedRouteSnapshot} from "@angular/router";
+import {DetailUserResponse} from "../models/detail-user/DetailUserResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,8 @@ export class UserService {
   private LOGOUT_URL = `${GlobalService.BASE_URL}/auth/user/logout`;
   private FORGET_PASSWORD_URL = `${GlobalService.BASE_URL}/mail/forgetPassword`;
   private CHANGE_PASSWORD_URL = `${GlobalService.BASE_URL}/user/changePassword`;
+  private DETAIL_USER_URL = `${GlobalService.BASE_URL}/user/detailUser`;
+  private UPDATE_DETAIL_USER_URL = `${GlobalService.BASE_URL}/user/update`;
 
   constructor(private http: HttpClient) {
   }
@@ -51,8 +53,25 @@ export class UserService {
   }
 
   changePassword(passwordChangerRequest: PasswordChangerRequest) {
-
     return this.http.post(this.CHANGE_PASSWORD_URL, passwordChangerRequest)
+  }
+
+  getDetailUserInformation(id: number) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.get<DetailUserResponse>(this.DETAIL_USER_URL+'?id='+id, {headers})
+  }
+
+  updateUser(detailUser: DetailUserResponse) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.patch<StringMessageModelResponse>(this.UPDATE_DETAIL_USER_URL, detailUser,{headers})
+  }
+
+
+  getUserId() {
+    let id = -1;
+    if(localStorage.getItem('userId')!==null)
+      id = Number(localStorage.getItem('userId'));
+    return id;
   }
 }
 

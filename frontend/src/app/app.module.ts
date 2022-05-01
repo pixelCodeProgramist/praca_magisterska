@@ -21,7 +21,7 @@ import { PriceListComponent } from './web-content/for-everyone/main-navbar-links
 import { LoginComponent } from './web-content/for-everyone/main-navbar-links/login-package/login/login.component';
 import { RegisterComponent } from './web-content/for-everyone/main-navbar-links/register/register.component';
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
-import { ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainProductsPriceContentComponent } from './web-content/for-everyone/main-products-price-content/main-products-price-content.component';
 import { PagingComponent } from './paging/paging.component';
@@ -29,13 +29,21 @@ import {NgxStarsModule} from "ngx-stars";
 import { OfferDetailsComponent } from './web-content/for-everyone/main-navbar-links/offer-for-everyone-package/offer-details/offer-details.component';
 import {DatepickerModule} from "ng2-datepicker";
 import {NgxDatePickerModule} from "@ngx-tiny/date-picker";
-import {TimepickerModule} from "ngx-bootstrap/timepicker";
 import {HttpClientModule} from "@angular/common/http";
 import {AutocompleteLibModule} from "angular-ng-autocomplete";
 import { PopupInformationViewComponent } from './web-content/for-everyone/main-navbar-links/popup-information-view/popup-information-view.component';
 import { ForgetPasswordComponent } from './web-content/for-everyone/main-navbar-links/login-package/forget-password/forget-password.component';
 import { ForgetPasswordResponseComponent } from './web-content/for-everyone/main-navbar-links/login-package/forget-password-response/forget-password-response.component';
 import { NotFoundSiteComponent } from './not-found-site/not-found-site.component';
+import { UserPanelComponent } from './web-content/for-logged-user/user-panel/user-panel.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatIconModule} from "@angular/material/icon";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatListModule} from "@angular/material/list";
+import { SettingAccountComponent } from './web-content/for-logged-user/for-every-logged-user/setting-account/setting-account.component';
+import { RepairBikeComponent } from './web-content/for-logged-user/for-every-logged-user/repair-bike/repair-bike.component';
+import { OrderComponent } from './web-content/for-logged-user/for-every-logged-user/order/order.component';
+import { OfferManagementComponent } from './web-content/for-logged-user/for-employee/offer-management/offer-management.component';
 
 
 
@@ -63,7 +71,12 @@ import { NotFoundSiteComponent } from './not-found-site/not-found-site.component
     PopupInformationViewComponent,
     ForgetPasswordComponent,
     ForgetPasswordResponseComponent,
-    NotFoundSiteComponent
+    NotFoundSiteComponent,
+    UserPanelComponent,
+    SettingAccountComponent,
+    RepairBikeComponent,
+    OrderComponent,
+    OfferManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -77,7 +90,12 @@ import { NotFoundSiteComponent } from './not-found-site/not-found-site.component
     DatepickerModule,
     NgxDatePickerModule,
     HttpClientModule,
-    AutocompleteLibModule
+    AutocompleteLibModule,
+    FormsModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
