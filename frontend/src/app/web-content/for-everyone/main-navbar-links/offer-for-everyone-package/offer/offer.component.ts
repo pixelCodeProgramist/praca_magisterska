@@ -42,7 +42,7 @@ export class OfferComponent implements OnInit {
             this.productGeneralOfferResponse.products[i].imageSafeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
           }
         }, error => {
-
+          console.log(error.error.error)
         }
       )
     } else {

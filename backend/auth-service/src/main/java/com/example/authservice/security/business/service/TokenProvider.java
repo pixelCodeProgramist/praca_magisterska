@@ -7,7 +7,13 @@ import io.jsonwebtoken.Jwts;
 import java.util.Date;
 
 public interface TokenProvider {
-    Long extractUserId(String token);
+    default Long extractUserId(String token) {
+        return -1L;
+    }
+
+    default String extractUserIdString(String token) {
+        return "";
+    }
 
     default Claims extractAllClaims(String token, String secretToken) {
         Claims body = null;

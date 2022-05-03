@@ -1,5 +1,6 @@
 package com.karol.generalinformationservice.generalInformationMenager.api.controller;
 
+import com.karol.generalinformationservice.generalInformationMenager.api.response.BranchView;
 import com.karol.generalinformationservice.generalInformationMenager.api.response.GeneralInfoView;
 import com.karol.generalinformationservice.generalInformationMenager.api.response.ImageView;
 import com.karol.generalinformationservice.generalInformationMenager.business.service.GeneralInformationService;
@@ -30,6 +31,14 @@ public class GeneralInformationController {
         return generalInformationService.getAllGeneralInfo();
     }
 
+    @GetMapping("/branches")
+    public List<BranchView> getBranchesInformation() {
+        return generalInformationService.getBranches();
+    }
 
+    @GetMapping("/branch")
+    public BranchView getBranchInformation(@RequestParam Long id) {
+        return generalInformationService.getBranchAfterId(id);
+    }
 
 }

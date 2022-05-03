@@ -8,6 +8,8 @@ import {LoginResponseModel} from "../models/user/LoginResponseModel";
 import {ForgetPasswordRequest} from "../models/forget-password-package/request/ForgetPasswordRequest";
 import {PasswordChangerRequest} from "../models/forget-password-package/request/PasswordChangerRequest";
 import {DetailUserResponse} from "../models/detail-user/DetailUserResponse";
+import {DetailEmployeeResponse} from "../models/detail-user/DetailEmployeeResponse";
+import {BackendResponse} from "../models/BackendResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,7 @@ export class UserService {
   private CHANGE_PASSWORD_URL = `${GlobalService.BASE_URL}/user/changePassword`;
   private DETAIL_USER_URL = `${GlobalService.BASE_URL}/user/detailUser`;
   private UPDATE_DETAIL_USER_URL = `${GlobalService.BASE_URL}/user/update`;
+  private ADD_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/add`;
 
   constructor(private http: HttpClient) {
   }
@@ -66,12 +69,13 @@ export class UserService {
     return this.http.patch<StringMessageModelResponse>(this.UPDATE_DETAIL_USER_URL, detailUser,{headers})
   }
 
+  getRole() {
+    return localStorage.getItem('role');
+  }
 
-  getUserId() {
-    let id = -1;
-    if(localStorage.getItem('userId')!==null)
-      id = Number(localStorage.getItem('userId'));
-    return id;
+  addEmployee(detailEmployeeResponse: DetailEmployeeResponse) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.post<BackendResponse>(this.ADD_EMPLOYEE_URL, detailEmployeeResponse, {headers})
   }
 }
 

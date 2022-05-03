@@ -40,7 +40,7 @@ public class SecurityController {
         return securityService.generateTokenNonLoginForUser(forgetPasswordRequest);
     }
 
-    @GetMapping("/expiredJwt")
+    @PostMapping("/expiredJwt")
     public ExpiredJwt expiredJwt(@RequestBody(required = false) RequestJwt requestJwt) {
         if(requestJwt != null) return securityService.getExpiredJwt(requestJwt);
         else return null;

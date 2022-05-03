@@ -11,6 +11,19 @@
         <li class="nav-item">
           <a class="nav-link p-4 fs-3" routerLink="/user-panel/setting" routerLinkActive="active">Ustawienia konta</a>
         </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/employee-management" routerLinkActive="active">Zarządzaj pracownikami</a>
+        </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/offer-management" routerLinkActive="active">Zarządzaj ofertami</a>
+        </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/client-management" routerLinkActive="active">Zarządzaj klientami</a>
+        </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/statistic-management" routerLinkActive="active">Statystyki</a>
+        </li>
+
       </ul>
     </div>
     <div class="col-9">

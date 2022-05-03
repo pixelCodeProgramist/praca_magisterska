@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {GlobalService} from "./global.service";
 import {Observable} from "rxjs";
 import {ImageForSectionResponse} from "../models/general-information/response/ImageForSectionResponse";
-import {GeneralInformationResponse} from "../models/general-information/response/GeneralInformationResponse";
+import {Branch, GeneralInformationResponse} from "../models/general-information/response/GeneralInformationResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,7 @@ export class GeneralInformationService {
 
   private LINKS_URL = `${GlobalService.BASE_URL}/general-information/photo`;
   private GENERAL_INFO_URL = `${GlobalService.BASE_URL}/general-information/all`;
+  private BRANCHES_URL = `${GlobalService.BASE_URL}/general-information/branches`;
 
   constructor(private http: HttpClient) { }
 
@@ -24,5 +25,9 @@ export class GeneralInformationService {
 
   getGeneralInfo() {
     return this.http.get<GeneralInformationResponse>(this.GENERAL_INFO_URL);
+  }
+
+  getBranches() {
+    return this.http.get<Branch[]>(this.BRANCHES_URL);
   }
 }

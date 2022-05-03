@@ -23,6 +23,13 @@ public class JwtTokenNonUserProvider implements TokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 
+
+    @Override
+    public String extractUserIdString(String token) {
+        Claims claims = extractAllClaims(token, authProperties.getSecretToken());
+        return claims.getSubject();
+    }
+
     @Override
     public Date extractExpireDate(String token) {
         Claims claims = extractAllClaims(token, authProperties.getSecretToken());

@@ -25,7 +25,7 @@ export class SettingAccountComponent implements OnInit {
 
   date!: NgbDateStruct;
 
-  constructor(private userService: UserService,  private ngbModal: NgbModal) {
+  constructor(public userService: UserService,  private ngbModal: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -49,6 +49,7 @@ export class SettingAccountComponent implements OnInit {
 
         }, error => {
           localStorage.clear();
+          location.reload();
         }
       )
     }

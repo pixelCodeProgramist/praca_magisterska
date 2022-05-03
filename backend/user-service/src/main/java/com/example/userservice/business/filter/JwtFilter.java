@@ -3,6 +3,7 @@ package com.example.userservice.business.filter;
 import com.example.userservice.business.filter.error.FilterError;
 import com.example.userservice.business.request.RequestJwt;
 import com.example.userservice.business.response.ExpiredJwtResponse;
+import com.example.userservice.business.service.JwtTokenNonUserProvider;
 import com.example.userservice.business.service.JwtTokenProvider;
 import com.example.userservice.userMenager.data.entity.User;
 import com.example.userservice.userMenager.data.repository.UserRepo;
@@ -32,6 +33,8 @@ import java.util.Optional;
 public class JwtFilter extends OncePerRequestFilter {
     private UserRepo userRepo;
     private JwtTokenProvider tokenProvider;
+
+    private JwtTokenNonUserProvider tokenNonUserProvider;
     private ExpiredJwtServiceFeignClient expiredJwtServiceFeignClient;
 
     @Override

@@ -1,0 +1,57 @@
+<div class="d-flex justify-content-center">
+  <div class="col-10 row align-content-center" style="min-height: 400px;">
+    <div class="navbar navbar-light col-12 col-lg-3 row h4 d-flex align-content-center" style="margin-top: 100px">
+      <ul class="col navbar-nav flex-column text-center">
+        <li class="nav-item">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/order-history" routerLinkActive="active">Zamówienia</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/repair-bike" routerLinkActive="active">Napraw rower</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/setting" routerLinkActive="active">Ustawienia konta</a>
+        </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/employee-management" routerLinkActive="active">Zarządzaj
+            pracownikami</a>
+        </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/offer-management" routerLinkActive="active">Zarządzaj
+            ofertami</a>
+        </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/client-management" routerLinkActive="active">Zarządzaj
+            klientami</a>
+        </li>
+        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/statistic-management" routerLinkActive="active">Statystyki</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-12 col-lg-9 row justify-content-center">
+      <nav class="navbar navbar-light row" style="height: 15%">
+        <ul id="employeeUl" class="my-navbar navbar-nav row me-auto mt-2 mt-lg-0 text-center">
+          <li class="col-12 col-lg-4 nav-item" (click)="setActive(addEmployee, 'addEmployee')">
+            <a #addEmployee class="nav-link p-4 fs-3">Dodaj pracownika</a>
+          </li>
+          <li class="col-12 col-lg-4 nav-item" (click)="setActive(removeEmployee,'removeEmployee')">
+            <a #removeEmployee class="nav-link p-4 fs-3">Usuń pracownika</a>
+          </li>
+          <li class="col-12 col-lg-4 nav-item" (click)="setActive(updateEmployee,'updateEmployee')">
+            <a #updateEmployee class="nav-link p-4 fs-3">Modyfikuj pracownika</a>
+          </li>
+        </ul>
+      </nav>
+      <div *ngIf="currentEmployeeNav=='addEmployee'">
+        <app-add-employee-content-management></app-add-employee-content-management>
+      </div>
+      <div *ngIf="currentEmployeeNav=='removeEmployee'">
+        <app-remove-employee-content-management></app-remove-employee-content-management>
+      </div>
+      <div *ngIf="currentEmployeeNav=='updateEmployee'">
+        <app-update-employee-content-management></app-update-employee-content-management>
+      </div>
+
+    </div>
+  </div>
+</div>

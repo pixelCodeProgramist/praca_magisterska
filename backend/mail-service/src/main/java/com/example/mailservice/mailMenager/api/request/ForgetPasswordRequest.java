@@ -15,5 +15,4 @@ public class ForgetPasswordRequest {
     @NotBlank
     @Size(min = 5, max = 100)
     private String mail;
-
 }

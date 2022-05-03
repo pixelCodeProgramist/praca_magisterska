@@ -33,7 +33,7 @@ public class MailController {
     }
 
     @PostMapping("/forgetPassword")
-    public ResponseEntity sendRegisterToken(@Valid @RequestBody ForgetPasswordRequest forgetPasswordRequest) throws MessagingException {
+    public ResponseEntity sendTokenForForgetPassword(@Valid @RequestBody ForgetPasswordRequest forgetPasswordRequest) throws MessagingException {
         if(emailSenderService.sendMail(forgetPasswordRequest)) return ResponseEntity.ok().build();
         return ResponseEntity.badRequest().body("Błąd w wysyłaniu maila");
     }

@@ -28,6 +28,20 @@ import {UnauthenticationGuard} from "../shared/guard/UnauthenticationGuard.guard
 import {SettingAccountComponent} from "./web-content/for-logged-user/for-every-logged-user/setting-account/setting-account.component";
 import {RepairBikeComponent} from "./web-content/for-logged-user/for-every-logged-user/repair-bike/repair-bike.component";
 import {OrderComponent} from "./web-content/for-logged-user/for-every-logged-user/order/order.component";
+import {
+  OfferManagementComponent
+} from "./web-content/for-logged-user/for-employee/offer-management/offer-management.component";
+import {RoleGuard} from "../shared/guard/role-guard.service";
+import {Role} from "../shared/enum/Role";
+import {
+  EmployeeManagementComponent
+} from "./web-content/for-logged-user/for-admin/employee-management/employee-management.component";
+import {
+  ClientManagementComponent
+} from "./web-content/for-logged-user/for-employee/client-management/client-management.component";
+import {
+  StatisticManagementComponent
+} from "./web-content/for-logged-user/for-employee/statistic-management/statistic-management.component";
 
 const routes: Routes = [
   {
@@ -102,6 +116,30 @@ const routes: Routes = [
     component: OrderComponent,
     path: 'user-panel/order-history',
     canActivate: [AuthenticationGuard],
+  },
+  {
+    component: OfferManagementComponent,
+    path: 'user-panel/offer-management',
+    canActivate: [AuthenticationGuard, RoleGuard],
+    data: {roles: [Role.ADMIN, Role.EMPLOYEE]}
+  },
+  {
+    component: EmployeeManagementComponent,
+    path: 'user-panel/employee-management',
+    canActivate: [AuthenticationGuard, RoleGuard],
+    data: {roles: [Role.ADMIN]}
+  },
+  {
+    component: ClientManagementComponent,
+    path: 'user-panel/client-management',
+    canActivate: [AuthenticationGuard, RoleGuard],
+    data: {roles: [Role.ADMIN, Role.EMPLOYEE]}
+  },
+  {
+    component: StatisticManagementComponent,
+    path: 'user-panel/statistic-management',
+    canActivate: [AuthenticationGuard, RoleGuard],
+    data: {roles: [Role.ADMIN, Role.EMPLOYEE]}
   },
   {
     path: '404', component: NotFoundSiteComponent

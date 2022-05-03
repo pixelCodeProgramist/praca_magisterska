@@ -22,6 +22,8 @@ public class Token {
     @Column(nullable = false)
     private Boolean active;
 
-    @OneToOne(mappedBy = "token")
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }

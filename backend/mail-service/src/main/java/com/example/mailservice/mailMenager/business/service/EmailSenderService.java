@@ -2,12 +2,10 @@ package com.example.mailservice.mailMenager.business.service;
 
 import com.example.mailservice.MailServiceApplication;
 import com.example.mailservice.mailMenager.api.dto.TokenForUserNonLoginResponse;
-import com.example.mailservice.mailMenager.api.request.ContactRequest;
-import com.example.mailservice.mailMenager.api.request.ForgetPasswordRequest;
-import com.example.mailservice.mailMenager.api.request.RegisterDataRequest;
-import com.example.mailservice.mailMenager.api.request.User;
+import com.example.mailservice.mailMenager.api.request.*;
 import com.example.mailservice.mailMenager.feignClient.AuthServiceFeignClient;
 import com.example.mailservice.mailMenager.feignClient.UserServiceFeignClient;
+import com.example.mailservice.tokenMenager.request.JwtTokenNonUserProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -24,6 +22,8 @@ public class EmailSenderService {
     private JavaMailSender javaMailSender;
     private UserServiceFeignClient userServiceFeignClient;
     private AuthServiceFeignClient authServiceFeignClient;
+
+    private JwtTokenNonUserProvider tokenNonUserProvider;
 
     public boolean sendMail(ContactRequest contactRequest) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -46,7 +46,7 @@ public class EmailSenderService {
     }
 
     public boolean sendMail(ForgetPasswordRequest forgetPasswordRequest) throws MessagingException {
-        User user = userServiceFeignClient.getUserByMail(forgetPasswordRequest.getMail());
+        User user = userServiceFeignClient.getUserByMail(new UserByMailRequest(forgetPasswordRequest.getMail(), tokenNonUserProvider.generateToken()));
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(forgetPasswordRequest.getMail());
@@ -82,7 +82,10 @@ public class EmailSenderService {
     }
 
     private String getContentForMailConfirmation(ForgetPasswordRequest forgetPasswordRequest, User user) {
-        TokenForUserNonLoginResponse tokenForUserNonLoginResponse = authServiceFeignClient.forgetPassword(forgetPasswordRequest);
+
+        TokenForUserNonLoginResponse tokenForUserNonLoginResponse = authServiceFeignClient.forgetPassword(
+                new ForgetPasswordFeignClientRequest(forgetPasswordRequest.getMail(),
+                        tokenNonUserProvider.generateToken()));
 
         String site = MailServiceApplication.FRONT_SITE + "forget_password_mail_response?token=" + tokenForUserNonLoginResponse.getToken();
         return "<div style=\"width: 100%; height: 100%; background-color: #f9f9f9;\">\n" +

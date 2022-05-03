@@ -44,6 +44,12 @@ import { SettingAccountComponent } from './web-content/for-logged-user/for-every
 import { RepairBikeComponent } from './web-content/for-logged-user/for-every-logged-user/repair-bike/repair-bike.component';
 import { OrderComponent } from './web-content/for-logged-user/for-every-logged-user/order/order.component';
 import { OfferManagementComponent } from './web-content/for-logged-user/for-employee/offer-management/offer-management.component';
+import { EmployeeManagementComponent } from './web-content/for-logged-user/for-admin/employee-management/employee-management.component';
+import { ClientManagementComponent } from './web-content/for-logged-user/for-employee/client-management/client-management.component';
+import { StatisticManagementComponent } from './web-content/for-logged-user/for-employee/statistic-management/statistic-management.component';
+import { AddEmployeeContentManagementComponent } from './web-content/for-logged-user/for-admin/add-employee-content-management/add-employee-content-management.component';
+import { RemoveEmployeeContentManagementComponent } from './web-content/for-logged-user/for-admin/remove-employee-content-management/remove-employee-content-management.component';
+import { UpdateEmployeeContentManagementComponent } from './web-content/for-logged-user/for-admin/update-employee-content-management/update-employee-content-management.component';
 
 
 
@@ -76,7 +82,13 @@ import { OfferManagementComponent } from './web-content/for-logged-user/for-empl
     SettingAccountComponent,
     RepairBikeComponent,
     OrderComponent,
-    OfferManagementComponent
+    OfferManagementComponent,
+    EmployeeManagementComponent,
+    ClientManagementComponent,
+    StatisticManagementComponent,
+    AddEmployeeContentManagementComponent,
+    RemoveEmployeeContentManagementComponent,
+    UpdateEmployeeContentManagementComponent
   ],
   imports: [
     BrowserModule,

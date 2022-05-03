@@ -54,9 +54,14 @@ public class User implements Serializable, UserDetails {
     @JoinColumn(name = "roleId", nullable = false)
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "token_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "user")
     private Token token;
+
+    @OneToOne(mappedBy = "user")
+    private Branch branch;
+
+    @OneToOne(mappedBy = "user")
+    private Employee employee;
 
     @Column(nullable = false)
     private boolean active;

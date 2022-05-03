@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {UserService} from "../../../../../shared/user.service";
 
 @Component({
   selector: 'app-offer-management',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OfferManagementComponent implements OnInit {
 
-  constructor() { }
+  constructor(public userService: UserService) { }
 
   ngOnInit(): void {
   }
