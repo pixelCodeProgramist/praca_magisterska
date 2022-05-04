@@ -1,10 +1,14 @@
 package com.example.userservice.userMenager.business.service;
 
-import com.example.userservice.business.service.JwtTokenNonUserProvider;
+import com.example.userservice.userMenager.business.exception.address.AddressNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import com.example.userservice.business.service.JwtTokenProvider;
 import com.example.userservice.userMenager.api.dto.RoleEnum;
+import com.example.userservice.userMenager.api.mapper.EmployeeMapper;
 import com.example.userservice.userMenager.api.request.EmployeeRequest;
+import com.example.userservice.userMenager.api.request.EmployeeUpdateRequest;
 import com.example.userservice.userMenager.api.response.BranchView;
+import com.example.userservice.userMenager.api.response.EmployeeUserView;
 import com.example.userservice.userMenager.business.exception.branch.BranchNotFoundException;
 import com.example.userservice.userMenager.business.exception.role.RoleNotFoundException;
 import com.example.userservice.userMenager.business.exception.user.UserMailExistsException;
@@ -16,8 +20,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +34,8 @@ public class EmployeeService {
     private AddressRepo addressRepo;
 
     private BranchRepo branchRepo;
+
+    private JwtTokenProvider tokenProvider;
 
     private EmployeeRepo employeeRepo;
 
@@ -103,5 +112,80 @@ public class EmployeeService {
         userRepo.findByEmail(email).ifPresent(user -> {
             throw new UserMailExistsException(email);
         });
+    }
+
+    public List<EmployeeUserView> getAllEmployees(HttpServletRequest httpServletRequest) {
+        List<User> allAdmin = userRepo.findAllByRole_RoleAndActive(RoleEnum.ADMIN.name(),true);
+        List<User> allEmployee = userRepo.findAllByRole_RoleAndActive(RoleEnum.EMPLOYEE.name(),true);
+        List<User> allAdminEmployee = Stream.concat(allAdmin.stream(), allEmployee.stream())
+                .collect(Collectors.toList());
+        String token = httpServletRequest.getHeader("Authorization");
+        if (token != null) {
+            token = token.substring(7);
+            Long userId = tokenProvider.extractUserId(token);
+            User user = userRepo.findById(userId).orElseThrow(() ->
+                    new UserNotFoundException("with id: " + userId));
+            allAdminEmployee = allAdminEmployee.stream()
+                    .filter(u->!u.equals(user))
+                    .collect(Collectors.toList());
+
+        }
+
+
+        return allAdminEmployee.stream()
+                .map(EmployeeMapper::mapUserToData)
+                .collect(Collectors.toList());
+    }
+
+    public void changeEmployeeStatusOnInactive(Long id) {
+        User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(" with id "+id));
+        user.setActive(false);
+        userRepo.save(user);
+    }
+
+    public void updateEmployee(EmployeeUpdateRequest employeeUpdateRequest) {
+        User user = userRepo.findById(employeeUpdateRequest.getUserId()).orElseThrow(() ->
+                new UserNotFoundException(" with id "+employeeUpdateRequest.getUserId()));
+        user.setEmail(employeeUpdateRequest.getEmail());
+        user.setFirstName(employeeUpdateRequest.getFirstName());
+        user.setLastName(employeeUpdateRequest.getLastName());
+        user.setPhone(employeeUpdateRequest.getPhone());
+        user.setBirthday(employeeUpdateRequest.getBirthDay());
+        Role role = null;
+
+        if(employeeUpdateRequest.getIsAdmin()) role = roleRepo.findByRoleIgnoreCase(RoleEnum.ADMIN.name())
+                .orElseThrow(()-> new RoleNotFoundException(RoleEnum.ADMIN.name()));
+
+        else role = roleRepo.findByRoleIgnoreCase(RoleEnum.EMPLOYEE.name())
+                .orElseThrow(()-> new RoleNotFoundException(RoleEnum.EMPLOYEE.name()));
+
+        user.setRole(role);
+
+        if(!StringUtils.isBlank(employeeUpdateRequest.getPassword()))
+            user.setPassword(passwordEncoder.encode(employeeUpdateRequest.getPassword()));
+
+        Employee employee = employeeRepo.findByUser(user)
+                .orElseThrow(()-> new UserNotFoundException("with user id" + user.getUserId()));
+
+        employee.setEmployeeDate(employeeUpdateRequest.getEmployeeDate());
+
+        Branch branch = branchRepo.findById(employeeUpdateRequest.getBranchView().getBranchId())
+                .orElseThrow(() -> new BranchNotFoundException(employeeUpdateRequest.getBranchView().getBranchId()));
+
+        branch.setUser(user);
+
+        Address address = addressRepo.findByUser(user).orElseThrow(()->new AddressNotFoundException("user id: "+user.getUserId()));
+
+        address.setZipCode(employeeUpdateRequest.getAddressView().getZipCode());
+        address.setStreet(employeeUpdateRequest.getAddressView().getStreet());
+        address.setCity(employeeUpdateRequest.getAddressView().getCity());
+        address.setHouseNr(employeeUpdateRequest.getAddressView().getHouseNr());
+
+        employeeRepo.save(employee);
+        branchRepo.save(branch);
+        addressRepo.save(address);
+        userRepo.save(user);
+
+
     }
 }

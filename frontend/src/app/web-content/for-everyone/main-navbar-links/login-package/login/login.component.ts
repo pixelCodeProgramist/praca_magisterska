@@ -38,9 +38,11 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', this.authenticationResponse.token);
           location.assign('/mainSite');
       },error => {
-
+          this.isErrorActive = true
+          this.errorMsg = error.statusText
         })
     } else {
+      this.isErrorActive = true
       this.errorMsg = 'Login or password cannot be empty!'
     }
   }

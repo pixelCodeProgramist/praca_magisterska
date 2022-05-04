@@ -7,7 +7,7 @@ export class DetailUserResponse {
   birthDay: Date = new Date();
   password: string = '';
 
-  static clone(o1: DetailUserResponse) {
+  public static clone(o1: DetailUserResponse) {
     let response: DetailUserResponse = new DetailUserResponse();
     response.email = o1.email;
     response.firstName = o1.firstName;
@@ -24,7 +24,7 @@ export class DetailUserResponse {
 
 
 
-  static isEquals(o1: DetailUserResponse, o2: DetailUserResponse): boolean {
+  public static isEquals(o1: DetailUserResponse, o2: DetailUserResponse): boolean {
 
 
     if (AddressView.isEqual(o1.addressView, o2.addressView) &&

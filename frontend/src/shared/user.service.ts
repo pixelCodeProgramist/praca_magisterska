@@ -25,6 +25,9 @@ export class UserService {
   private DETAIL_USER_URL = `${GlobalService.BASE_URL}/user/detailUser`;
   private UPDATE_DETAIL_USER_URL = `${GlobalService.BASE_URL}/user/update`;
   private ADD_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/add`;
+  private ALL_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/all`;
+  private REMOVE_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/remove`;
+  private UPDATE_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/update`;
 
   constructor(private http: HttpClient) {
   }
@@ -76,6 +79,22 @@ export class UserService {
   addEmployee(detailEmployeeResponse: DetailEmployeeResponse) {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
     return this.http.post<BackendResponse>(this.ADD_EMPLOYEE_URL, detailEmployeeResponse, {headers})
+  }
+
+  getAllEmployee() {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.get<DetailEmployeeResponse[]>(this.ALL_EMPLOYEE_URL, {headers})
+  }
+
+  removeUser(id: number) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.patch<BackendResponse>(this.REMOVE_EMPLOYEE_URL+'/'+id, null,{headers})
+  }
+
+
+  updateEmployee(detailEmployeeResponse: DetailEmployeeResponse) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.put<BackendResponse>(this.UPDATE_EMPLOYEE_URL, detailEmployeeResponse, {headers})
   }
 }
 

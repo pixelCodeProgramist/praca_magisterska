@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class AddressMapper {
 
-    public static AddressView mapTokenToData(Address address) {
+    public static AddressView mapAddressToData(Address address) {
         return new AddressView().builder()
                 .city(address.getCity())
                 .houseNr(address.getHouseNr())

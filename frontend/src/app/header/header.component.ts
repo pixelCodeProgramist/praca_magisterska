@@ -28,7 +28,8 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         this.phones = data.branches.map(branch=>branch.phone.replace(/(?=(?:.{3})*$)/g, ' '));
 
       },error => {
-
+        localStorage.clear();
+        location.reload();
       }
     )
   }

@@ -10,8 +10,6 @@ import com.example.userservice.userMenager.data.entity.Token;
 import com.example.userservice.userMenager.data.entity.User;
 import lombok.experimental.UtilityClass;
 
-import java.util.stream.Collectors;
-
 @UtilityClass
 public class UserMapper {
     public User mapDataToResponse(RegisterRequest registerRequest, Role role, Token token, boolean isActive) {
@@ -66,7 +64,7 @@ public class UserMapper {
                 .lastName(user.getLastName())
                 .phone(user.getPhone())
                 .birthDay(user.getBirthday())
-                .addressView(AddressMapper.mapTokenToData(user.getAddress()))
+                .addressView(AddressMapper.mapAddressToData(user.getAddress()))
                 .build();
     }
 }

@@ -134,7 +134,6 @@ export class AddEmployeeContentManagementComponent implements OnInit {
 
   changeStatusOfAdminCheckbox() {
     this.detailUserResponse.isAdmin = !this.detailUserResponse.isAdmin
-    console.log(this.detailUserResponse.isAdmin)
   }
 
   private employeeDateValidator(): ValidatorFn {
