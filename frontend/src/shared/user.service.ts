@@ -8,8 +8,9 @@ import {LoginResponseModel} from "../models/user/LoginResponseModel";
 import {ForgetPasswordRequest} from "../models/forget-password-package/request/ForgetPasswordRequest";
 import {PasswordChangerRequest} from "../models/forget-password-package/request/PasswordChangerRequest";
 import {DetailUserResponse} from "../models/detail-user/DetailUserResponse";
-import {DetailEmployeeResponse} from "../models/detail-user/DetailEmployeeResponse";
+import {DetailUserMoreResponse} from "../models/detail-user/DetailUserMoreResponse";
 import {BackendResponse} from "../models/BackendResponse";
+import {Role} from "./enum/Role";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,11 @@ export class UserService {
   private ALL_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/all`;
   private REMOVE_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/remove`;
   private UPDATE_EMPLOYEE_URL = `${GlobalService.BASE_URL}/user/employee/update`;
+  private ALL_ACTIVE_CLIENTS_URL = `${GlobalService.BASE_URL}/user/client/active/all`;
+  private REMOVE_CLIENT_URL = `${GlobalService.BASE_URL}/user/client/remove`;
+  private ALL_CLIENTS_URL = `${GlobalService.BASE_URL}/user/client/all`;
+  private ACTIVATE_CLIENT_URL = `${GlobalService.BASE_URL}/user/client/activate`;
+  private UPDATE_CLIENT_URL = `${GlobalService.BASE_URL}/user/client/update`;
 
   constructor(private http: HttpClient) {
   }
@@ -76,25 +82,43 @@ export class UserService {
     return localStorage.getItem('role');
   }
 
-  addEmployee(detailEmployeeResponse: DetailEmployeeResponse) {
+  addEmployee(detailEmployeeResponse: DetailUserMoreResponse) {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
     return this.http.post<BackendResponse>(this.ADD_EMPLOYEE_URL, detailEmployeeResponse, {headers})
   }
 
   getAllEmployee() {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
-    return this.http.get<DetailEmployeeResponse[]>(this.ALL_EMPLOYEE_URL, {headers})
+    return this.http.get<DetailUserMoreResponse[]>(this.ALL_EMPLOYEE_URL, {headers})
   }
 
-  removeUser(id: number) {
+  removeUser(id: number, role: Role) {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
-    return this.http.patch<BackendResponse>(this.REMOVE_EMPLOYEE_URL+'/'+id, null,{headers})
+    if(role == Role.EMPLOYEE) return this.http.patch<BackendResponse>(this.REMOVE_EMPLOYEE_URL+'/'+id, null,{headers})
+    if(role == Role.CLIENT) return this.http.patch<BackendResponse>(this.REMOVE_CLIENT_URL+'/'+id, null,{headers})
+    return null;
   }
 
 
-  updateEmployee(detailEmployeeResponse: DetailEmployeeResponse) {
+  updateEmployee(detailEmployeeResponse: DetailUserMoreResponse) {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
     return this.http.put<BackendResponse>(this.UPDATE_EMPLOYEE_URL, detailEmployeeResponse, {headers})
+  }
+
+  getAllClients(active: boolean = false) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    if(active) return this.http.get<DetailUserMoreResponse[]>(this.ALL_ACTIVE_CLIENTS_URL, {headers})
+    return this.http.get<DetailUserMoreResponse[]>(this.ALL_CLIENTS_URL, {headers})
+  }
+
+  activateUser(userId: number) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.get<BackendResponse>(this.ACTIVATE_CLIENT_URL+'/'+userId, {headers})
+  }
+
+  updateClient(detailClientResponse: DetailUserMoreResponse) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.put<BackendResponse>(this.UPDATE_CLIENT_URL, detailClientResponse, {headers})
   }
 }
 

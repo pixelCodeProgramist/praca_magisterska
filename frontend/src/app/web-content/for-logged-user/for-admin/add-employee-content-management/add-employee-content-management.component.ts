@@ -4,7 +4,7 @@ import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bo
 import {UserService} from "../../../../../shared/user.service";
 import {Branch} from "../../../../../models/general-information/response/GeneralInformationResponse";
 import {GeneralInformationService} from "../../../../../shared/general-information.service";
-import {DetailEmployeeResponse} from "../../../../../models/detail-user/DetailEmployeeResponse";
+import {DetailUserMoreResponse} from "../../../../../models/detail-user/DetailUserMoreResponse";
 import {
   PopupInformationViewComponent
 } from "../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
@@ -24,7 +24,7 @@ export class AddEmployeeContentManagementComponent implements OnInit {
   password!: string;
   branches: Branch[] = [];
 
-  detailUserResponse: DetailEmployeeResponse = new DetailEmployeeResponse()
+  detailUserResponse: DetailUserMoreResponse = new DetailUserMoreResponse()
 
   isErrorActive: boolean = false;
   errorMsg: string = '';

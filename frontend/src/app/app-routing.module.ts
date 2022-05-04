@@ -38,7 +38,7 @@ import {
 } from "./web-content/for-logged-user/for-admin/employee-management/employee-management.component";
 import {
   ClientManagementComponent
-} from "./web-content/for-logged-user/for-employee/client-management/client-management.component";
+} from "./web-content/for-logged-user/for-employee/client-management-package/client-management/client-management.component";
 import {
   StatisticManagementComponent
 } from "./web-content/for-logged-user/for-employee/statistic-management/statistic-management.component";

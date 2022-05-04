@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {DetailEmployeeResponse} from "../../../../../models/detail-user/DetailEmployeeResponse";
+import {DetailUserMoreResponse} from "../../../../../models/detail-user/DetailUserMoreResponse";
 import {UserService} from "../../../../../shared/user.service";
 import {
   PopupInformationViewComponent
 } from "../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
 import {Router} from "@angular/router";
+import {Role} from "../../../../../shared/enum/Role";
 
 @Component({
   selector: 'app-remove-employee-content-management',
@@ -19,8 +20,8 @@ export class RemoveEmployeeContentManagementComponent implements OnInit {
   phone!: number;
   password!: string;
 
-  detailUserResponse: DetailEmployeeResponse = new DetailEmployeeResponse()
-  detailUserResponses: DetailEmployeeResponse[] = []
+  detailUserResponse: DetailUserMoreResponse = new DetailUserMoreResponse()
+  detailUserResponses: DetailUserMoreResponse[] = []
 
   isErrorActive: boolean = false;
   errorMsg: string = '';
@@ -58,7 +59,7 @@ export class RemoveEmployeeContentManagementComponent implements OnInit {
 
   submit() {
 
-    this.userService.removeUser(this.detailUserResponse.userId).subscribe(
+    this.userService.removeUser(this.detailUserResponse.userId, Role.EMPLOYEE)?.subscribe(
       data=>{
         const modalRef = this.ngbModal.open(PopupInformationViewComponent);
         modalRef.componentInstance.message = data.message;
@@ -70,7 +71,7 @@ export class RemoveEmployeeContentManagementComponent implements OnInit {
     )
   }
 
-  search($event: DetailEmployeeResponse) {
+  search($event: DetailUserMoreResponse) {
     this.detailUserResponse = $event
   }
 

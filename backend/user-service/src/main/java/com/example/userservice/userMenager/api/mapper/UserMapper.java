@@ -59,12 +59,15 @@ public class UserMapper {
 
     public DetailUserView mapDataToDetailedResponse(User user) {
         return DetailUserView.builder()
-                .email(user.getEmail())
+                .userId(user.getUserId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .email(user.getEmail())
                 .phone(user.getPhone())
+                .active(user.isActive())
                 .birthDay(user.getBirthday())
                 .addressView(AddressMapper.mapAddressToData(user.getAddress()))
+                .roleView(RoleMapper.mapRoleToData(user.getRole()))
                 .build();
     }
 }

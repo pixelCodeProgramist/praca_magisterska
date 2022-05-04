@@ -80,10 +80,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/id").permitAll()
                 .antMatchers("/user/detailUser").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
                 .antMatchers("/user/update").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
-                .antMatchers("/user/employee/add").hasAnyRole(ADMIN.name())
-                .antMatchers("/user/employee/all").hasAnyRole(ADMIN.name())
-                .antMatchers("/user/employee/remove/**").hasAnyRole(ADMIN.name())
-                .antMatchers("/user/employee/update").hasAnyRole(ADMIN.name())
+                .antMatchers("/user/employee/**").hasAnyRole(ADMIN.name())
+                .antMatchers("/user/client/**").hasAnyRole(ADMIN.name(), EMPLOYEE.name())
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

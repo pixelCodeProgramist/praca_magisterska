@@ -1,16 +1,17 @@
 import {AddressView, DetailUserResponse} from "./DetailUserResponse";
 import {Branch} from "../general-information/response/GeneralInformationResponse";
 
-export class DetailEmployeeResponse extends DetailUserResponse{
+export class DetailUserMoreResponse extends DetailUserResponse{
   userId!: number;
   isAdmin: boolean = false;
   branchId!: number;
   employeeDate!: Date;
   roleView!: Role;
+  active!: boolean;
   branchView!: Branch
 
-  public static cloneDeep(o1: DetailEmployeeResponse) {
-    let response: DetailEmployeeResponse = new DetailEmployeeResponse();
+  public static cloneDeep(o1: DetailUserMoreResponse) {
+    let response: DetailUserMoreResponse = new DetailUserMoreResponse();
     response.email = o1.email;
     response.firstName = o1.firstName;
     response.lastName = o1.lastName;
@@ -28,7 +29,11 @@ export class DetailEmployeeResponse extends DetailUserResponse{
     return response;
   }
 
-  public static isEqualsDeep(o1: DetailEmployeeResponse, o2: DetailEmployeeResponse): boolean {
+  public static isEqualsDeep(o1: DetailUserMoreResponse, o2: DetailUserMoreResponse): boolean {
+    if(isNaN(o1.employeeDate.getTime())) o1.employeeDate = new Date();
+    if(isNaN(o2.employeeDate.getTime())) o2.employeeDate = new Date();
+
+
     if (AddressView.isEqual(o1.addressView, o2.addressView) &&
       o1.email == o2.email &&
       o1.firstName == o2.firstName &&
@@ -38,7 +43,7 @@ export class DetailEmployeeResponse extends DetailUserResponse{
       o1.employeeDate.getTime() == o2.employeeDate.getTime() &&
       o1.password == o2.password &&
       o1.isAdmin == o2.isAdmin &&
-      o1.branchView.branchId == o2.branchView.branchId
+      o1.branchView?.branchId == o2.branchView?.branchId
     ) return true;
     return false;
   }

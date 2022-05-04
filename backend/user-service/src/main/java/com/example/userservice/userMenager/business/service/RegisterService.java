@@ -31,6 +31,7 @@ public class RegisterService {
 
     private AddressRepo addressRepo;
     private TokenService tokenService;
+    private TokenRepo tokenRepo;
     private PasswordEncoder passwordEncoder;
     private MailServiceFeignClient mailServiceFeignClient;
 
@@ -43,6 +44,8 @@ public class RegisterService {
         Role role = roleRepo.findByRoleIgnoreCase(RoleEnum.CLIENT.name()).orElseThrow(()->new RoleNotFoundException(RoleEnum.CLIENT.name()));
 
         User user = userRepo.save(UserMapper.mapDataToResponse(registerRequest, role, token, false));
+        token.setUser(user);
+        tokenRepo.save(token);
         Address address = Address.builder()
                 .city(registerRequest.getCity())
                 .houseNr(registerRequest.getHouseNr())

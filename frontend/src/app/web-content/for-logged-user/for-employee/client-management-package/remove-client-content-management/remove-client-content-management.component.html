@@ -1,0 +1,150 @@
+<div class="row justify-content-around align-content-center mb-3 mt-5">
+  <div class="row">
+    <div class="row justify-content-around align-content-center">
+      <div class="col-12 col-lg-10" *ngIf="detailUserResponse!=undefined">
+        <div class="d-flex col-12 h5 mt-2">
+          <div class="ng-autocomplete">
+            <ng-autocomplete
+              [data]="detailUserResponses"
+              [searchKeyword]="keyword"
+              placeholder="Wyszukaj klienta"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+              (selected)='search($event)'>
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <div class="item p-3">
+                <span>{{item.firstName}} {{item.lastName}}</span> &nbsp;|
+                <small>{{item.email}}</small>
+              </div>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+        </div>
+        <form>
+          <div class="card m-3 p-3">
+            <div class="row justify-content-around align-content-center mb-5">
+              <strong class="h2 fw-bold pb-3 myHeader text-center">Usuń klienta</strong>
+              <div class="line"></div>
+            </div>
+            <div class="h4 pb-4">Dane osobowe</div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly [(ngModel)]="detailUserResponse.firstName"
+                           class="form-control" name="firstName" type="text" placeholder="Imię"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly [(ngModel)]="detailUserResponse.lastName" class="form-control" name="lastName" type="text"
+                           placeholder="Nazwisko"/>
+                  </div>
+                </div>
+
+
+              </div>
+
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly [(ngModel)]="detailUserResponse.email" class="form-control" name="email" type="email"
+                           placeholder="Email"/>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly [(ngModel)]="detailUserResponse.phone" class="form-control" name="phone" type="text"
+                           placeholder="Telefon"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly class="form-control" readonly placeholder="Data urodzenia"
+                           name="birthdayDate" [value]="detailUserResponse.birthDay | date: 'yyyy-MM-dd'">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="h4 pb-4 mt-4">Dane kontaktowe</div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly [(ngModel)]="detailUserResponse.addressView.street" class="form-control" name="street"
+                           type="text" placeholder="Ulica"
+                    />
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="col-6">
+
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly [(ngModel)]="detailUserResponse.addressView.houseNr" [ngModelOptions]="{standalone: true}"
+                           [value]="detailUserResponse?.addressView?.houseNr" name="houseNr" class="form-control"
+                           type="text" placeholder="Numer domu"/>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly class="form-control" name="zipCode" type="text" placeholder="Kod pocztowy"
+                           [(ngModel)]="detailUserResponse.addressView.zipCode"
+                           [value]="detailUserResponse?.addressView?.zipCode"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="input-group">
+                    <input readonly [(ngModel)]="detailUserResponse.addressView.city"
+                           [value]="detailUserResponse?.addressView?.city" class="form-control" name="city" type="text"
+                           placeholder="Miasto"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mx-1" style="max-width: 15vmin">
+              <button class="btn btn-primary" type="submit" (click)="submit()">Usuń</button>
+            </div>
+            <div class="row" *ngIf="isErrorActive">
+              <small class="text-danger h5">
+                {{errorMsg}}
+              </small>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

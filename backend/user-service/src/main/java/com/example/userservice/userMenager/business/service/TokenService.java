@@ -26,6 +26,7 @@ public class TokenService {
     @Transactional
     public User verifyToken(String token) {
         Token tokenObject = tokenRepo.findByToken(token).orElseThrow(()->new TokenNotFoundException(token));
+
         if (!tokenObject.getActive()) throw new TokenAlreadyUsedException(token);
         tokenObject.setActive(false);
         tokenRepo.save(tokenObject);

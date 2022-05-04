@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DetailEmployeeResponse} from "../../../../../models/detail-user/DetailEmployeeResponse";
+import {DetailUserMoreResponse} from "../../../../../models/detail-user/DetailUserMoreResponse";
 import {UserService} from "../../../../../shared/user.service";
 import {NgbDate, NgbDateStruct, NgbInputDatepicker, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
@@ -22,8 +22,8 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
   phone!: number;
   repeatPassword!: string;
 
-  detailEmployeeResponse: DetailEmployeeResponse = new DetailEmployeeResponse()
-  detailEmployeeResponses: DetailEmployeeResponse[] = []
+  detailEmployeeResponse: DetailUserMoreResponse = new DetailUserMoreResponse()
+  detailEmployeeResponses: DetailUserMoreResponse[] = []
 
   isErrorActive: boolean = false;
   errorMsg: string = '';
@@ -36,7 +36,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
 
   isSelectPossible: boolean = false;
 
-  detailEmployeeResponseOrginal: DetailEmployeeResponse = new DetailEmployeeResponse();
+  detailEmployeeResponseOrginal: DetailUserMoreResponse = new DetailUserMoreResponse();
 
   birthdayDate!: NgbDateStruct;
 
@@ -72,7 +72,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
 
         this.detailEmployeeResponse.birthDay = new Date(this.detailEmployeeResponse.birthDay);
         this.detailEmployeeResponse.employeeDate = new Date(this.detailEmployeeResponse.employeeDate);
-        this.detailEmployeeResponseOrginal = DetailEmployeeResponse.cloneDeep(this.detailEmployeeResponse)
+        this.detailEmployeeResponseOrginal = DetailUserMoreResponse.cloneDeep(this.detailEmployeeResponse)
 
         this.birthdayDate = new NgbDate(
           this.detailEmployeeResponseOrginal.birthDay.getFullYear(),
@@ -180,7 +180,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
       this.detailEmployeeResponse.branchView = branch;
       if (this.detailEmployeeResponse.isAdmin) this.detailEmployeeResponse.roleView.role = 'ADMIN'
       else this.detailEmployeeResponse.roleView.role = 'EMPLOYEE'
-      let isEqual = DetailEmployeeResponse.isEqualsDeep(this.detailEmployeeResponse, this.detailEmployeeResponseOrginal)
+      let isEqual = DetailUserMoreResponse.isEqualsDeep(this.detailEmployeeResponse, this.detailEmployeeResponseOrginal)
       if (!isEqual) {
         this.isErrorActive = false;
         this.errorMsg = ''
@@ -203,7 +203,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
   }
 
 
-  search($event: DetailEmployeeResponse) {
+  search($event: DetailUserMoreResponse) {
     this.detailEmployeeResponse = $event
   }
 

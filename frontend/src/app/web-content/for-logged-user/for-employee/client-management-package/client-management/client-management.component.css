@@ -1,0 +1,13 @@
+.nav-item:hover {
+  background: lightblue !important;
+}
+
+.my-navbar {
+  color: #0c0c0c;
+  display: flex;
+  flex-direction: row;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+  cursor: pointer;
+}

@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetailUserView {
+    private Long userId;
 
     private String firstName;
 
@@ -24,5 +25,9 @@ public class DetailUserView {
     private Date birthDay;
 
     private AddressView addressView;
+
+    private RoleView roleView;
+
+    private Boolean active;
 
 }
