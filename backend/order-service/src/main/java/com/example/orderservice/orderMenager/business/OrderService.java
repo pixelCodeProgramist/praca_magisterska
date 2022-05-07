@@ -37,6 +37,7 @@ public class OrderService {
 //
 //        String s = jwtTokenNonUserProvider.generateToken(claims);
 //        System.out.println();
+
         if (jwtTokenNonUserProvider.validateToken(dateAndHourOfReservationRequest.getToken())) {
             if (!jwtTokenNonUserProvider.isTokenExpire(dateAndHourOfReservationRequest.getToken()) &&
                     "COMPUTER".equalsIgnoreCase(jwtTokenNonUserProvider.extractUserIdName(dateAndHourOfReservationRequest.getToken()))) {

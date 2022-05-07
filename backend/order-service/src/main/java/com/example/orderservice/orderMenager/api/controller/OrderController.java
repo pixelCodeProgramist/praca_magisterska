@@ -20,4 +20,10 @@ public class OrderController {
     {
         return new AvailableHoursResponse(orderService.getAvailableHours(dateAndHourOfReservationRequest));
     }
+
+//    @PostMapping("/makeOrder")
+//    public AvailableHoursResponse getAvailableHours(@Valid @RequestBody DateAndHourOfReservationRequest dateAndHourOfReservationRequest)
+//    {
+//        return new AvailableHoursResponse(orderService.getAvailableHours(dateAndHourOfReservationRequest));
+//    }
 }
