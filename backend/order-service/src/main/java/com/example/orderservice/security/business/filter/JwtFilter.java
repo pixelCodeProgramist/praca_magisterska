@@ -2,7 +2,10 @@ package com.example.orderservice.security.business.filter;
 
 import com.example.orderservice.security.business.filter.error.FilterError;
 import com.example.orderservice.security.business.request.RequestJwt;
+import com.example.orderservice.security.business.request.UserByIdRequest;
 import com.example.orderservice.security.business.response.ExpiredJwtResponse;
+import com.example.orderservice.security.business.service.JwtTokenNonUserOrderProvider;
+import com.example.orderservice.security.business.service.JwtTokenNonUserProvider;
 import com.example.orderservice.security.business.service.JwtTokenProvider;
 import com.example.orderservice.userMenager.api.request.User;
 import com.example.orderservice.userMenager.feignClient.ExpiredJwtServiceFeignClient;
@@ -31,6 +34,10 @@ import java.util.Collections;
 public class JwtFilter extends OncePerRequestFilter {
     private UserServiceFeignClient userServiceFeignClient;
     private JwtTokenProvider tokenProvider;
+
+    private JwtTokenNonUserProvider jwtTokenNonUserProvider;
+
+
     private ExpiredJwtServiceFeignClient expiredJwtServiceFeignClient;
 
     @Override
@@ -52,7 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
         ExpiredJwtResponse token = expiredJwtServiceFeignClient.getExpiredJwtByJwt(new RequestJwt(jwt));
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null && token == null) {
-            User user = userServiceFeignClient.getUserById(userId);
+            User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
             if (user != null) {
                 if (tokenProvider.validateToken(jwt, user)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

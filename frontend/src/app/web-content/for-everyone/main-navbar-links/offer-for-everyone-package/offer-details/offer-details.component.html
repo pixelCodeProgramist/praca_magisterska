@@ -77,7 +77,7 @@
           <div *ngIf="withAccessoryCheckbox "
                class="form-group col-12" style="font-size: medium">
             <label for="accessory_filter4">Wybierz akcesoria</label>
-            <select (change)="selectAccessory()"
+            <select
                     id="accessory_filter4" class="form-select col-8" [(ngModel)]="selectedAccessoryOption">
               <option *ngFor="let accessoryInOrder of accessoriesInOrder"
                       [ngValue]="accessoryInOrder">{{accessoryInOrder.productName}}</option>
@@ -87,10 +87,16 @@
           <strong *ngIf="selectedTimeOption != '-' && selectedTimeOption && productTimeDetails.availableHours.length>0"
                   style="font-size: xx-large">{{getPrice() | number:'1.2-2'}} PLN</strong>
           <button *ngIf="selectedTimeOption != '-' && selectedTimeOption && selectedHourBeginTripOption != '-' &&
-                  selectedHourBeginTripOption && productTimeDetails.availableHours.length>0"
+                  selectedHourBeginTripOption && productTimeDetails.availableHours.length>0" (click)="order()"
                   class="btn btn-primary h5 p-3 col-3 mt-3">Zamów
           </button>
+
         </div>
+      </div>
+      <div class="row" *ngIf="isErrorActive">
+        <small class="text-danger h5">
+          {{errorMsg}}
+        </small>
       </div>
 
 

@@ -1,6 +1,8 @@
 package com.example.orderservice.orderMenager.api.controller;
 
+import com.example.orderservice.orderMenager.api.request.OrderRequest;
 import com.example.orderservice.orderMenager.api.response.AvailableHoursResponse;
+import com.example.orderservice.orderMenager.api.response.ResponseView;
 import com.example.orderservice.orderMenager.business.OrderService;
 import com.example.orderservice.orderMenager.api.request.DateAndHourOfReservationRequest;
 import lombok.AllArgsConstructor;
@@ -21,9 +23,10 @@ public class OrderController {
         return new AvailableHoursResponse(orderService.getAvailableHours(dateAndHourOfReservationRequest));
     }
 
-//    @PostMapping("/makeOrder")
-//    public AvailableHoursResponse getAvailableHours(@Valid @RequestBody DateAndHourOfReservationRequest dateAndHourOfReservationRequest)
-//    {
-//        return new AvailableHoursResponse(orderService.getAvailableHours(dateAndHourOfReservationRequest));
-//    }
+    @PostMapping("/makeOrder")
+    public ResponseView makeOrder(@Valid @RequestBody OrderRequest orderRequest)
+    {
+
+        return new ResponseView("Zamoówienie złożone poprawnie");
+    }
 }

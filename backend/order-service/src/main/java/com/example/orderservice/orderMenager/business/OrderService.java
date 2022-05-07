@@ -9,22 +9,20 @@ import com.example.orderservice.orderMenager.business.hoursStrategyPackage.LessT
 import com.example.orderservice.orderMenager.data.entity.UserOrder;
 import com.example.orderservice.orderMenager.data.repository.UserOrderRepo;
 import com.example.orderservice.security.business.exception.authorize.AuthorizationException;
-import com.example.orderservice.security.business.service.JwtTokenNonUserProvider;
+import com.example.orderservice.security.business.service.JwtTokenNonUserOrderProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class OrderService {
 
-    private JwtTokenNonUserProvider jwtTokenNonUserProvider;
+    private JwtTokenNonUserOrderProvider jwtTokenNonUserProvider;
     private UserOrderRepo userOrderRepo;
 
     public List<String> getAvailableHours(DateAndHourOfReservationRequest dateAndHourOfReservationRequest) {

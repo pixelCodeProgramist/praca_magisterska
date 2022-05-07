@@ -29,13 +29,6 @@ public class ElectricBike {
     private String url;
 
 
-
-    @NotBlank
-    private int inUse;
-
-    @NotBlank
-    private int availableNumber;
-
     @OneToMany(mappedBy = "electricBike", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ElectricBikeFrameInventory> electricBikeFrameInventories = new HashSet<>();
 

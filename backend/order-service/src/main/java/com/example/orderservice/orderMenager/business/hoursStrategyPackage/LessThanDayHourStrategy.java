@@ -2,16 +2,15 @@ package com.example.orderservice.orderMenager.business.hoursStrategyPackage;
 
 import com.example.orderservice.orderMenager.api.request.DateAndHourOfReservationRequest;
 import com.example.orderservice.orderMenager.data.entity.UserOrder;
-import com.example.orderservice.security.business.service.JwtTokenNonUserProvider;
+import com.example.orderservice.security.business.service.JwtTokenNonUserOrderProvider;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
 public class LessThanDayHourStrategy implements HoursStrategy {
     @Override
-    public List<String> getAvailableHours(String hourUnit, List<UserOrder> userOrdersFromToday, DateAndHourOfReservationRequest dateAndHourOfReservationRequest, JwtTokenNonUserProvider tokenNonUserProvider) {
+    public List<String> getAvailableHours(String hourUnit, List<UserOrder> userOrdersFromToday, DateAndHourOfReservationRequest dateAndHourOfReservationRequest, JwtTokenNonUserOrderProvider tokenNonUserProvider) {
         String range = dateAndHourOfReservationRequest.getReservationRange();
         if ("godzina".equalsIgnoreCase(range)) range = "1";
         else {

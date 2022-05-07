@@ -105,7 +105,7 @@ public class OfferService {
                 .map(product -> GeneralAccessoryOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))
                 .collect(Collectors.toList());
 
-        productGeneralOfferViews.sort(Comparator.comparingInt(AccessoryGeneralOfferView::getId));
+        productGeneralOfferViews.sort(Comparator.comparingLong(AccessoryGeneralOfferView::getId));
 
 
         return new AccessoryGeneralOfferResponseView(productGeneralOfferViews, page.getTotalPages());

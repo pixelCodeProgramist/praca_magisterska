@@ -15,6 +15,10 @@ import {AvailableHoursResponse} from "../../../../../../models/offers/pre-order/
 import {AccessoryInOrder} from "../../../../../../models/offers/pre-order/response/AccessoryInOrder";
 import {GradeRequest} from "../../../../../../models/offers/pre-order/request/GradeRequest";
 import {NgxStarsComponent} from "ngx-stars";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {PopupInformationViewComponent} from "../../popup-information-view/popup-information-view.component";
+import {OrderRequest} from "../../../../../../models/order/request/OrderRequest";
+import {OrderService} from "../../../../../../shared/order.service";
 
 @Component({
   selector: 'app-offer-details',
@@ -46,25 +50,28 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
   canGrade: boolean = false;
   @ViewChild(NgxStarsComponent)
   starsComponent!: NgxStarsComponent;
+  isErrorActive: boolean = false;
+  errorMsg: string = '';
 
   constructor(private route: ActivatedRoute, private router: Router, private offerService: OfferService,
-              private imageFromByteSanitizer: ImageFromByteSanitizerService, public userService: UserService) {
+              private imageFromByteSanitizer: ImageFromByteSanitizerService, public userService: UserService,
+              private ngbModal: NgbModal, private orderService: OrderService) {
   }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.queryParams["id"];
     if (this.id == undefined) this.router.navigate(['offer']);
-    if(this.userService.isLoggedIn()){
+
+    if (this.userService.isLoggedIn()) {
 
       this.offerService.canGrade(Number(this.id)).subscribe(
-        data=>{
+        data => {
           this.canGrade = data;
-        },error => {
+        }, error => {
 
         }
       )
     }
-
 
 
     this.options.minDate = new Date();
@@ -74,12 +81,12 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
 
   onRatingSet($event: number) {
     //console.log(this.id)
-    if(this.canGrade) {
+    if (this.canGrade) {
       this.offerService.grade(new GradeRequest(Number(this.id), $event)).subscribe(
-        data=>{
+        data => {
           this.canGrade = false;
           this.ngAfterViewInit()
-        },error => {
+        }, error => {
 
         }
       )
@@ -111,9 +118,9 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
     this.withAccessoryCheckbox = false;
 
     this.offerService.getAvailableHours(this.dateAndHourOfReservationRequest).subscribe(
-      data=>{
+      data => {
         this.productTimeDetails = data;
-      },error => {
+      }, error => {
 
       }
     )
@@ -139,24 +146,20 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
 
   changeAccessoryState() {
     this.withAccessoryCheckbox = !this.withAccessoryCheckbox;
-    if(this.withAccessoryCheckbox) {
+    if (this.withAccessoryCheckbox) {
 
-      let rangeInt = Number(this.selectedTimeOption.replace('godzina','1')
-        .replace('doba','24').replace('dzień','5')
-        .replace('do ','').replace(' h',''));
+      let rangeInt = Number(this.selectedTimeOption.replace('godzina', '1')
+        .replace('doba', '24').replace('dzień', '5')
+        .replace('do ', '').replace(' h', ''));
       this.offerService.getAccessoryDetailOfferResponse(rangeInt).subscribe(
-        data=>{
+        data => {
           this.accessoriesInOrder = data;
-        },error => {
+        }, error => {
 
         }
       )
     }
 
-  }
-
-  selectAccessory() {
-    console.log(this.selectedAccessoryOption)
   }
 
   ngAfterViewInit(): void {
@@ -170,8 +173,37 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
         this.dateAndHourOfReservationRequest.bikeId = this.bikeDetail.id;
         this.dateAndHourOfReservationRequest.frame = this.selectedFrameOption;
         this.starsComponent.setRating(this.bikeDetail.rating)
+      }, error => {
+        if (error.error.offer) {
+          if (error.error.offer.includes('does not exists')) this.router.navigate(["404"]);
+          this.isErrorActive = true;
+          this.errorMsg = error.error.offer;
+        }
+        this.isErrorActive = true;
+        this.errorMsg = error.error.status;
+
       }
     )
+  }
+
+  order() {
+    if (!this.isEmpty(this.selectedFrameOption) && !this.isEmpty(this.selectedTimeOption) && !this.isEmpty(this.selectedHourBeginTripOption)) {
+      let orderRequest: OrderRequest =
+        new OrderRequest(Number(this.id), this.selectedFrameOption, this.selectedHourBeginTripOption,
+          this.selectedAccessoryOption?.id, this.getPrice());
+      this.orderService.makeOrder(orderRequest).subscribe(
+        data=>{
+          console.log(data)
+        },error => {
+
+        }
+      )
+    }
+
+  }
+
+  isEmpty(str: string) {
+    return str.trim().length == 0;
   }
 }
 

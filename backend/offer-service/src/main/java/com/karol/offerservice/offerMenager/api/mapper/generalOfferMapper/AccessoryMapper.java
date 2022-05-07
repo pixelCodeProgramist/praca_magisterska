@@ -28,6 +28,7 @@ public class AccessoryMapper {
 
 
         return new AccessoryInformationInOrderView().builder()
+                .id(accessory.getId())
                 .productName(accessory.getProduct().getName())
                 .currency(accessory.getCurrency())
                 .price(price)

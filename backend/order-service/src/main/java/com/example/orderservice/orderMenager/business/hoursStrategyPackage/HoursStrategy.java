@@ -2,7 +2,7 @@ package com.example.orderservice.orderMenager.business.hoursStrategyPackage;
 
 import com.example.orderservice.orderMenager.api.request.DateAndHourOfReservationRequest;
 import com.example.orderservice.orderMenager.data.entity.UserOrder;
-import com.example.orderservice.security.business.service.JwtTokenNonUserProvider;
+import com.example.orderservice.security.business.service.JwtTokenNonUserOrderProvider;
 import lombok.*;
 
 import java.util.*;
@@ -50,5 +50,5 @@ public interface HoursStrategy {
         return hourInstanceMap;
 
     }
-    List<String> getAvailableHours(String hourUnit, List<UserOrder> userOrdersFromToday, DateAndHourOfReservationRequest possibleAvailableBikeNumber, JwtTokenNonUserProvider tokenNonUserProvider);
+    List<String> getAvailableHours(String hourUnit, List<UserOrder> userOrdersFromToday, DateAndHourOfReservationRequest possibleAvailableBikeNumber, JwtTokenNonUserOrderProvider tokenNonUserProvider);
 }

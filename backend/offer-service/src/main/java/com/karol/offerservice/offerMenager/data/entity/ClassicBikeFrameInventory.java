@@ -17,14 +17,7 @@ public class ClassicBikeFrameInventory {
     private Long id;
 
     @NotBlank
-    private int inUse;
-
-    @NotBlank
     private int availableNumber;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "bike_type_id", nullable = false)
-    private BikeType bikeType;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "frame_id", nullable = false)

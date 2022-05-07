@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 public class AccessoryGeneralOfferView {
-    private int id;
+    private Long id;
 
     private String name;
 

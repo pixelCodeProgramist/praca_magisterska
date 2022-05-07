@@ -8,18 +8,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class JwtTokenNonUserProvider implements TokenProvider {
+public class JwtTokenNonUserOrderProvider implements TokenProvider {
     private AuthProperties authProperties;
 
-    @Override
-    public Long extractUserId(String token) {
+    public String extractValueFromClaims(String token, String key) {
         Claims claims = extractAllClaims(token, authProperties.getSecretToken());
-        return Long.parseLong(claims.getSubject());
+        return String.valueOf(claims.get(key));
+    }
+    @Override
+    public String extractUserIdName(String token) {
+        Claims claims = extractAllClaims(token, authProperties.getSecretToken());
+        return claims.getSubject();
     }
 
     @Override
@@ -34,16 +37,21 @@ public class JwtTokenNonUserProvider implements TokenProvider {
     }
 
     @Override
-    public String generateToken() {
-        Map<String, Object> claims = new HashMap<>();
+    public String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
-                .setSubject("COMPUTER")
+                .setSubject("ORDER")
                 .addClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() +
-                        Long.parseLong(authProperties.getTokenExpirationMsec())))
+                        Long.parseLong(authProperties.getTokenExpirationMsecOrder())))
                 .signWith(SignatureAlgorithm.HS256, authProperties.getSecretToken())
                 .compact();
+    }
+
+    @Override
+    public boolean validateToken(String token) {
+        Claims claims = extractAllClaims(token, authProperties.getSecretToken());
+        return claims!=null && !isTokenExpire(token);
     }
 }
 

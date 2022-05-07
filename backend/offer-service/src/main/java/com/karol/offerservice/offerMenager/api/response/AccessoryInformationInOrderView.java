@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 public class AccessoryInformationInOrderView {
+    private Long id;
+
     private String productName;
 
     private BigDecimal price;

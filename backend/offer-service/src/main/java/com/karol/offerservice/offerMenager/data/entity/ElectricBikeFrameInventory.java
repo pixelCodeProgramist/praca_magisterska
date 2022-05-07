@@ -17,9 +17,6 @@ public class ElectricBikeFrameInventory {
     private Long id;
 
     @NotBlank
-    private int inUse;
-
-    @NotBlank
     private int availableNumber;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

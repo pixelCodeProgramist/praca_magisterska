@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class Accessory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
