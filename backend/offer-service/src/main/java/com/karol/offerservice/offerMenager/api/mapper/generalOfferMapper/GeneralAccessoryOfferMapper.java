@@ -4,6 +4,8 @@ import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.Acces
 import com.karol.offerservice.offerMenager.data.entity.Accessory;
 import lombok.experimental.UtilityClass;
 
+import java.math.BigDecimal;
+
 
 @UtilityClass
 public class GeneralAccessoryOfferMapper {
@@ -12,7 +14,7 @@ public class GeneralAccessoryOfferMapper {
                 .id(accessory.getId())
                 .name(accessory.getProduct().getName())
                 .image(image)
-                .rating(accessory.getRating())
+                .rating(accessory.getProduct().getRating())
                 .minimalPrice(accessory.getEveryBeginHourPrice())
                 .build();
     }

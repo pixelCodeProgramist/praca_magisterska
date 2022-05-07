@@ -4,6 +4,7 @@ import com.karol.offerservice.offerMenager.api.dto.TimePriceDto;
 import com.karol.offerservice.offerMenager.data.entity.Frame;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
 @Getter
 public class DetailBikeInfoViewBuilder {
 
-    private int id;
+    private Long id;
     private String name;
     private byte[] image;
     private int ratingNumber;
@@ -25,6 +26,10 @@ public class DetailBikeInfoViewBuilder {
     private List<TimePriceDto> timePriceDtoList;
 
     private Set<String> frames;
+
+    private int inUse;
+
+    private int availableNumber;
     public DetailBikeInfoViewBuilder() {
     }
 
@@ -33,7 +38,7 @@ public class DetailBikeInfoViewBuilder {
         return this;
     }
 
-    public DetailBikeInfoViewBuilder id(int id) {
+    public DetailBikeInfoViewBuilder id(Long id) {
         this.id = id;
         return this;
     }
@@ -85,6 +90,16 @@ public class DetailBikeInfoViewBuilder {
 
     public DetailBikeInfoViewBuilder guidePrice(BigDecimal guidePrice) {
         this.guidePrice = guidePrice;
+        return this;
+    }
+
+    public DetailBikeInfoViewBuilder inUse(int inUse) {
+        this.inUse = inUse;
+        return this;
+    }
+
+    public DetailBikeInfoViewBuilder availableNumber(int availableNumber) {
+        this.availableNumber = availableNumber;
         return this;
     }
 }

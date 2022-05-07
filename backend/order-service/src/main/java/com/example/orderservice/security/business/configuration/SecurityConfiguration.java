@@ -71,8 +71,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/swagger-ui.html").permitAll()
                 //user
-                .antMatchers("/order/testPublic").permitAll()
-                .antMatchers("/order/testPrivate").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
+                .antMatchers("/order/**").permitAll()
+
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

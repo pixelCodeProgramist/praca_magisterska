@@ -10,11 +10,16 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 public class BikeGeneralOfferView {
-    private int id;
+    private Long id;
 
     private String name;
 
     private byte[] image;
 
     private BigDecimal rating;
+
+    private int inUse;
+
+    private int availableNumber;
+
 }

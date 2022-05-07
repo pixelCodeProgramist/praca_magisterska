@@ -19,23 +19,25 @@ public class ElectricBike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @NotBlank
     private String url;
 
-    @Size(max = 5)
-    @Column(precision=10, scale=2)
-    private BigDecimal rating;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "ElectricBikeFrame",
-            joinColumns = {@JoinColumn(name = "electricBikeId")},
-            inverseJoinColumns = {@JoinColumn(name = "frameId")})
-    private Set<Frame> frames = new HashSet<>();
+
+    @NotBlank
+    private int inUse;
+
+    @NotBlank
+    private int availableNumber;
+
+    @OneToMany(mappedBy = "electricBike", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ElectricBikeFrameInventory> electricBikeFrameInventories = new HashSet<>();
+
 
 }

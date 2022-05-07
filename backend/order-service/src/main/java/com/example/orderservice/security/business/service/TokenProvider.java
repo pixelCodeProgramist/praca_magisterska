@@ -5,14 +5,27 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public interface TokenProvider {
-    Long extractUserId(String token);
+    default Long extractUserId(String token){
+        return -1L;
+    }
+    default String extractUserIdName(String token) {
+        return "";
+    }
 
     default Claims extractAllClaims(String token, String secretToken) {
-        return Jwts.parser()
-                .setSigningKey(secretToken)
-                .parseClaimsJws(token).getBody();
+        Claims body = null;
+        try {
+            body = Jwts.parser()
+                    .setSigningKey(secretToken)
+                    .parseClaimsJws(token).getBody();
+            return body;
+        }catch (Exception e) {
+            return body;
+        }
     }
 
     default  boolean isTokenExpire(String token) {
@@ -24,9 +37,20 @@ public interface TokenProvider {
     default String generateToken(User user) {
         return "";
     }
+    default String generateToken() {
+        return "";
+    }
+
+    default String generateToken(Map<String, Object> claims) {
+        return "";
+    }
 
     default boolean validateToken(String token, User user) {
         Long userId = extractUserId(token);
         return userId.equals(user.getUserId()) && !isTokenExpire(token);
+    }
+
+    default boolean validateToken(String token) {
+        return false;
     }
 }

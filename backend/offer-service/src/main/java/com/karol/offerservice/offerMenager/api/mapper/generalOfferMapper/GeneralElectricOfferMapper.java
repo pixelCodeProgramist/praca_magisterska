@@ -12,7 +12,7 @@ public class GeneralElectricOfferMapper {
                 .id(electricBike.getId())
                 .name(electricBike.getProduct().getName())
                 .image(image)
-                .rating(electricBike.getRating())
+                .rating(electricBike.getProduct().getRating())
                 .build();
     }
 }

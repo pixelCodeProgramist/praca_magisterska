@@ -12,7 +12,7 @@ public class GeneralClassicOfferMapper {
                 .id(classicBike.getId())
                 .name(classicBike.getProduct().getName())
                 .image(image)
-                .rating(classicBike.getRating())
+                .rating(classicBike.getProduct().getRating())
                 .build();
     }
 }

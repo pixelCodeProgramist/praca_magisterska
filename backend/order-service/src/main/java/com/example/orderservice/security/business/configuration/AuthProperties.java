@@ -13,4 +13,7 @@ public class AuthProperties
 
     @Value("${app.auth.tokenExpirationMsec}")
     private String tokenExpirationMsec;
+
+    @Value("${app.auth.tokenExpirationMsecOrder}")
+    private String tokenExpirationMsecOrder;
 }

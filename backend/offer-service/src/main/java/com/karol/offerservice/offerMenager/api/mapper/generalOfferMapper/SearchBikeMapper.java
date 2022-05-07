@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 public class SearchBikeMapper {
     public BikeForSearchView mapDataToResponse(ElectricBike electricBike, byte[] image) {
         return BikeForSearchView.builder()
-                .id(electricBike.getProduct().getId())
+                .id(electricBike.getProduct().getProductId())
                 .name(electricBike.getProduct().getName())
                 .image(image)
                 .type("Elektryczny")
@@ -21,7 +21,7 @@ public class SearchBikeMapper {
 
     public BikeForSearchView mapDataToResponse(ClassicBike classicBike, byte[] image) {
         return BikeForSearchView.builder()
-                .id(classicBike.getProduct().getId())
+                .id(classicBike.getProduct().getProductId())
                 .name(classicBike.getProduct().getName())
                 .image(image)
                 .type("Klasyczny " + classicBike.getBikeType().getType())

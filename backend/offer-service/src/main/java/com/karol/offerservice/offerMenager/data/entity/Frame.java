@@ -23,9 +23,6 @@ public class Frame {
     @NotEmpty
     private String name;
 
-    @ManyToMany(mappedBy = "frames", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<ClassicBike> classicBikes = new HashSet<>();
-
-    @ManyToMany(mappedBy = "frames", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<ClassicBike> electricBikes = new HashSet<>();
+    @OneToMany(mappedBy = "frame", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ClassicBikeFrameInventory> classicBikeFrameInventories = new HashSet<>();
 }

@@ -2,6 +2,7 @@ package com.karol.offerservice.offerMenager.api.response.generalInfoPackage;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 @AllArgsConstructor
@@ -19,4 +20,8 @@ public class ClassicBikeGeneralInformationView {
     private BigDecimal dayAndNightPrice;
 
     private String currency;
+
+    private int inUse;
+
+    private int availableNumber;
 }

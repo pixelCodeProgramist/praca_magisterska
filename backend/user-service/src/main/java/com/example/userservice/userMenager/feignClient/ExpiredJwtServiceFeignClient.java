@@ -5,10 +5,11 @@ import com.example.userservice.business.response.ExpiredJwtResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "AUTH-SERVICE")
 public interface ExpiredJwtServiceFeignClient {
     @PostMapping("/auth/user/expiredJwt")
-    ExpiredJwtResponse getExpiredJwtByJwt(@RequestParam RequestJwt jwt);
+    ExpiredJwtResponse getExpiredJwtByJwt(@RequestBody RequestJwt jwt);
 }

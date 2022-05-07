@@ -18,14 +18,14 @@ public class DetailOfferMapper {
                 .id(classicBike.getId())
                 .name(classicBike.getProduct().getName())
                 .image(image)
-                .ratingNumber(10)
-                .rating(classicBike.getRating())
+                .ratingNumber(classicBike.getProduct().getUserGradeProducts().size())
+                .rating(classicBike.getProduct().getRating())
                 .bikeType(classicBike.getBikeType().getType())
                 .offerType(classicBike.getProduct().getProductType().getType())
                 .bikeOfferType("Classic")
                 .timePriceDtoList(timePriceDtoList)
                 .guidePrice(guidePrice)
-                .frames(classicBike.getFrames().stream().map(frame -> frame.getName()).collect(Collectors.toSet()))
+                .frames(classicBike.getClassicBikeFrameInventories().stream().map(frame->frame.getFrame().getName()).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -34,13 +34,13 @@ public class DetailOfferMapper {
                 .id(electricBike.getId())
                 .name(electricBike.getProduct().getName())
                 .image(image)
-                .ratingNumber(20)
-                .rating(electricBike.getRating())
+                .ratingNumber(electricBike.getProduct().getUserGradeProducts().size())
+                .rating(electricBike.getProduct().getRating())
                 .offerType(electricBike.getProduct().getProductType().getType())
                 .guidePrice(guidePrice)
                 .timePriceDtoList(timePriceDtoList)
                 .bikeOfferType("Electric")
-                .frames(electricBike.getFrames().stream().map(frame -> frame.getName()).collect(Collectors.toSet()))
+                .frames(electricBike.getElectricBikeFrameInventories().stream().map(frame->frame.getFrame().getName()).collect(Collectors.toSet()))
                 .build();
     }
 }

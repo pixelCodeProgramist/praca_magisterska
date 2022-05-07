@@ -4,6 +4,10 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -15,7 +19,8 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private Long productId;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "product_type_id", nullable = false)
@@ -35,6 +40,16 @@ public class Product {
 
     @OneToOne(mappedBy = "product")
     private Service Service;
+
+    @Size(max = 5)
+    @Column(precision=10, scale=2)
+    private BigDecimal rating;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<UserGradeProduct> userGradeProducts = new HashSet<>();
+
+//    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<UserGrade> userGrades = new HashSet<>();
 }
 
 

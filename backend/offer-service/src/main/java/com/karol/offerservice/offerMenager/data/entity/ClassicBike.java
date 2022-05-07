@@ -18,26 +18,21 @@ import java.util.Set;
 public class ClassicBike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank
     private String url;
 
-    @Size(max = 5)
-    @Column(precision=10, scale=2)
-    private BigDecimal rating;
-
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "bike_type_id", nullable = false)
     private BikeType bikeType;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "ClassicBikeFrame",
-            joinColumns = {@JoinColumn(name = "classicBikeId")},
-            inverseJoinColumns = {@JoinColumn(name = "frameId")})
-    private Set<Frame> frames = new HashSet<>();
+    @OneToMany(mappedBy = "classicBike", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ClassicBikeFrameInventory> classicBikeFrameInventories = new HashSet<>();
+
+
 }

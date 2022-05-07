@@ -20,7 +20,7 @@ public class Accessory {
     private int id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @NotBlank
@@ -37,11 +37,5 @@ public class Accessory {
 
     @Size(min = 3, max = 3)
     private String currency;
-
-    @Size(max = 5)
-    @Column(precision=10, scale=2)
-    private BigDecimal rating;
-
-
 
 }

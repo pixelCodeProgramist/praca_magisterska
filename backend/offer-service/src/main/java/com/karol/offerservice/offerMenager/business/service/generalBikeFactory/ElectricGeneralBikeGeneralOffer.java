@@ -34,7 +34,7 @@ public class ElectricGeneralBikeGeneralOffer implements IGeneralBikeGeneralOffer
                 .map(product-> GeneralElectricOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))
                 .collect(Collectors.toList());
 
-        bikeGeneralOfferViews.sort(Comparator.comparingInt(BikeGeneralOfferView::getId));
+        bikeGeneralOfferViews.sort(Comparator.comparingLong(BikeGeneralOfferView::getId));
         BigDecimal minimalPrice = electricBikePriceRepo.findMinimalPrice();
 
         return new BikeGeneralOfferResponseView(bikeGeneralOfferViews, page.getTotalPages(), minimalPrice);

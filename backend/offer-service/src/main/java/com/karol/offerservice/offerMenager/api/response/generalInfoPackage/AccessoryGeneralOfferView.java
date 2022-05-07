@@ -19,4 +19,6 @@ public class AccessoryGeneralOfferView {
     private BigDecimal rating;
 
     private BigDecimal minimalPrice;
+
+
 }
