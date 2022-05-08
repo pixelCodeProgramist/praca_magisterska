@@ -3,7 +3,9 @@ package com.example.orderservice.orderMenager.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -27,5 +29,10 @@ public class UserOrder {
     @NotBlank
     private String transactionToken;
 
+    @Column(nullable = false)
+    private boolean isPaid;
+
+    @Future
+    private Date timeToPaid;
 
 }

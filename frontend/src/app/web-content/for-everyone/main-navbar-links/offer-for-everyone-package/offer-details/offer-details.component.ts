@@ -144,13 +144,18 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
 
   }
 
+  convertRangeToNumber(dayReplace: string) {
+    return Number(this.selectedTimeOption.replace('godzina', '1')
+      .replace('doba', '24').replace('dzień', dayReplace)
+      .replace('do ', '').replace(' h', ''));
+  }
+
   changeAccessoryState() {
     this.withAccessoryCheckbox = !this.withAccessoryCheckbox;
     if (this.withAccessoryCheckbox) {
 
-      let rangeInt = Number(this.selectedTimeOption.replace('godzina', '1')
-        .replace('doba', '24').replace('dzień', '5')
-        .replace('do ', '').replace(' h', ''));
+      let rangeInt = this.convertRangeToNumber('5');
+
       this.offerService.getAccessoryDetailOfferResponse(rangeInt).subscribe(
         data => {
           this.accessoriesInOrder = data;
@@ -188,12 +193,23 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
 
   order() {
     if (!this.isEmpty(this.selectedFrameOption) && !this.isEmpty(this.selectedTimeOption) && !this.isEmpty(this.selectedHourBeginTripOption)) {
+      let beginDate = new Date(this.dateAndHourOfReservationRequest.reservationTime);
+      let endDate = new Date(beginDate);
+      let beginHour = Number(this.selectedHourBeginTripOption.split(':')[0]);
+      let rangeInt = this.convertRangeToNumber(String(18 - beginHour));
+
+
+      beginDate.setHours(beginHour);
+      endDate.setHours(beginHour + rangeInt);
+
+
       let orderRequest: OrderRequest =
-        new OrderRequest(Number(this.id), this.selectedFrameOption, this.selectedHourBeginTripOption,
+        new OrderRequest(Number(this.id), this.selectedFrameOption, beginDate, endDate,
           this.selectedAccessoryOption?.id, this.getPrice());
+
       this.orderService.makeOrder(orderRequest).subscribe(
         data=>{
-          console.log(data)
+           window.location.href = data.message;
         },error => {
 
         }

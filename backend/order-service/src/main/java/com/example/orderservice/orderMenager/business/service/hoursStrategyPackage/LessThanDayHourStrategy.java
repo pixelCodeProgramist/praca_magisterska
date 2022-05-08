@@ -1,4 +1,4 @@
-package com.example.orderservice.orderMenager.business.hoursStrategyPackage;
+package com.example.orderservice.orderMenager.business.service.hoursStrategyPackage;
 
 import com.example.orderservice.orderMenager.api.request.DateAndHourOfReservationRequest;
 import com.example.orderservice.orderMenager.data.entity.UserOrder;

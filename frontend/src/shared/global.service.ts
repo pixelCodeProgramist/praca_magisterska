@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 
 export class GlobalService {
 
-  public static BASE_URL = 'http://localhost:9000';
+  public static BASE_URL = 'https://localhost:9000';
 
   constructor() { }
 }

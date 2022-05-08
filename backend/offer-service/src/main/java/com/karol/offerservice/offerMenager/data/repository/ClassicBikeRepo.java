@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface ClassicBikeRepo extends JpaRepository<ClassicBike, Long> {
     Page<ClassicBike> findAllByBikeType_Type(Pageable pageable, String type);
     Optional<ClassicBike> findByProduct(Product product);
-
 }

@@ -5,7 +5,6 @@ import com.karol.offerservice.offerMenager.api.response.AccessoryInformationInOr
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
 import com.karol.offerservice.offerMenager.business.service.OfferService;
 import com.karol.offerservice.offerMenager.dto.AvailableHoursResponse;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +32,16 @@ public class DetailOfferController {
     @GetMapping("/detail-information/accessories/all/{range}")
     public List<AccessoryInformationInOrderView> getAccessories(@PathVariable(value = "range") Integer range) {
         return offerService.getAllAccessories(range);
+    }
+
+    @GetMapping("/detail-information/{type}/{id}")
+    public Boolean existBikeWithFrame(@PathVariable(value = "type") String type, @PathVariable(value = "id") Long id) {
+        return offerService.isProductInDb(type, id);
+    }
+
+    @GetMapping("/detail-information/frame/{type}/{id}")
+    public Integer isFrameInBike(@PathVariable(value = "type") String type, @PathVariable(value = "id") Long id){
+        return offerService.getFrameId(type, id);
     }
 
 }

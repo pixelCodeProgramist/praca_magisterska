@@ -10,4 +10,6 @@ import java.util.List;
 public interface UserOrderRepo extends JpaRepository<UserOrder, Long> {
     @Query(value = "SELECT * FROM user_order o WHERE cast(begin_order as date) between :date and :date", nativeQuery = true)
     List<UserOrder> getUserOrderByDate(@Param("date") String date);
+
+   // List<UserOrder> findByPaidIs(boolean isPaid);
 }

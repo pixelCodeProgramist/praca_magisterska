@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +27,10 @@ public class OrderRequest {
     private String selectedFrameOption;
 
     @NotBlank
-    private String selectedHourBeginTripOption;
+    @Future
+    private Date beginDateOrder;
+
+    @NotBlank
+    @Future
+    private Date endDateOrder;
 }

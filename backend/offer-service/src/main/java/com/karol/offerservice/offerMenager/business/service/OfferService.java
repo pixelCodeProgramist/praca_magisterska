@@ -58,6 +58,10 @@ public class OfferService {
     private UserGradeRepo userGradeRepo;
     private UserGradeProductRepo userGradeProductRepo;
 
+    private ClassicBikeFrameInventoryRepo classicBikeFrameInventoryRepo;
+
+    private ElectricBikeFrameInventoryRepo electricBikeFrameInventoryRepo;
+
     private static final int MAX_PRODUCT_ON_PAGE = 9;
 
     public List<ClassicBikeGeneralInformationView> getAllGeneralClassicOfferInformation() {
@@ -234,5 +238,23 @@ public class OfferService {
         }
 
         throw new AuthorizationException();
+    }
+
+    public Boolean isProductInDb(String type, Long id) {
+        Product product = productRepo.findById(id).orElse(null);
+        if(product == null) return false;
+        if(type.equalsIgnoreCase(product.getProductType().getType())) return true;
+        return false;
+    }
+
+    public Integer getFrameId(String frameType, Long id) {
+        ClassicBikeFrameInventory classicBikeFrameInventory =
+                classicBikeFrameInventoryRepo.findByClassicBike_IdAndFrame_Name(id, frameType).orElse(null);
+        ElectricBikeFrameInventory electricBikeFrameInventory =
+                electricBikeFrameInventoryRepo.findByElectricBike_IdAndFrame_Name(id, frameType).orElse(null);
+
+        if(classicBikeFrameInventory != null) return classicBikeFrameInventory.getFrame().getFrameId();
+        if(electricBikeFrameInventory != null) return electricBikeFrameInventory.getFrame().getFrameId();
+        return -1;
     }
 }
