@@ -4,8 +4,11 @@ package com.example.orderservice.orderMenager.business.service;
 import com.example.orderservice.OrderServiceApplication;
 import com.example.orderservice.orderMenager.api.request.DateAndHourOfReservationRequest;
 //import com.example.orderservice.orderMenager.data.repository.OrderRepo;
+import com.example.orderservice.orderMenager.api.request.OrderNameProductRequest;
 import com.example.orderservice.orderMenager.api.request.OrderRequest;
+import com.example.orderservice.orderMenager.api.request.QRMailRequest;
 import com.example.orderservice.orderMenager.api.response.Link;
+import com.example.orderservice.orderMenager.api.response.OrderNameProductResponse;
 import com.example.orderservice.orderMenager.business.exception.date.DateIncorrectException;
 import com.example.orderservice.orderMenager.business.exception.frame.FrameNotFoundException;
 import com.example.orderservice.orderMenager.business.exception.offer.OfferNotFoundException;
@@ -16,6 +19,7 @@ import com.example.orderservice.orderMenager.business.service.hoursStrategyPacka
 import com.example.orderservice.orderMenager.business.service.hoursStrategyPackage.LessThanDayHourStrategy;
 import com.example.orderservice.orderMenager.data.entity.UserOrder;
 import com.example.orderservice.orderMenager.data.repository.UserOrderRepo;
+import com.example.orderservice.orderMenager.feignClient.MailServiceFeignClient;
 import com.example.orderservice.orderMenager.feignClient.OfferServiceFeignClient;
 import com.example.orderservice.security.business.exception.authorize.AuthorizationException;
 import com.example.orderservice.security.business.request.UserByIdRequest;
@@ -28,12 +32,12 @@ import com.example.orderservice.userMenager.feignClient.UserServiceFeignClient;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -48,6 +52,8 @@ public class OrderService {
     private JwtTokenProvider jwtTokenProvider;
     private UserOrderRepo userOrderRepo;
     private OfferServiceFeignClient offerServiceFeignClient;
+    private QrImageService qrImageService;
+    private MailServiceFeignClient mailServiceFeignClient;
 
     private final String SUCCESS_PAYMENT_URL = OrderServiceApplication.MAIN_SITE + "order/pay/success?orderId=";
     private final String CANCEL_PAYMENT_URL = OrderServiceApplication.MAIN_SITE + "order/pay/cancel?orderId=";
@@ -126,6 +132,8 @@ public class OrderService {
                     .transactionToken(orderToken)
                     .paid(false)
                     .timeToPaid(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
+                    .price(orderRequest.getPrice())
+                    .currency("PLN")
                     .build();
 
             userOrder = userOrderRepo.save(userOrder);
@@ -195,9 +203,39 @@ public class OrderService {
     }
 
     public void changeStatusOfOrder(Long orderId) {
+
         UserOrder userOrder = userOrderRepo.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+
+        String userIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"userId");
+        String bikeIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"bikeId");
+        String accessoryIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"accessoryId");
+
+        Long userId = Long.parseLong(userIdStr);
+
+        User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
+        Long accessoryIdLong = null;
+        if(!StringUtils.isBlank(accessoryIdStr)) accessoryIdLong = Long.parseLong(accessoryIdStr);
+        OrderNameProductResponse orderNameProductResponse = offerServiceFeignClient.getOrderNames(
+                new OrderNameProductRequest(Long.parseLong(bikeIdStr), accessoryIdLong));
+
+        byte[] qrImage = qrImageService.createQrImage(userOrder, user);
+
         userOrder.setPaid(true);
         userOrderRepo.save(userOrder);
+        QRMailRequest qrMailRequest = QRMailRequest.builder()
+                .orderId(orderId)
+                .beginOrder(userOrder.getBeginOrder())
+                .currency(userOrder.getCurrency())
+                .endOrder(userOrder.getEndOrder())
+                .price(userOrder.getPrice())
+                .mailTo(user.getEmail())
+                .bikeName(orderNameProductResponse.getBike())
+                .frameName(orderNameProductResponse.getFrame())
+                .accessoryName(orderNameProductResponse.getAccessory())
+                .image(qrImage)
+                .token(jwtTokenNonUserProvider.generateToken())
+                .build();
+        mailServiceFeignClient.sendQrCode(qrMailRequest);
     }
 
     public void cancelOrder(Long orderId) {

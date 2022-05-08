@@ -1,14 +1,14 @@
 package com.karol.offerservice.offerMenager.api.controller;
 
+import com.karol.offerservice.offerMenager.api.request.OrderNameProductRequest;
+import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
 import com.karol.offerservice.offerMenager.business.service.OfferService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -49,6 +49,11 @@ public class GeneralOfferController {
     @GetMapping("/bikes")
     public List<BikeForSearchView> getBikes() {
         return offerService.getAllBikes();
+    }
+
+    @PostMapping("/offer-in-order")
+    OrderNameProductResponse getOrderNames(@RequestBody @Valid OrderNameProductRequest orderNameProductRequest){
+        return offerService.getOrderNames(orderNameProductRequest);
     }
 }
 

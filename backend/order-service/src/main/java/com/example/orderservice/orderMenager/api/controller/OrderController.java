@@ -58,6 +58,7 @@ public class OrderController {
             Payment payment = orderService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
                 orderService.changeStatusOfOrder(orderId);
+
                 httpServletResponse.setHeader("Location", OrderServiceApplication.FRONT_SITE);
                 httpServletResponse.setStatus(302);
                 return "redirect:localhost:4200/";

@@ -7,13 +7,17 @@ import com.example.mailservice.mailMenager.feignClient.AuthServiceFeignClient;
 import com.example.mailservice.mailMenager.feignClient.UserServiceFeignClient;
 import com.example.mailservice.tokenMenager.request.JwtTokenNonUserProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.math.RoundingMode;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -106,6 +110,64 @@ public class EmailSenderService {
                 " white; border-color: #007bff; font-weight: 400;font-size: 1rem;border-radius: 0.25rem;\">\n" +
                 "Potwierdz mail\n" +
                 "</a>\n" +
+                "</div>\n" +
+                "</div>\n" +
+                "</div>";
+    }
+
+    public boolean sendMail(QRMailRequest qrMailRequest) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setTo(qrMailRequest.getMailTo());
+        mimeMessageHelper.setSubject("Potwierdzenie zamówienia i qr code");
+        mimeMessageHelper.setText(getContentForMailConfirmation(qrMailRequest), true);
+        mimeMessageHelper.addInline("qrCode",  new ByteArrayResource(qrMailRequest.getImage()){
+            @Override
+            public String getFilename() {
+                return "qrCode.png";
+            }
+        });
+        javaMailSender.send(mimeMessage);
+
+        return true;
+    }
+
+    private String getContentForMailConfirmation(QRMailRequest qrMailRequest) {
+        String accessory = qrMailRequest.getAccessoryName();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        if(accessory == null) accessory = "BRAK";
+        return "<div style=\"width: 100%; height: 100%; background-color: #f9f9f9;\">\n" +
+                "<div style=\"margin: auto;color: lightgrey;font-size: 25px; text-align: center;padding: 1.5rem 2rem;\">\n" +
+                "<span style=\"color: blue;\">Nx</span>Bike\n" +
+                "</div>\n" +
+                "<div style=\"text-align: center; background-color: white; color: gray;padding: 5rem 1rem;width: 30%;margin: auto;min-width: 400px\">\n" +
+                "<h2>Hej " + qrMailRequest.getMailTo() + "</h2>\n" +
+                "<div style=\"margin-bottom: 2rem; align-content: center; padding: 0.5rem 2rem; text-align: left;font-size: 18px;\">\n" +
+                "<p>\n" +
+                "Dziękujemy za dokonanie rezerwacji na naszej stronie internetowej. Poniżej znajdują się informacje na temat biletu oraz kod qr, " +
+                "dzięki któremu możesz wypożyczyć rower, dlatego nie zapomnij telefonu przed wyjściem do obiektu\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "Wypożyczono:"+
+                "</p>\n" +
+                "<p>\n" +
+                "Rower: " + qrMailRequest.getBikeName() + "\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "Akcesoria: " + accessory + "\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "Data i godzina rozpoczęcia: " +  sdf.format(qrMailRequest.getBeginOrder()) + "\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "Data i godzina zakończenia: " + sdf.format(qrMailRequest.getEndOrder()) + "\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "Cena całkowita rezerwacji: " + qrMailRequest.getPrice().setScale(2, RoundingMode.CEILING) + "\n" +
+                "</p>\n" +
+                "<img src='cid:qrCode' alt=\"QR code\" width=\"400\" height=\"400\"/>\n" +
                 "</div>\n" +
                 "</div>\n" +
                 "</div>";

@@ -9,7 +9,9 @@ import com.karol.offerservice.offerMenager.api.mapper.generalOfferMapper.*;
 import com.karol.offerservice.offerMenager.api.request.DateAndHourOfReservationRequest;
 import com.karol.offerservice.offerMenager.api.request.DateAndHourOfReservationWithTokenRequest;
 import com.karol.offerservice.offerMenager.api.request.GradeRequest;
+import com.karol.offerservice.offerMenager.api.request.OrderNameProductRequest;
 import com.karol.offerservice.offerMenager.api.response.AccessoryInformationInOrderView;
+import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
 import com.karol.offerservice.offerMenager.business.exception.offer.BikeWithFrameNotAvailableException;
@@ -256,5 +258,30 @@ public class OfferService {
         if(classicBikeFrameInventory != null) return classicBikeFrameInventory.getFrame().getFrameId();
         if(electricBikeFrameInventory != null) return electricBikeFrameInventory.getFrame().getFrameId();
         return -1;
+    }
+
+    public OrderNameProductResponse getOrderNames(OrderNameProductRequest orderNameProductRequest) {
+        ClassicBikeFrameInventory classicBikeFrameInventory =
+                classicBikeFrameInventoryRepo.findById(orderNameProductRequest.getBikeId()).orElse(null);
+        ElectricBikeFrameInventory electricBikeFrameInventory =
+                electricBikeFrameInventoryRepo.findById(orderNameProductRequest.getBikeId()).orElse(null);
+        Accessory accessory = orderNameProductRequest.getAccessoryId()!=null?
+                accessoryRepo.findById(orderNameProductRequest.getAccessoryId()).orElse(null): null;
+
+        OrderNameProductResponse orderNameProductResponse = new OrderNameProductResponse();
+
+        if(classicBikeFrameInventory == null && electricBikeFrameInventory == null) return null;
+
+        if(classicBikeFrameInventory!=null) {
+            orderNameProductResponse.setBike(classicBikeFrameInventory.getClassicBike().getProduct().getName());
+            orderNameProductResponse.setFrame(classicBikeFrameInventory.getFrame().getName());
+        }
+        if(electricBikeFrameInventory!=null) {
+            orderNameProductResponse.setBike(electricBikeFrameInventory.getElectricBike().getProduct().getName());
+            orderNameProductResponse.setFrame(electricBikeFrameInventory.getFrame().getName());
+        }
+        if(accessory != null) orderNameProductResponse.setAccessory(accessory.getProduct().getName());
+
+        return orderNameProductResponse;
     }
 }

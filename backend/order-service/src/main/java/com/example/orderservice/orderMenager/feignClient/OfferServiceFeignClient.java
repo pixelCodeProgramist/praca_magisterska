@@ -1,8 +1,14 @@
 package com.example.orderservice.orderMenager.feignClient;
 
+import com.example.orderservice.orderMenager.api.request.OrderNameProductRequest;
+import com.example.orderservice.orderMenager.api.response.OrderNameProductResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
 
 @FeignClient(name = "OFFER-SERVICE")
 public interface OfferServiceFeignClient {
@@ -11,5 +17,8 @@ public interface OfferServiceFeignClient {
 
     @GetMapping("offer/detail-information/frame/{type}/{id}")
     Integer isFrameInBike(@PathVariable(value = "type") String type, @PathVariable(value = "id") Long id);
+
+    @PostMapping("offer/offer-in-order")
+    OrderNameProductResponse getOrderNames(@RequestBody @Valid OrderNameProductRequest orderNameProductRequest);
 
 }
