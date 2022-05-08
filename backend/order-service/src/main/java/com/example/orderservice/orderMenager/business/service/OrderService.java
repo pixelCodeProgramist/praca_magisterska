@@ -60,15 +60,21 @@ public class OrderService {
         if (jwtTokenNonUserOrderProvider.validateToken(dateAndHourOfReservationRequest.getToken())) {
             if (!jwtTokenNonUserOrderProvider.isTokenExpire(dateAndHourOfReservationRequest.getToken()) &&
                     "COMPUTER".equalsIgnoreCase(jwtTokenNonUserOrderProvider.extractUserIdName(dateAndHourOfReservationRequest.getToken()))) {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String s = df.format(dateAndHourOfReservationRequest.getReservationTime());
-                List<UserOrder> userOrdersFromToday = userOrderRepo.getUserOrderByDate(s);
+                Date from = new Date(dateAndHourOfReservationRequest.getReservationTime().getTime());
+                from.setHours(0);
+                from.setMinutes(0);
+                Date to = new Date(dateAndHourOfReservationRequest.getReservationTime().getTime());
+                to.setHours(23);
+                to.setMinutes(59);
+                List<UserOrder> userOrdersFromToday = userOrderRepo.findByBeginOrderBetween(from,to);
 
-                userOrdersFromToday = userOrdersFromToday.stream().filter(userOrder -> jwtTokenNonUserOrderProvider
-                        .extractValueFromClaims(userOrder.getTransactionToken(), "bikeId")
-                        .equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeId())) &&
-                        jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeFrameId")
-                                .equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeFrameId())))
+                userOrdersFromToday = userOrdersFromToday.stream().filter(userOrder -> {
+                            String bikeId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeId");
+                            String bikeFrameId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeFrameId");
+                            return  bikeId.equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeId())) &&
+                                    bikeFrameId.equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeFrameId()));
+
+                })
                         .collect(Collectors.toList());
 
                 HoursStrategy hoursStrategy = null;
@@ -110,7 +116,7 @@ public class OrderService {
             claims.put("userId", user.getUserId());
             Integer frameId = offerServiceFeignClient.isFrameInBike(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
             if(frameId<0) throw new FrameNotFoundException(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
-            claims.put("bikeFrame", frameId);
+            claims.put("bikeFrameId", frameId);
             String orderToken = jwtTokenNonUserOrderProvider.generateToken(claims);
             LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(PAYMENT_TIME);
 
@@ -118,7 +124,7 @@ public class OrderService {
                     .beginOrder(orderRequest.getBeginDateOrder())
                     .endOrder(orderRequest.getEndDateOrder())
                     .transactionToken(orderToken)
-                    .isPaid(false)
+                    .paid(false)
                     .timeToPaid(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
                     .build();
 
@@ -192,5 +198,10 @@ public class OrderService {
         UserOrder userOrder = userOrderRepo.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
         userOrder.setPaid(true);
         userOrderRepo.save(userOrder);
+    }
+
+    public void cancelOrder(Long orderId) {
+        UserOrder userOrder = userOrderRepo.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+        userOrderRepo.delete(userOrder);
     }
 }

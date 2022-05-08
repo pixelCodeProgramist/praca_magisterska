@@ -30,7 +30,7 @@ public class UserOrder {
     private String transactionToken;
 
     @Column(nullable = false)
-    private boolean isPaid;
+    private Boolean paid;
 
     @Future
     private Date timeToPaid;

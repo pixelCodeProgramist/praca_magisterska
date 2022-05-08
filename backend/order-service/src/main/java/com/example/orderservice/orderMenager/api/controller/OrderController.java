@@ -37,15 +37,15 @@ public class OrderController {
         return new ResponseView(orderService.makeOrder(orderRequest, httpServletRequest).getPayLink());
     }
 
-//    @CrossOrigin(origins = "https://www.sandbox.paypal.com/**")
-//    @GetMapping("/pay/cancel")
-//    public String cancelPay(@RequestParam("tickets") List<Long> tickets,
-//                            HttpServletResponse httpServletResponse) {
-//        ticketService.cancelTickets(tickets);
-//        httpServletResponse.setHeader("Location", CinemaserviceApplication.FRONT_SITE);
-//        httpServletResponse.setStatus(302);
-//        return "redirect:localhost:4200/";
-//    }
+    @CrossOrigin(origins = "https://www.sandbox.paypal.com/**")
+    @GetMapping("/pay/cancel")
+    public String cancelPay( @RequestParam("orderId") Long orderId,
+                            HttpServletResponse httpServletResponse) {
+        orderService.cancelOrder(orderId);
+        httpServletResponse.setHeader("Location", OrderServiceApplication.FRONT_SITE);
+        httpServletResponse.setStatus(302);
+        return "redirect:localhost:4200/";
+    }
 
     @CrossOrigin(origins = "https://www.sandbox.paypal.com/**")
     @GetMapping("/pay/success")
