@@ -15,6 +15,7 @@ import {AccessoryInOrder} from "../models/offers/pre-order/response/AccessoryInO
 import {GradeRequest} from "../models/offers/pre-order/request/GradeRequest";
 import {BackendResponse} from "../models/BackendResponse";
 import {OrderRequest} from "../models/order/request/OrderRequest";
+import {BikeRepairRequest} from "../models/order/request/BikeRepairRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,7 @@ import {OrderRequest} from "../models/order/request/OrderRequest";
 export class OrderService {
 
   private MAKE_ORDER_URL = `${GlobalService.BASE_URL}/order/makeOrder`;
+  private MAKE_ORDER_BIKE_REPAIR_URL = `${GlobalService.BASE_URL}/order/makeOrder/repairBike`;
 
 
   constructor(private http: HttpClient) {
@@ -32,5 +34,10 @@ export class OrderService {
   makeOrder(orderRequest: OrderRequest) {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
     return this.http.post<BackendResponse>(this.MAKE_ORDER_URL, orderRequest, {headers});
+  }
+
+  makeOrderBikeRepair(orderRequest: BikeRepairRequest) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.post<BackendResponse>(this.MAKE_ORDER_BIKE_REPAIR_URL, orderRequest, {headers});
   }
 }

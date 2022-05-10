@@ -33,7 +33,7 @@ public class ClassicDetailBikeDetailOffer implements IDetailBikeDetailOffer {
         timePriceDtoList.add(new TimePriceDto("dzień", bikeType.getClassicBikePrice().getDayPrice()));
         timePriceDtoList.add(new TimePriceDto("doba", bikeType.getClassicBikePrice().getDayAndNightPrice()));
         Service guide = serviceRepo
-                .findByProductIgnoreCase_Name("Wycieczka z przewodnikiem")
+                .findByProduct_Name("Wycieczka z przewodnikiem")
                 .orElseThrow(OfferNotFoundException::new);
 
         return DetailOfferMapper.mapDataToResponse(classicBike,imageService.getImagesForUrls(classicBike.getUrl()),

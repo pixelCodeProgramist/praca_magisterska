@@ -27,11 +27,11 @@ public class QRMailRequest {
     private String mailTo;
     @NotNull
     private byte[] image;
-    @NotBlank
+
     private String bikeName;
-    @NotBlank
     private String frameName;
     private String accessoryName;
+    private String service;
 
     @NotBlank
     private String token;

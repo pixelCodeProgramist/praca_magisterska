@@ -1,6 +1,7 @@
 package com.karol.offerservice.offerMenager.api.controller;
 
 import com.karol.offerservice.offerMenager.api.request.OrderNameProductRequest;
+import com.karol.offerservice.offerMenager.api.request.ServiceRequest;
 import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
 import com.karol.offerservice.offerMenager.business.service.OfferService;
@@ -54,6 +55,11 @@ public class GeneralOfferController {
     @PostMapping("/offer-in-order")
     OrderNameProductResponse getOrderNames(@RequestBody @Valid OrderNameProductRequest orderNameProductRequest){
         return offerService.getOrderNames(orderNameProductRequest);
+    }
+
+    @PostMapping("/service-info")
+    public ServiceGeneralInfoView getService(@RequestBody @Valid ServiceRequest serviceRequest) {
+        return offerService.getServiceInfo(serviceRequest);
     }
 }
 

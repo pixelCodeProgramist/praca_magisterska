@@ -6,10 +6,7 @@ import com.karol.offerservice.business.request.UserByIdRequest;
 import com.karol.offerservice.business.service.JwtTokenNonUserProvider;
 import com.karol.offerservice.business.service.JwtTokenProvider;
 import com.karol.offerservice.offerMenager.api.mapper.generalOfferMapper.*;
-import com.karol.offerservice.offerMenager.api.request.DateAndHourOfReservationRequest;
-import com.karol.offerservice.offerMenager.api.request.DateAndHourOfReservationWithTokenRequest;
-import com.karol.offerservice.offerMenager.api.request.GradeRequest;
-import com.karol.offerservice.offerMenager.api.request.OrderNameProductRequest;
+import com.karol.offerservice.offerMenager.api.request.*;
 import com.karol.offerservice.offerMenager.api.response.AccessoryInformationInOrderView;
 import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
@@ -283,5 +280,16 @@ public class OfferService {
         if(accessory != null) orderNameProductResponse.setAccessory(accessory.getProduct().getName());
 
         return orderNameProductResponse;
+    }
+
+    public ServiceGeneralInfoView getServiceInfo(ServiceRequest serviceRequest) {
+        com.karol.offerservice.offerMenager.data.entity.Service service = serviceRepo.findByProduct_Name(serviceRequest.getName()).orElseThrow(() -> new OfferNotFoundException());
+
+        return ServiceGeneralInfoView.builder()
+                .id(service.getId())
+                .currency(service.getCurrency())
+                .name(service.getProduct().getName())
+                .price(service.getPrice())
+                .build();
     }
 }

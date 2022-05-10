@@ -33,4 +33,6 @@ public class QRMailRequest {
     private String accessoryName;
 
     private String token;
+
+    private String service;
 }

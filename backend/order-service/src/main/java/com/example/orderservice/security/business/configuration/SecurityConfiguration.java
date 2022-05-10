@@ -72,7 +72,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/order/available-hours").permitAll()
                 .antMatchers("/order/makeOrder").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
+                .antMatchers("/order/makeOrder/repairBike").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
                 .antMatchers("/order/pay/success").permitAll()
+                .antMatchers("/order/pay/cancel").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

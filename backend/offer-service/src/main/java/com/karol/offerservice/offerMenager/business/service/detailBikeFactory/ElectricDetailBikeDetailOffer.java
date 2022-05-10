@@ -28,7 +28,7 @@ public class ElectricDetailBikeDetailOffer implements IDetailBikeDetailOffer {
     public DetailBikeInfoView getDetailOfferView(ImageService imageService) {
 
         Service guide = serviceRepo
-                .findByProductIgnoreCase_Name("Wycieczka z przewodnikiem")
+                .findByProduct_Name("Wycieczka z przewodnikiem")
                 .orElseThrow(OfferNotFoundException::new);
         List<ElectricBikePrice> electricBikePrices = electricBikePriceRepo.findAll();
         List<TimePriceDto> timePriceDtoList = electricBikePrices.stream()

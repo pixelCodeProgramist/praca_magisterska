@@ -1,3 +1,8 @@
 .nav-item:hover {
   background: lightblue !important;
 }
+
+input[readonly] {
+  background-color: white;
+}
+

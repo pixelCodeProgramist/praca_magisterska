@@ -1,6 +1,7 @@
 package com.example.orderservice.orderMenager.api.controller;
 
 import com.example.orderservice.OrderServiceApplication;
+import com.example.orderservice.orderMenager.api.request.OrderRepairBikeRequest;
 import com.example.orderservice.orderMenager.api.request.OrderRequest;
 import com.example.orderservice.orderMenager.api.response.AvailableHoursResponse;
 import com.example.orderservice.orderMenager.api.response.Link;
@@ -35,6 +36,14 @@ public class OrderController {
     public ResponseView makeOrder(@Valid @RequestBody OrderRequest orderRequest, HttpServletRequest httpServletRequest)
     {
         return new ResponseView(orderService.makeOrder(orderRequest, httpServletRequest).getPayLink());
+    }
+
+    @PostMapping("/makeOrder/repairBike")
+    public ResponseView makeOrderRepairBike(@Valid @RequestBody OrderRepairBikeRequest orderRepairBikeRequest, HttpServletRequest httpServletRequest)
+    {
+
+        return new ResponseView(orderService.makeOrder(orderRepairBikeRequest, httpServletRequest).getPayLink());
+
     }
 
     @CrossOrigin(origins = "https://www.sandbox.paypal.com/**")

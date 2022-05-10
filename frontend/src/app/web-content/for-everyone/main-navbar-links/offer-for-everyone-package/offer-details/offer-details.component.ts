@@ -211,7 +211,8 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
         data=>{
            window.location.href = data.message;
         },error => {
-
+          this.isErrorActive = true;
+          this.errorMsg = error.error.order;
         }
       )
     }

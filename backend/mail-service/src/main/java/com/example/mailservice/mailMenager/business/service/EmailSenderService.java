@@ -136,40 +136,63 @@ public class EmailSenderService {
         String accessory = qrMailRequest.getAccessoryName();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-        if(accessory == null) accessory = "BRAK";
-        return "<div style=\"width: 100%; height: 100%; background-color: #f9f9f9;\">\n" +
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<div style=\"width: 100%; height: 100%; background-color: #f9f9f9;\">\n" +
                 "<div style=\"margin: auto;color: lightgrey;font-size: 25px; text-align: center;padding: 1.5rem 2rem;\">\n" +
                 "<span style=\"color: blue;\">Nx</span>Bike\n" +
                 "</div>\n" +
                 "<div style=\"text-align: center; background-color: white; color: gray;padding: 5rem 1rem;width: 30%;margin: auto;min-width: 400px\">\n" +
                 "<h2>Hej " + qrMailRequest.getMailTo() + "</h2>\n" +
                 "<div style=\"margin-bottom: 2rem; align-content: center; padding: 0.5rem 2rem; text-align: left;font-size: 18px;\">\n" +
-                "<p>\n" +
+                "<p>\n"+
                 "Dziękujemy za dokonanie rezerwacji na naszej stronie internetowej. Poniżej znajdują się informacje na temat biletu oraz kod qr, " +
-                "dzięki któremu możesz wypożyczyć rower, dlatego nie zapomnij telefonu przed wyjściem do obiektu\n" +
-                "</p>\n" +
+                "dzięki któremu możesz ");
+
+        if(qrMailRequest.getService()!=null) {
+            stringBuilder.append("naprawić swój rower");
+        }else {
+            stringBuilder.append("możesz wypożyczyć rower");
+        }
+        stringBuilder.append(", dlatego nie zapomnij telefonu przed wyjściem do obiektu\n" +
+        "</p>\n" +
+                "<p>\n");
+        if(qrMailRequest.getService()!=null) {
+            stringBuilder.append("Zamówiono:");
+        }else {
+            stringBuilder.append("Zarezerwowano:");
+        }
+        stringBuilder.append("</p>\n" +
+                "<p>\n");
+        if(qrMailRequest.getService()!=null) {
+            stringBuilder.append("Usługa: " + qrMailRequest.getService() + "</p>");
+            stringBuilder.append("Data zobowiązania dostarczenia roweru: "+ sdf.format(qrMailRequest.getBeginOrder()) + "</p>\n");
+            stringBuilder.append("Planowana data naprawy roweru: "+ sdf.format(qrMailRequest.getEndOrder()) + "</p>\n");
+        }else {
+            if(accessory == null) accessory = "BRAK";
+            stringBuilder.append("Rower: " + qrMailRequest.getBikeName() + "\n" +
+                    "</p>\n" +
+                    "<p>\n" +
+                    "Akcesoria: " + accessory + "\n" +
+                    "</p>\n" +
+                    "<p>\n" +
+                    "Data i godzina rozpoczęcia: " +  sdf.format(qrMailRequest.getBeginOrder()) + "</p>\n" +
+                    "</p>\n" +
+                    "<p>\n" +
+                    "Data i godzina zakończenia: " + sdf.format(qrMailRequest.getEndOrder()) + "</p>\n");
+        }
+
+        stringBuilder.append( "</p>\n" +
                 "<p>\n" +
-                "Wypożyczono:"+
-                "</p>\n" +
-                "<p>\n" +
-                "Rower: " + qrMailRequest.getBikeName() + "\n" +
-                "</p>\n" +
-                "<p>\n" +
-                "Akcesoria: " + accessory + "\n" +
-                "</p>\n" +
-                "<p>\n" +
-                "Data i godzina rozpoczęcia: " +  sdf.format(qrMailRequest.getBeginOrder()) + "\n" +
-                "</p>\n" +
-                "<p>\n" +
-                "Data i godzina zakończenia: " + sdf.format(qrMailRequest.getEndOrder()) + "\n" +
-                "</p>\n" +
-                "<p>\n" +
-                "Cena całkowita rezerwacji: " + qrMailRequest.getPrice().setScale(2, RoundingMode.CEILING) + "\n" +
+                "Cena całkowita rezerwacji: " + qrMailRequest.getPrice().setScale(2, RoundingMode.CEILING) + "\n"+
                 "</p>\n" +
                 "<img src='cid:qrCode' alt=\"QR code\" width=\"400\" height=\"400\"/>\n" +
                 "</div>\n" +
                 "</div>\n" +
-                "</div>";
+                "</div>");
+
+        return stringBuilder.toString();
+
+
+
     }
 }

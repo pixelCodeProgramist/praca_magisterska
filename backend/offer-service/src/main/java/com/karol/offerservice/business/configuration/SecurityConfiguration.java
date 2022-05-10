@@ -82,6 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/offer/detail-information/**").permitAll()
                 .antMatchers("/offer/bikes/**").permitAll()
                 .antMatchers("/offer/offer-in-order").permitAll()
+                .antMatchers("/offer/service-info").permitAll()
                 .antMatchers("/offer/grade/**").hasAnyRole(ADMIN.name(), CLIENT.name(), EMPLOYEE.name())
                 .anyRequest().authenticated();
 

@@ -6,19 +6,22 @@
           <a class="nav-link p-4 fs-3" routerLink="/user-panel/order-history" routerLinkActive="active">Zamówienia</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/repair-bike"  routerLinkActive="active">Napraw rower</a>
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/repair-bike" routerLinkActive="active">Napraw rower</a>
         </li>
         <li class="nav-item">
           <a class="nav-link p-4 fs-3" routerLink="/user-panel/setting" routerLinkActive="active">Ustawienia konta</a>
         </li>
         <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN'">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/employee-management" routerLinkActive="active">Zarządzaj pracownikami</a>
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/employee-management" routerLinkActive="active">Zarządzaj
+            pracownikami</a>
         </li>
         <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/offer-management" routerLinkActive="active">Zarządzaj ofertami</a>
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/offer-management" routerLinkActive="active">Zarządzaj
+            ofertami</a>
         </li>
         <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/client-management" routerLinkActive="active">Zarządzaj klientami</a>
+          <a class="nav-link p-4 fs-3" routerLink="/user-panel/client-management" routerLinkActive="active">Zarządzaj
+            klientami</a>
         </li>
         <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
           <a class="nav-link p-4 fs-3" routerLink="/user-panel/statistic-management" routerLinkActive="active">Statystyki</a>
@@ -26,7 +29,88 @@
       </ul>
     </div>
     <div class="col-9">
+      <div class="row justify-content-around align-content-center mb-3 mt-5">
+        <div class="row">
+          <div class="row justify-content-around align-content-center">
+            <div class="col-12 col-lg-10">
+              <form [formGroup]="addRepairBikeFormGroup" (ngSubmit)="submit()">
+                <div class="card m-3 p-3">
+                  <div class="row justify-content-around align-content-center mb-5">
+                    <strong class="h2 fw-bold pb-3 myHeader text-center">Dodaj nowe zgłoszenie</strong>
+                    <div class="line"></div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-6">
+                      <div class="row">
+                        <div class="input-group">
+                          <input [(ngModel)]="repairBike.defect"
+                                 class="form-control" name="defect" type="text" placeholder="Usterka"
+                                 formControlName="defectName"
+                                 [ngClass]="{activeRedBorder: hasError('defectName')}"/>
+                        </div>
+                        <div *ngIf="addRepairBikeFormGroup.controls['defectName']?.touched" class="row">
+                          <small class="text-danger h5" *ngIf="checkError('defectName', 'required')">Pole nie może być
+                            puste</small>
+                          <small class="text-danger h5" *ngIf="checkError('defectName', 'minlength')">Pole powinno
+                            zawierać minimum 3 znaki</small>
+                          <small class="text-danger h5" *ngIf="checkError('defectName', 'maxlength')">Pole powinno
+                            zawierać maximum 100 znaków</small>
+                        </div>
+                      </div>
+                    </div>
 
+                    <div class="col-6">
+                      <div class="row">
+                        <div class="input-group">
+                          <input class="form-control" readonly placeholder="Data doprowadzenia do serwisu"
+                                 name="beginDate" [(ngModel)]="beginDate" ngbDatepicker
+                                 [footerTemplate]="footerTemplate"
+                                 [minDate]="today"
+                                 formControlName="beginDate" [ngClass]="{activeRedBorder: hasError('beginDate')}"
+                                 #d="ngbDatepicker" (click)="d.toggle()">
+                        </div>
+                      </div>
+                      <ng-template #footerTemplate>
+                        <hr class="my-0">
+                        <button class="btn btn-secondary btn-sm m-2 float-end" (click)="d.close()">Zamknij</button>
+                      </ng-template>
+                      <div *ngIf="addRepairBikeFormGroup.controls['beginDate']?.touched" class="row">
+                        <small class="text-danger h5" *ngIf="checkError('beginDate', 'required')">Pole nie może być
+                          puste</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="row">
+                      <div class="input-group">
+                        <textarea class="form-control" id="description" type="text" [(ngModel)]="repairBike.description"
+                                  placeholder="Opis usterki" rows="10" formControlName="descriptionName"
+                                  [ngClass]="{activeRedBorder: hasError('descriptionName')}"></textarea>
+                      </div>
+                    </div>
+                    <div *ngIf="addRepairBikeFormGroup.controls['descriptionName']?.touched" class="row">
+                      <small class="text-danger h5" *ngIf="checkError('descriptionName', 'required')">Pole nie może być puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('descriptionName', 'minlength')">Pole powinno zawierać minimum 5 znaków</small>
+                      <small class="text-danger h5" *ngIf="checkError('descriptionName', 'maxlength')">Pole powinno zawierać maximum 1000 znaków</small>
+                    </div>
+
+                  </div>
+
+
+                  <div class="row mx-1" style="max-width: 15vmin">
+                    <button class="btn btn-primary" type="submit">Dodaj</button>
+                  </div>
+                  <div class="row" *ngIf="isErrorActive">
+                    <small class="text-danger h5">
+                      {{errorMsg}}
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

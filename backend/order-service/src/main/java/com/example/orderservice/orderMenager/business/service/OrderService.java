@@ -2,13 +2,11 @@ package com.example.orderservice.orderMenager.business.service;
 
 
 import com.example.orderservice.OrderServiceApplication;
-import com.example.orderservice.orderMenager.api.request.DateAndHourOfReservationRequest;
+import com.example.orderservice.orderMenager.api.request.*;
 //import com.example.orderservice.orderMenager.data.repository.OrderRepo;
-import com.example.orderservice.orderMenager.api.request.OrderNameProductRequest;
-import com.example.orderservice.orderMenager.api.request.OrderRequest;
-import com.example.orderservice.orderMenager.api.request.QRMailRequest;
 import com.example.orderservice.orderMenager.api.response.Link;
 import com.example.orderservice.orderMenager.api.response.OrderNameProductResponse;
+import com.example.orderservice.orderMenager.api.response.ServiceGeneralInfoView;
 import com.example.orderservice.orderMenager.business.exception.date.DateIncorrectException;
 import com.example.orderservice.orderMenager.business.exception.frame.FrameNotFoundException;
 import com.example.orderservice.orderMenager.business.exception.offer.OfferNotFoundException;
@@ -77,6 +75,8 @@ public class OrderService {
                 userOrdersFromToday = userOrdersFromToday.stream().filter(userOrder -> {
                             String bikeId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeId");
                             String bikeFrameId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeFrameId");
+                            if(bikeId == null) bikeId = "";
+                            if(bikeFrameId == null) bikeFrameId = "";
                             return  bikeId.equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeId())) &&
                                     bikeFrameId.equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeFrameId()));
 
@@ -143,6 +143,90 @@ public class OrderService {
         throw new AuthorizationException();
     }
 
+    public Link makeOrder(OrderRepairBikeRequest orderRepairBikeRequest, HttpServletRequest httpServletRequest) {
+
+        String token = httpServletRequest.getHeader("Authorization");
+
+        if (token != null) {
+            token = token.substring(7);
+            Long userId = jwtTokenProvider.extractUserId(token);
+            User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
+            if (user == null) throw new UserNotFoundException(" with id: " + userId);
+
+            ServiceGeneralInfoView serviceGeneralInfoView = offerServiceFeignClient.getRepairBikeServiceInfo(new ServiceRequest("Naprawianie rowerów"));
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("userId", user.getUserId());
+            claims.put("serviceId", serviceGeneralInfoView.getId());
+            String transactionToken = jwtTokenNonUserOrderProvider.generateToken(claims);
+
+            LocalDateTime localDateTimeMinutes = LocalDateTime.now().plusMinutes(PAYMENT_TIME);
+            LocalDateTime localDateTimeDays = LocalDateTime.now().plusDays(7);
+
+            UserOrder userOrder = UserOrder.builder()
+                    .beginOrder(orderRepairBikeRequest.getBeginDate())
+                    .endOrder(Date.from(localDateTimeDays.atZone(ZoneId.systemDefault()).toInstant()))
+                    .transactionToken(transactionToken)
+                    .paid(false)
+                    .timeToPaid(Date.from(localDateTimeMinutes.atZone(ZoneId.systemDefault()).toInstant()))
+                    .price(serviceGeneralInfoView.getPrice())
+                    .currency("PLN")
+                    .build();
+
+            userOrder = userOrderRepo.save(userOrder);
+            return buyService(orderRepairBikeRequest, serviceGeneralInfoView, userOrder.getOrderId());
+
+
+        }
+        throw new AuthorizationException();
+    }
+
+    private Link buyService(OrderRepairBikeRequest orderRequest,ServiceGeneralInfoView service, Long orderId) {
+        try {
+            Payment payment = createPayment(orderRequest, service, orderId);
+            for (Links link : payment.getLinks()) {
+                if (link.getRel().equals("approval_url")) {
+                    return new Link(link.getHref());
+                }
+            }
+            mailServiceFeignClient.sendEmailForContact(new ContactRequest("Naprawa roweru/numer zamówienia "+ orderId+" \n"+orderRequest.getDefect(),
+                    "", "nxbike.suppor1t@gmail.com",orderRequest.getDescription()));
+        } catch (PayPalRESTException ex) {
+            throw new PaypalErrorException(ex.getMessage());
+        }
+        return new Link("");
+    }
+
+    private Payment createPayment(OrderRepairBikeRequest orderRequest,ServiceGeneralInfoView service, Long orderId) throws PayPalRESTException {
+        Amount amount = new Amount();
+        amount.setCurrency("PLN");
+        amount.setTotal(String.valueOf(service.getPrice()));
+
+        Transaction transaction = new Transaction();
+        transaction.setDescription(getPaymentDescription(orderRequest, service));
+        transaction.setAmount(amount);
+
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.add(transaction);
+
+        Payer payer = new Payer();
+        payer.setPaymentMethod("paypal");
+
+        Payment payment = new Payment();
+        payment.setIntent("sale");
+        payment.setPayer(payer);
+        payment.setTransactions(transactions);
+        RedirectUrls redirectUrls = new RedirectUrls();
+        redirectUrls.setCancelUrl(CANCEL_PAYMENT_URL + orderId);
+        redirectUrls.setReturnUrl(SUCCESS_PAYMENT_URL + orderId);
+        payment.setRedirectUrls(redirectUrls);
+        return payment.create(apiContext);
+    }
+
+    private String getPaymentDescription(OrderRepairBikeRequest orderRequest, ServiceGeneralInfoView service) {
+        return "Zarezerwowano usługe: "+service.getName()+ " i zobowiązano się dostarczyć go od: "+
+                orderRequest.getBeginDate();
+    }
+
     private Link buyTicket(OrderRequest orderRequest, Long orderId) {
         try {
             Payment payment = createPayment(orderRequest, orderId);
@@ -185,6 +269,7 @@ public class OrderService {
         return payment.create(apiContext);
     }
 
+
     private String getPaymentDescription(OrderRequest orderRequest) {
         return "Zarezerwowano rower o id: "+orderRequest.getBikeId()+ " i rezerwacja trwa od: "+
                 orderRequest.getBeginDateOrder()+" do "+orderRequest.getEndDateOrder();
@@ -206,6 +291,7 @@ public class OrderService {
 
         UserOrder userOrder = userOrderRepo.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
 
+        String serviceId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"serviceId");
         String userIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"userId");
         String bikeIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"bikeId");
         String accessoryIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"accessoryId");
@@ -213,29 +299,51 @@ public class OrderService {
         Long userId = Long.parseLong(userIdStr);
 
         User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
-        Long accessoryIdLong = null;
-        if(!StringUtils.isBlank(accessoryIdStr)) accessoryIdLong = Long.parseLong(accessoryIdStr);
-        OrderNameProductResponse orderNameProductResponse = offerServiceFeignClient.getOrderNames(
-                new OrderNameProductRequest(Long.parseLong(bikeIdStr), accessoryIdLong));
+
+        QRMailRequest.QRMailRequestBuilder qrMailRequestBuilder = null;
+
+
+        if(serviceId=="null") {
+            Long accessoryIdLong = null;
+            if(!StringUtils.isBlank(accessoryIdStr)) accessoryIdLong = Long.parseLong(accessoryIdStr);
+            OrderNameProductResponse orderNameProductResponse = offerServiceFeignClient.getOrderNames(
+                    new OrderNameProductRequest(Long.parseLong(bikeIdStr), accessoryIdLong));
+
+
+            qrMailRequestBuilder = QRMailRequest.builder()
+                    .bikeName(orderNameProductResponse.getBike())
+                    .frameName(orderNameProductResponse.getFrame())
+                    .accessoryName(orderNameProductResponse.getAccessory());
+        } else {
+            ServiceGeneralInfoView serviceGeneralInfoView = offerServiceFeignClient.getRepairBikeServiceInfo(new ServiceRequest("Naprawianie rowerów"));
+            if(!String.valueOf(serviceGeneralInfoView.getId()).equals(serviceId)) throw new OfferNotFoundException();
+            qrMailRequestBuilder = QRMailRequest.builder()
+                    .service(serviceGeneralInfoView.getName());
+            mailServiceFeignClient.sendEmailForContact(new ContactRequest("Naprawa roweru/numer zamówienia "+ orderId,
+                    user.getFirstName()+" "+user.getLastName(), user.getEmail(),"Opłacono przez usera o id: "+userIdStr+" zamówienie o id: "+orderId));
+
+        }
 
         byte[] qrImage = qrImageService.createQrImage(userOrder, user);
 
+        if(qrMailRequestBuilder!=null) {
+
+            QRMailRequest qrMailRequest = qrMailRequestBuilder
+                    .orderId(orderId)
+                    .beginOrder(userOrder.getBeginOrder())
+                    .currency(userOrder.getCurrency())
+                    .endOrder(userOrder.getEndOrder())
+                    .price(userOrder.getPrice())
+                    .mailTo(user.getEmail())
+                    .image(qrImage)
+                    .token(jwtTokenNonUserProvider.generateToken())
+                    .build();
+
+            mailServiceFeignClient.sendQrCode(qrMailRequest);
+        }
         userOrder.setPaid(true);
         userOrderRepo.save(userOrder);
-        QRMailRequest qrMailRequest = QRMailRequest.builder()
-                .orderId(orderId)
-                .beginOrder(userOrder.getBeginOrder())
-                .currency(userOrder.getCurrency())
-                .endOrder(userOrder.getEndOrder())
-                .price(userOrder.getPrice())
-                .mailTo(user.getEmail())
-                .bikeName(orderNameProductResponse.getBike())
-                .frameName(orderNameProductResponse.getFrame())
-                .accessoryName(orderNameProductResponse.getAccessory())
-                .image(qrImage)
-                .token(jwtTokenNonUserProvider.generateToken())
-                .build();
-        mailServiceFeignClient.sendQrCode(qrMailRequest);
+
     }
 
     public void cancelOrder(Long orderId) {
