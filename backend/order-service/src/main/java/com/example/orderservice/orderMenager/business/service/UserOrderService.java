@@ -13,10 +13,12 @@ import com.example.orderservice.orderMenager.business.service.orderHistoryFactor
 import com.example.orderservice.orderMenager.data.entity.UserOrder;
 import com.example.orderservice.orderMenager.data.repository.UserOrderRepo;
 import com.example.orderservice.orderMenager.feignClient.OfferServiceFeignClient;
+import com.example.orderservice.security.business.exception.authorize.AuthorizationException;
 import com.example.orderservice.security.business.request.UserByIdRequest;
 import com.example.orderservice.security.business.service.JwtTokenNonUserOrderProvider;
 import com.example.orderservice.security.business.service.JwtTokenNonUserProvider;
 import com.example.orderservice.security.business.service.JwtTokenProvider;
+import com.example.orderservice.userMenager.api.request.RoleEnum;
 import com.example.orderservice.userMenager.api.request.User;
 import com.example.orderservice.userMenager.business.exception.user.UserNotFoundException;
 import com.example.orderservice.userMenager.feignClient.UserServiceFeignClient;
@@ -50,12 +52,24 @@ public class UserOrderService {
             Long userId = jwtTokenProvider.extractUserId(token);
             User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
             if (user == null) throw new UserNotFoundException(" with id: " + userId);
-            List<UserOrder> userOrderList = userOrderRepo.findAll();
+
             OrderHistoryType orderHistoryType = null;
             if(id == null) {
                 orderHistoryType = OrderHistoryType.MY;
             } else orderHistoryType = OrderHistoryType.OTHERS;
             OrderHistoryI orderHistoryImpl = OrderHistoryFactory.getOrderHistory(orderHistoryType, jwtTokenNonUserOrderProvider);
+
+            if(RoleEnum.CLIENT.name().equalsIgnoreCase(user.getRole().getRole()) &&
+                    orderHistoryType == OrderHistoryType.OTHERS) {
+                User userFromSearch = userServiceFeignClient.getUserById(new UserByIdRequest(id, jwtTokenNonUserProvider.generateToken()));
+                if(userFromSearch.getUserId() != userId) throw new AuthorizationException();
+            }
+
+
+
+
+
+            List<UserOrder> userOrderList = userOrderRepo.findAll();
             List<OrderNameProductWithOrderIdRequest> orderBikeOrAccessoryList = orderHistoryImpl
                     .getOrderNameProductWithOrderIdRequestList(userOrderList, id, userId);
 
