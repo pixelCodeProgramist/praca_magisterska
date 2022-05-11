@@ -24,4 +24,7 @@ public interface OfferServiceFeignClient {
     OrderNameProductResponse getOrderNames(@RequestBody @Valid OrderNameProductRequest orderNameProductRequest);
     @PostMapping("offer/service-info")
     ServiceGeneralInfoView getRepairBikeServiceInfo(@RequestBody @Valid ServiceRequest serviceRequest);
+
+    @GetMapping("offer/service-info/{id}")
+    ServiceGeneralInfoView getServiceNameInfo(@PathVariable(value = "id") Long id);
 }

@@ -1,3 +1,7 @@
 .nav-item:hover {
   background: lightblue !important;
 }
+
+.mfp-iframe-holder .mfp-arrow {
+  display: none !important;
+}

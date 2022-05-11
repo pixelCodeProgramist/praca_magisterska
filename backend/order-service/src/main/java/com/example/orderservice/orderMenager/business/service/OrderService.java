@@ -3,7 +3,6 @@ package com.example.orderservice.orderMenager.business.service;
 
 import com.example.orderservice.OrderServiceApplication;
 import com.example.orderservice.orderMenager.api.request.*;
-//import com.example.orderservice.orderMenager.data.repository.OrderRepo;
 import com.example.orderservice.orderMenager.api.response.Link;
 import com.example.orderservice.orderMenager.api.response.OrderNameProductResponse;
 import com.example.orderservice.orderMenager.api.response.ServiceGeneralInfoView;
@@ -30,12 +29,16 @@ import com.example.orderservice.userMenager.feignClient.UserServiceFeignClient;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -52,7 +55,6 @@ public class OrderService {
     private OfferServiceFeignClient offerServiceFeignClient;
     private QrImageService qrImageService;
     private MailServiceFeignClient mailServiceFeignClient;
-
     private final String SUCCESS_PAYMENT_URL = OrderServiceApplication.MAIN_SITE + "order/pay/success?orderId=";
     private final String CANCEL_PAYMENT_URL = OrderServiceApplication.MAIN_SITE + "order/pay/cancel?orderId=";
 
@@ -287,7 +289,7 @@ public class OrderService {
         return payment.execute(apiContext, paymentExecute);
     }
 
-    public void changeStatusOfOrder(Long orderId) {
+    public void changeStatusOfOrder(Long orderId) throws IOException {
 
         UserOrder userOrder = userOrderRepo.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
 
@@ -325,6 +327,19 @@ public class OrderService {
         }
 
         byte[] qrImage = qrImageService.createQrImage(userOrder, user);
+        ByteArrayInputStream bis = new ByteArrayInputStream(qrImage);
+        BufferedImage bImage2 = ImageIO.read(bis);
+        String fileName = UUID.randomUUID().toString();
+        String userDirectory = System.getProperty("user.dir");
+        String [] parts = userDirectory.split("/");
+        userDirectory = "";
+        for(int i=0;i<parts.length-1;i++)
+            userDirectory+=parts[i]+"/";
+
+
+        File file = new File(userDirectory+"order-service/src/main/resources/static/order/"+fileName+".png");
+        ImageIO.write(bImage2, "png", file);
+        userOrder.setUrl("order/"+fileName+".png");
 
         if(qrMailRequestBuilder!=null) {
 

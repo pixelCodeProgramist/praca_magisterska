@@ -292,4 +292,14 @@ public class OfferService {
                 .price(service.getPrice())
                 .build();
     }
+
+    public ServiceGeneralInfoView getServiceInfo(Long id) {
+        com.karol.offerservice.offerMenager.data.entity.Service service = serviceRepo.findById(id).orElseThrow(() -> new OfferNotFoundException());
+        return ServiceGeneralInfoView.builder()
+                .id(service.getId())
+                .currency(service.getCurrency())
+                .name(service.getProduct().getName())
+                .price(service.getPrice())
+                .build();
+    }
 }

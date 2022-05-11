@@ -45,4 +45,6 @@ public class UserOrder {
     @NotBlank
     private String currency;
 
+    private String url;
+
 }

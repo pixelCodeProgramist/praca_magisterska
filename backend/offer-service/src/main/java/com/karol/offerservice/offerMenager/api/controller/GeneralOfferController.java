@@ -61,5 +61,10 @@ public class GeneralOfferController {
     public ServiceGeneralInfoView getService(@RequestBody @Valid ServiceRequest serviceRequest) {
         return offerService.getServiceInfo(serviceRequest);
     }
+
+    @GetMapping("service-info/{id}")
+    ServiceGeneralInfoView getServiceNameInfo(@PathVariable(value = "id") Long id){
+        return offerService.getServiceInfo(id);
+    }
 }
 

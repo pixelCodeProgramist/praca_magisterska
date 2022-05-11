@@ -1,33 +1,38 @@
-<div class="d-flex justify-content-center">
-  <div class="col-10 row align-content-center" style="min-height: 400px;">
-    <div class="navbar navbar-light col-12 col-lg-3 row h4 d-flex align-content-center" style="margin-top: 100px">
-      <ul class="col navbar-nav flex-column text-center">
-        <li class="nav-item">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/order-history" routerLinkActive="active">Zamówienia</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/repair-bike"  routerLinkActive="active">Napraw rower</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/setting" routerLinkActive="active">Ustawienia konta</a>
-        </li>
-        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN'">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/employee-management" routerLinkActive="active">Zarządzaj pracownikami</a>
-        </li>
-        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/offer-management" routerLinkActive="active">Zarządzaj ofertami</a>
-        </li>
-        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/client-management" routerLinkActive="active">Zarządzaj klientami</a>
-        </li>
-        <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
-          <a class="nav-link p-4 fs-3" routerLink="/user-panel/statistic-management" routerLinkActive="active">Statystyki</a>
-        </li>
-      </ul>
+<div class="row justify-content-center">
+  <div class="row col-10 align-items-start" style="min-height: 800px">
+    <div class="col-12 col-lg-3 row align-content-center" style="min-height: 800px">
+      <div class="navbar navbar-light col-12 row h4 d-flex align-content-center">
+        <ul class="col navbar-nav flex-column text-center">
+          <li class="nav-item">
+            <a class="nav-link p-4 fs-3" routerLink="/user-panel/order-history" routerLinkActive="active">Zamówienia</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link p-4 fs-3" routerLink="/user-panel/repair-bike" routerLinkActive="active">Napraw rower</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link p-4 fs-3" routerLink="/user-panel/setting" routerLinkActive="active">Ustawienia konta</a>
+          </li>
+          <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN'">
+            <a class="nav-link p-4 fs-3" routerLink="/user-panel/employee-management" routerLinkActive="active">Zarządzaj
+              pracownikami</a>
+          </li>
+          <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+            <a class="nav-link p-4 fs-3" routerLink="/user-panel/offer-management" routerLinkActive="active">Zarządzaj
+              ofertami</a>
+          </li>
+          <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+            <a class="nav-link p-4 fs-3" routerLink="/user-panel/client-management" routerLinkActive="active">Zarządzaj
+              klientami</a>
+          </li>
+          <li class="nav-item" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'">
+            <a class="nav-link p-4 fs-3" routerLink="/user-panel/statistic-management" routerLinkActive="active">Statystyki</a>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="col-12 col-lg-9 row justify-content-center">
       <div class="col-xl-9">
-        <h3 class="text-center">Zaktualizuj swoje dane</h3>
+        <h3 class="text-center mt-5">Zaktualizuj swoje dane</h3>
         <div class="mt-5">
           <form [formGroup]="settingFormGroup" (ngSubmit)="submit()">
             <div class="card m-3 p-3">
@@ -40,12 +45,18 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #firstname [(ngModel)]="detailUserResponse.firstName" (click)="setUntouchedIfBlocked('firstName', firstname)" value="{{detailUserResponse.firstName}}" class="form-control" name="firstName" type="text" placeholder="Imię" formControlName="firstName"
+                      <input readonly #firstname [(ngModel)]="detailUserResponse.firstName"
+                             (click)="setUntouchedIfBlocked('firstName', firstname)"
+                             value="{{detailUserResponse.firstName}}" class="form-control" name="firstName" type="text"
+                             placeholder="Imię" formControlName="firstName"
                              [ngClass]="{activeRedBorder: hasError('firstName')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(firstname)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(firstname)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['firstName']?.touched" class="row">
-                      <small class="text-danger h5" *ngIf="checkError('firstName', 'required')">Pole nie może być puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('firstName', 'required')">Pole nie może być
+                        puste</small>
                       <small class="text-danger h5" *ngIf="checkError('firstName', 'minlength')">Pole powinno zawierać
                         minimum 3 znaki</small>
                       <small class="text-danger h5" *ngIf="checkError('firstName', 'maxlength')">Pole powinno zawierać
@@ -57,12 +68,16 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #lastname [(ngModel)]="detailUserResponse.lastName" class="form-control" name="lastName" type="text" placeholder="Nazwisko" formControlName="lastName"
+                      <input readonly #lastname [(ngModel)]="detailUserResponse.lastName" class="form-control"
+                             name="lastName" type="text" placeholder="Nazwisko" formControlName="lastName"
                              [ngClass]="{activeRedBorder: hasError('lastName')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(lastname)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(lastname)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['lastName']?.touched" class="row">
-                      <small class="text-danger h5" *ngIf="checkError('lastName', 'required')">Pole nie może być puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('lastName', 'required')">Pole nie może być
+                        puste</small>
                       <small class="text-danger h5" *ngIf="checkError('lastName', 'minlength')">Pole powinno zawierać
                         minimum 3 znaki</small>
                       <small class="text-danger h5" *ngIf="checkError('lastName', 'maxlength')">Pole powinno zawierać
@@ -78,13 +93,18 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #email [(ngModel)]="detailUserResponse.email" class="form-control" name="email" type="email" placeholder="Email" formControlName="email"
+                      <input readonly #email [(ngModel)]="detailUserResponse.email" class="form-control" name="email"
+                             type="email" placeholder="Email" formControlName="email"
                              [ngClass]="{activeRedBorder: hasError('email')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(email)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(email)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['email']?.touched" class="row">
-                      <small class="text-danger h5" *ngIf="checkError('email', 'required')">Pole nie może być puste</small>
-                      <small class="text-danger h5" *ngIf="checkError('email', 'email')">Nieprawidłowa forma maila</small>
+                      <small class="text-danger h5" *ngIf="checkError('email', 'required')">Pole nie może być
+                        puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('email', 'email')">Nieprawidłowa forma
+                        maila</small>
                     </div>
                   </div>
 
@@ -93,12 +113,16 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #phone [(ngModel)]="detailUserResponse.phone" class="form-control" name="phone" type="text" placeholder="Telefon" formControlName="phone"
+                      <input readonly #phone [(ngModel)]="detailUserResponse.phone" class="form-control" name="phone"
+                             type="text" placeholder="Telefon" formControlName="phone"
                              [ngClass]="{activeRedBorder: hasError('phone')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(phone)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(phone)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['phone']?.touched" class="row">
-                      <small class="text-danger h5" *ngIf="checkError('phone', 'required')">Pole nie może być puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('phone', 'required')">Pole nie może być
+                        puste</small>
                       <small class="text-danger h5" *ngIf="checkError('phone', 'minlength')">Pole powinno zawierać 9
                         znaków</small>
                       <small class="text-danger h5" *ngIf="checkError('phone', 'maxlength')">Pole powinno zawierać 9
@@ -114,9 +138,12 @@
                   <div class="row">
                     <div class="input-group">
                       <input id="birthday" readonly #birthday class="form-control" placeholder="Data urodzenia"
-                             name="birthday" [(ngModel)]="date" [ngModelOptions]="{standalone: true}" ngbDatepicker [footerTemplate]="footerTemplate" [maxDate]="today"
+                             name="birthday" [(ngModel)]="date" [ngModelOptions]="{standalone: true}" ngbDatepicker
+                             [footerTemplate]="footerTemplate" [maxDate]="today"
                              #d="ngbDatepicker" (click)="canToggle(birthday, d)">
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(birthday)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(birthday)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                   </div>
                   <ng-template #footerTemplate>
@@ -130,12 +157,17 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly [(ngModel)]="detailUserResponse.addressView.street"  #street [value]="detailUserResponse?.addressView?.street" class="form-control" name="street" type="text" placeholder="Ulica" formControlName="street"
+                      <input readonly [(ngModel)]="detailUserResponse.addressView.street" #street
+                             [value]="detailUserResponse?.addressView?.street" class="form-control" name="street"
+                             type="text" placeholder="Ulica" formControlName="street"
                              [ngClass]="{activeRedBorder: hasError('street')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(street)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(street)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['street']?.touched" class="row">
-                      <small class="text-danger h5" *ngIf="checkError('street', 'required')">Pole nie może być puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('street', 'required')">Pole nie może być
+                        puste</small>
                       <small class="text-danger h5" *ngIf="checkError('street', 'minlength')">Pole powinno zawierać
                         minimum 3 znaki</small>
                       <small class="text-danger h5" *ngIf="checkError('street', 'maxlength')">Pole powinno zawierać
@@ -149,9 +181,13 @@
 
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #houseNr [(ngModel)]="detailUserResponse.addressView.houseNr"  [ngModelOptions]="{standalone: true}" [value]="detailUserResponse?.addressView?.houseNr" name="houseNr" class="form-control" type="text" placeholder="Numer domu"/>
+                      <input readonly #houseNr [(ngModel)]="detailUserResponse.addressView.houseNr"
+                             [ngModelOptions]="{standalone: true}" [value]="detailUserResponse?.addressView?.houseNr"
+                             name="houseNr" class="form-control" type="text" placeholder="Numer domu"/>
 
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(houseNr)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(houseNr)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -161,13 +197,20 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #zipCode class="form-control" name="zipCode" type="text" placeholder="Kod pocztowy" formControlName="zipCode"
-                             [(ngModel)]="detailUserResponse.addressView.zipCode"  [value]="detailUserResponse?.addressView?.zipCode" [ngClass]="{activeRedBorder: hasError('zipCode')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(zipCode)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <input readonly #zipCode class="form-control" name="zipCode" type="text"
+                             placeholder="Kod pocztowy" formControlName="zipCode"
+                             [(ngModel)]="detailUserResponse.addressView.zipCode"
+                             [value]="detailUserResponse?.addressView?.zipCode"
+                             [ngClass]="{activeRedBorder: hasError('zipCode')}"/>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(zipCode)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['zipCode']?.touched" class="row">
-                      <small class="text-danger h5" *ngIf="checkError('zipCode', 'required')">Pole nie może być puste</small>
-                      <small class="text-danger h5" *ngIf="checkError('zipCode', 'pattern')">Kod powinien mieć postać xx-xxx lub xxxxx i składać się z cyfr</small>
+                      <small class="text-danger h5" *ngIf="checkError('zipCode', 'required')">Pole nie może być
+                        puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('zipCode', 'pattern')">Kod powinien mieć postać
+                        xx-xxx lub xxxxx i składać się z cyfr</small>
 
                     </div>
                   </div>
@@ -177,19 +220,23 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #city [(ngModel)]="detailUserResponse.addressView.city" [value]="detailUserResponse?.addressView?.city" class="form-control" name="city" type="text" placeholder="Miasto" formControlName="city"
+                      <input readonly #city [(ngModel)]="detailUserResponse.addressView.city"
+                             [value]="detailUserResponse?.addressView?.city" class="form-control" name="city"
+                             type="text" placeholder="Miasto" formControlName="city"
                              [ngClass]="{activeRedBorder: hasError('city')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(city)" type="button"><img src="../../../../../assets/edit.png" width="15px" height= "15px"></button>
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(city)"
+                              type="button"><img src="../../../../../assets/edit.png" width="15px" height="15px">
+                      </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['city']?.touched" class="row">
-                      <small class="text-danger h5" *ngIf="checkError('city', 'required')">Pole nie może być puste</small>
+                      <small class="text-danger h5" *ngIf="checkError('city', 'required')">Pole nie może być
+                        puste</small>
                       <small class="text-danger h5" *ngIf="checkError('city', 'minlength')">Pole powinno zawierać
                         minimum 3 znaki</small>
                       <small class="text-danger h5" *ngIf="checkError('city', 'maxlength')">Pole powinno zawierać
                         maximum 100 znaków</small>
                     </div>
                   </div>
-
 
 
                 </div>
@@ -202,16 +249,19 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="input-group">
-                      <input readonly #password [(ngModel)]="detailUserResponse.password" class="form-control" name="password" type="password" placeholder="Hasło" formControlName="password"
+                      <input readonly #password [(ngModel)]="detailUserResponse.password" class="form-control"
+                             name="password" type="password" placeholder="Hasło" formControlName="password"
                              [ngClass]="{activeRedBorder: hasError('password')}"/>
-                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(password)" type="button">
-                        <img src="../../../../../assets/edit.png" width="15px" height= "15px">
+                      <button class="btn btn-outline-secondary edit-btn" (click)="setEditPossibility(password)"
+                              type="button">
+                        <img src="../../../../../assets/edit.png" width="15px" height="15px">
                       </button>
                     </div>
                     <div *ngIf="settingFormGroup.controls['password']?.touched" class="row">
                       <small class="text-danger h5" *ngIf="checkError('password', 'minlength')">Pole powinno zawierać
                         przynajmniej 8 znaków</small>
-                      <small class="text-danger h5" *ngIf="checkError('password', 'passwordStrength')">Pole powinno zawierać
+                      <small class="text-danger h5" *ngIf="checkError('password', 'passwordStrength')">Pole powinno
+                        zawierać
                         przynajmniej jedą cyfrę, jedną małą literę i jedną dużą literę</small>
                     </div>
                   </div>
