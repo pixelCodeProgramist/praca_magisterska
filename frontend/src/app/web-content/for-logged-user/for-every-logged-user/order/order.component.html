@@ -47,21 +47,81 @@
           </thead>
           <tbody>
           <tr *ngFor="let order of myHistory.orderHistoryList; index as i">
-            <th scope="row">{{i+1}}</th>
+            <th scope="row">{{i + 1}}</th>
             <td>{{order.name}}</td>
             <td>{{order.beginDate | date: 'dd/MM/yyyy hh:mm'}}</td>
             <td>{{order.endDate | date: 'dd/MM/yyyy hh:mm'}}</td>
             <td>{{order.price}} {{order.currency}}</td>
-            <td (click)="open(i)" class="link-secondary" style="cursor: pointer">
+            <td (click)="open(i, myHistoryAlbums)" class="link-secondary" style="cursor: pointer">
               Pokaż kod
             </td>
           </tr>
           </tbody>
         </table>
         <div class="mt-5">
-          <app-paging [CURRENT_PAGE]="currentPage" [MAX_PAGINATION]="myHistory.maxPages" (currentPageEmitter)="clickOnPage($event)"></app-paging>
+          <app-paging [CURRENT_PAGE]="currentMyHistoryPage" [MAX_PAGINATION]="myHistory.maxPages"
+                      (currentPageEmitter)="clickOnMyHistoryPage($event)"></app-paging>
+        </div>
+      </div>
+      <div *ngIf="userService.isAdmin()">
+        <div class="d-flex col-12 h5 mt-2">
+          <div class="ng-autocomplete">
+            <ng-autocomplete
+              [data]="detailClientResponses"
+              [searchKeyword]="keyword"
+              placeholder="Wyszukaj klienta"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+              (selected)='search($event)'>
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <div class="item p-3">
+                <span>{{item.firstName}} {{item.lastName}}</span> &nbsp;|
+                <small>{{item.email}}</small>
+              </div>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+        </div>
+
+        <nav style="margin-top: 25px">Historia zamówień innych osób</nav>
+        <div style="margin-top: 50px;" class="h4" *ngIf="otherHistory.orderHistoryList.length>0">
+          <table class="table">
+            <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Zamówienie</th>
+              <th scope="col">Data rozpoczęcia</th>
+              <th scope="col">Data zakończenia</th>
+              <th scope="col">Cena</th>
+              <th scope="col">Pokaż kod qr</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let order of otherHistory.orderHistoryList; index as i">
+              <th scope="row">{{i + 1}}</th>
+              <td>{{order.name}}</td>
+              <td>{{order.beginDate | date: 'dd/MM/yyyy hh:mm'}}</td>
+              <td>{{order.endDate | date: 'dd/MM/yyyy hh:mm'}}</td>
+              <td>{{order.price}} {{order.currency}}</td>
+              <td (click)="open(i, myHistoryAlbums)" class="link-secondary" style="cursor: pointer">
+                Pokaż kod
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="mt-5">
+            <app-paging [CURRENT_PAGE]="currentOtherHistoryPage" [MAX_PAGINATION]="otherHistory.maxPages"
+                        (currentPageEmitter)="clickOnOtherHistoryPage($event)"></app-paging>
+          </div>
         </div>
       </div>
     </div>
+
+
   </div>
 </div>

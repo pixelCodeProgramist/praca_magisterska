@@ -120,5 +120,10 @@ export class UserService {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
     return this.http.put<BackendResponse>(this.UPDATE_CLIENT_URL, detailClientResponse, {headers})
   }
+
+  isAdmin() {
+    if(this.getRole() === "ADMIN") return true;
+    return false;
+  }
 }
 

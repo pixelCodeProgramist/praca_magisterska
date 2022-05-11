@@ -7,6 +7,9 @@ import com.example.orderservice.orderMenager.api.response.OrderHistory;
 import com.example.orderservice.orderMenager.api.response.OrderHistoryResponse;
 import com.example.orderservice.orderMenager.api.response.OrderNameProductResponse;
 import com.example.orderservice.orderMenager.api.response.ServiceGeneralInfoView;
+import com.example.orderservice.orderMenager.business.service.orderHistoryFactoryPackage.OrderHistoryFactory;
+import com.example.orderservice.orderMenager.business.service.orderHistoryFactoryPackage.OrderHistoryI;
+import com.example.orderservice.orderMenager.business.service.orderHistoryFactoryPackage.OrderHistoryType;
 import com.example.orderservice.orderMenager.data.entity.UserOrder;
 import com.example.orderservice.orderMenager.data.repository.UserOrderRepo;
 import com.example.orderservice.orderMenager.feignClient.OfferServiceFeignClient;
@@ -48,20 +51,14 @@ public class UserOrderService {
             User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
             if (user == null) throw new UserNotFoundException(" with id: " + userId);
             List<UserOrder> userOrderList = userOrderRepo.findAll();
-            List<OrderNameProductWithOrderIdRequest> orderBikeOrAccessoryList = userOrderList.stream()
-                    .filter(userOrder -> {
-                        Long userIdFromToken = Long.valueOf(jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "userId"));
-                        String bikeId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeId");
-                        return user.getUserId() == userIdFromToken && !"null".equalsIgnoreCase(bikeId);
-                    })
-                    .map(userOrder -> {
-                        String bikeIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeId");
-                        Long bikeId = NumberUtils.isCreatable(bikeIdStr) ? Long.valueOf(bikeIdStr) : null;
-                        String accessoryIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "accessoryId");
-                        Long accessoryId = NumberUtils.isCreatable(accessoryIdStr) ? Long.valueOf(accessoryIdStr) : null;
-                        return new OrderNameProductWithOrderIdRequest(bikeId, accessoryId, userOrder);
-                    })
-                    .collect(Collectors.toList());
+            OrderHistoryType orderHistoryType = null;
+            if(id == null) {
+                orderHistoryType = OrderHistoryType.MY;
+            } else orderHistoryType = OrderHistoryType.OTHERS;
+            OrderHistoryI orderHistoryImpl = OrderHistoryFactory.getOrderHistory(orderHistoryType, jwtTokenNonUserOrderProvider);
+            List<OrderNameProductWithOrderIdRequest> orderBikeOrAccessoryList = orderHistoryImpl
+                    .getOrderNameProductWithOrderIdRequestList(userOrderList, id, userId);
+
 
             orderBikeOrAccessoryList.forEach(orderBikeOrAccessory -> {
                 OrderNameProductResponse orderNameProductResponse = offerServiceFeignClient.getOrderNames(orderBikeOrAccessory);
@@ -76,18 +73,8 @@ public class UserOrderService {
             });
 
 
-            List<ServiceIdRequest> serviceIdRequests = userOrderList.stream()
-                    .filter(userOrder -> {
-                        Long userIdFromToken = Long.valueOf(jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "userId"));
-                        String serviceId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "serviceId");
-                        return user.getUserId() == userIdFromToken && !"null".equalsIgnoreCase(serviceId);
-                    })
-                    .map(userOrder ->{
-                        String serviceIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "serviceId");
-                        Long serviceId = NumberUtils.isCreatable(serviceIdStr) ? Long.valueOf(serviceIdStr) : null;
-                        return new ServiceIdRequest(userOrder, serviceId);
-                    })
-                    .collect(Collectors.toList());
+            List<ServiceIdRequest> serviceIdRequests = orderHistoryImpl
+                    .getServiceIdRequestList(userOrderList, id, userId);
 
             serviceIdRequests.forEach(serviceIdRequest -> {
                 ServiceGeneralInfoView serviceNameInfo = offerServiceFeignClient.getServiceNameInfo(serviceIdRequest.getId());
