@@ -27,7 +27,7 @@ public class ClassicBike {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "bike_type_id", nullable = false)
     private BikeType bikeType;
 

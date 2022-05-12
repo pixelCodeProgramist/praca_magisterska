@@ -1,0 +1,16 @@
+
+
+
+@media only screen and (min-width: 576px) {
+  .frame-checkboxes {
+    width: 60%;
+  }
+
+}
+
+@media only screen and (min-width: 741px) {
+  .frame-checkboxes {
+    width: 50%;
+  }
+
+}

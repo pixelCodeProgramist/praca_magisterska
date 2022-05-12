@@ -12,4 +12,5 @@ public class BikeForSearchView {
     private String name;
     private byte[] image;
     private String type;
+    private Boolean active;
 }

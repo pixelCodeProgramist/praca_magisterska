@@ -28,7 +28,7 @@ public class ElectricGeneralBikeGeneralOffer implements IGeneralBikeGeneralOffer
     public BikeGeneralOfferResponseView getGeneralOfferView(ImageService imageService, int pageNr, String section) {
         Pageable pageRequest = PageRequest.of(pageNr, MAX_PRODUCT_ON_PAGE, Sort.by(Sort.Direction.ASC, "product.name"));
 
-        Page<ElectricBike> page = electricBikeRepo.findAll(pageRequest);
+        Page<ElectricBike> page = electricBikeRepo.findAllByProduct_Active(pageRequest, true);
 
         List<BikeGeneralOfferView> bikeGeneralOfferViews = page.getContent().stream()
                 .map(product-> GeneralElectricOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))

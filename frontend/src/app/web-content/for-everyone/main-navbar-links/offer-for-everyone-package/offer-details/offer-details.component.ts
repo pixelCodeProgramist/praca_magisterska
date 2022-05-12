@@ -16,7 +16,6 @@ import {AccessoryInOrder} from "../../../../../../models/offers/pre-order/respon
 import {GradeRequest} from "../../../../../../models/offers/pre-order/request/GradeRequest";
 import {NgxStarsComponent} from "ngx-stars";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {PopupInformationViewComponent} from "../../popup-information-view/popup-information-view.component";
 import {OrderRequest} from "../../../../../../models/order/request/OrderRequest";
 import {OrderService} from "../../../../../../shared/order.service";
 
@@ -171,7 +170,7 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
     this.offerService.getDetailBikeInformation(this.id).subscribe(
       data => {
         this.bikeDetail = data;
-        this.selectedFrameOption = this.bikeDetail.frames[0];
+        this.selectedFrameOption = this.bikeDetail.frames[0].frameSize;
         let objectURL = 'data:image/png;base64,' + this.bikeDetail.image;
         let safeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
         this.bikeDetail.safeUrl = safeUrl;

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -48,8 +49,8 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<UserGradeProduct> userGradeProducts = new HashSet<>();
 
-//    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<UserGrade> userGrades = new HashSet<>();
+    @NotNull
+    private Boolean active;
 }
 
 

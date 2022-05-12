@@ -19,6 +19,8 @@ export class SearchBikeResponse {
   imageSafeUrl!: SafeResourceUrl;
 
   type!: string;
+
+  active!: boolean;
 }
 
 export interface ProductGeneralOffer {

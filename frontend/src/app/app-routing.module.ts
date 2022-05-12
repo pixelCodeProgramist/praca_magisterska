@@ -30,7 +30,7 @@ import {RepairBikeComponent} from "./web-content/for-logged-user/for-every-logge
 import {OrderComponent} from "./web-content/for-logged-user/for-every-logged-user/order/order.component";
 import {
   OfferManagementComponent
-} from "./web-content/for-logged-user/for-employee/offer-management/offer-management.component";
+} from "./web-content/for-logged-user/for-employee/offer-management-package/offer-management/offer-management.component";
 import {RoleGuard} from "../shared/guard/role-guard.service";
 import {Role} from "../shared/enum/Role";
 import {

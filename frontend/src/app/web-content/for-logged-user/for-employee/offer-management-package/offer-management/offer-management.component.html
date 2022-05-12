@@ -30,7 +30,29 @@
         </ul>
       </div>
     </div>
-    <div class="col-9">
+    <div class="col-12 col-lg-9 row justify-content-center">
+      <nav class="navbar navbar-light row" style="height: 15%">
+        <ul id="employeeUl" class="my-navbar navbar-nav row me-auto mt-2 mt-lg-0 text-center">
+          <li class="col-12 col-lg-4 nav-item" (click)="setActive(addEmployee, 'addOffer')">
+            <a #addEmployee class="nav-link p-4 fs-3">Dodaj ofertę</a>
+          </li>
+          <li class="col-12 col-lg-4 nav-item" (click)="setActive(removeEmployee,'removeOffer')">
+            <a #removeEmployee class="nav-link p-4 fs-3">Usuń ofertę</a>
+          </li>
+          <li class="col-12 col-lg-4 nav-item" (click)="setActive(updateEmployee,'updateOffer')">
+            <a #updateEmployee class="nav-link p-4 fs-3">Modyfikuj ofertę</a>
+          </li>
+        </ul>
+      </nav>
+      <div *ngIf="currentEmployeeNav=='addOffer'">
+        <app-add-offer-content-management></app-add-offer-content-management>
+      </div>
+      <div *ngIf="currentEmployeeNav=='removeOffer'">
+        <app-remove-offer-content-management></app-remove-offer-content-management>
+      </div>
+      <div *ngIf="currentEmployeeNav=='updateOffer'">
+        <app-update-offer-content-management></app-update-offer-content-management>
+      </div>
 
     </div>
   </div>

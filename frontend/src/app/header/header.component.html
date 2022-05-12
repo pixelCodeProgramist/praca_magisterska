@@ -54,6 +54,15 @@
               <button routerLink="/user-panel/order-history" ngbDropdownItem>Zamówienia</button>
               <button routerLink="/user-panel/repair-bike" ngbDropdownItem>Napraw rower</button>
               <button routerLink="/user-panel/setting" ngbDropdownItem>Ustawienia konta</button>
+              <button routerLink="/user-panel/employee-management" *ngIf="userService.getRole() == 'ADMIN'"
+                      ngbDropdownItem>Zarządzaj pracownikami</button>
+              <button routerLink="/user-panel/offer-management" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'"
+                      ngbDropdownItem>Zarządzaj ofertami</button>
+              <button routerLink="/user-panel/client-managemen" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'"
+                      ngbDropdownItem>Zarządzaj klientami</button>
+              <button routerLink="/user-panel/statistic-management" *ngIf="userService.getRole() == 'ADMIN' || userService.getRole() =='EMPLOYEE'"
+                      ngbDropdownItem>Statystyki</button>
+
               <button (click)="logout()" ngbDropdownItem>Wyloguj się</button>
             </div>
 

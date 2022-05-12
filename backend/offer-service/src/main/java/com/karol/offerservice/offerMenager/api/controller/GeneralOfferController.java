@@ -47,9 +47,9 @@ public class GeneralOfferController {
         return offerService.getAccessoryProductsGeneralOffer(pageNr);
     }
 
-    @GetMapping("/bikes")
-    public List<BikeForSearchView> getBikes() {
-        return offerService.getAllBikes();
+    @GetMapping("/bikes/{all}")
+    public List<BikeForSearchView> getBikes(@PathVariable(value = "all", required = false) boolean all) {
+        return offerService.getAllBikes(all);
     }
 
     @PostMapping("/offer-in-order")

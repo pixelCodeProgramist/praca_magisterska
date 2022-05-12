@@ -15,6 +15,7 @@ public class SearchBikeMapper {
                 .id(electricBike.getProduct().getProductId())
                 .name(electricBike.getProduct().getName())
                 .image(image)
+                .active(electricBike.getProduct().getActive())
                 .type("Elektryczny")
                 .build();
     }
@@ -24,6 +25,7 @@ public class SearchBikeMapper {
                 .id(classicBike.getProduct().getProductId())
                 .name(classicBike.getProduct().getName())
                 .image(image)
+                .active(classicBike.getProduct().getActive())
                 .type("Klasyczny " + classicBike.getBikeType().getType())
                 .build();
     }

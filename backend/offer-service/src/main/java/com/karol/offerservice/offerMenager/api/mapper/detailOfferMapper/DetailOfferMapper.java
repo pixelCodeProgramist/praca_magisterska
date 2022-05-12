@@ -3,6 +3,7 @@ package com.karol.offerservice.offerMenager.api.mapper.detailOfferMapper;
 import com.karol.offerservice.offerMenager.api.dto.TimePriceDto;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoViewBuilder;
+import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.FrameView;
 import com.karol.offerservice.offerMenager.data.entity.ClassicBike;
 import com.karol.offerservice.offerMenager.data.entity.ElectricBike;
 import lombok.experimental.UtilityClass;
@@ -25,13 +26,13 @@ public class DetailOfferMapper {
                 .bikeOfferType("Classic")
                 .timePriceDtoList(timePriceDtoList)
                 .guidePrice(guidePrice)
-                .frames(classicBike.getClassicBikeFrameInventories().stream().map(frame->frame.getFrame().getName()).collect(Collectors.toSet()))
+                .frames(classicBike.getClassicBikeFrameInventories().stream().map(frame->
+                        new FrameView(frame.getFrame().getName(), frame.getAvailableNumber())).collect(Collectors.toSet()))
                 .build();
     }
 
     public DetailBikeInfoView mapDataToResponse(ElectricBike electricBike, byte[] image, BigDecimal guidePrice, List<TimePriceDto> timePriceDtoList){
         return new DetailBikeInfoViewBuilder()
-                .id(electricBike.getId())
                 .name(electricBike.getProduct().getName())
                 .image(image)
                 .ratingNumber(electricBike.getProduct().getUserGradeProducts().size())
@@ -40,7 +41,8 @@ public class DetailOfferMapper {
                 .guidePrice(guidePrice)
                 .timePriceDtoList(timePriceDtoList)
                 .bikeOfferType("Electric")
-                .frames(electricBike.getElectricBikeFrameInventories().stream().map(frame->frame.getFrame().getName()).collect(Collectors.toSet()))
+                .frames(electricBike.getElectricBikeFrameInventories().stream().map(frame->
+                        new FrameView(frame.getFrame().getName(), frame.getAvailableNumber())).collect(Collectors.toSet()))
                 .build();
     }
 }

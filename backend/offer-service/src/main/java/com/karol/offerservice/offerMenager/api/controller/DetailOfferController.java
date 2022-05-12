@@ -19,9 +19,9 @@ import java.util.List;
 public class DetailOfferController {
     private OfferService offerService;
 
-    @GetMapping("/detail-information/{id}")
-    public DetailBikeInfoView getBikeInformation(@PathVariable(value = "id") Long id) {
-        return offerService.getBikeInformation(id);
+    @GetMapping("/detail-information/product/{id}/{all}")
+    public DetailBikeInfoView getBikeInformation(@PathVariable(value = "id") Long id, @PathVariable(value = "all", required = false) Boolean all) {
+        return offerService.getBikeInformation(id, all);
     }
 
     @PostMapping("/available-hours")

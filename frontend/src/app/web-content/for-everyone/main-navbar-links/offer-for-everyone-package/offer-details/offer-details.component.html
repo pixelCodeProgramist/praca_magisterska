@@ -27,7 +27,7 @@
             <label style="font-size: medium" for="frame_filter">Rozmiar ramy</label>
             <select id="frame_filter" class="form-select col-8" aria-label="Default select example"
                     [(ngModel)]="selectedFrameOption" (ngModelChange)="onFrameChange($event)">
-              <option *ngFor="let frame of bikeDetail?.frames" value="{{frame}}">{{frame}}</option>
+              <option *ngFor="let frame of bikeDetail?.frames" value="{{frame.frameSize}}">{{frame.frameSize}}</option>
             </select>
           </div>
         </div>

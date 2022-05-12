@@ -1,0 +1,91 @@
+<div class="row justify-content-around align-content-center mb-3 mt-5">
+  <div class="row">
+    <div class="row justify-content-around align-content-center">
+      <div class="col-12 col-lg-10">
+        <div class="d-flex col-12 h5 mt-2 mb-4">
+          <div class="ng-autocomplete">
+            <ng-autocomplete
+              [data]="bikes"
+              [searchKeyword]="keyword"
+              placeholder="Wyszukaj roweru"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+              historyHeading="{{null}}"
+              (selected)='search($event)'>
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <div class="item p-3">
+                <img [src]="item.imageSafeUrl" height="25" width="25" class="me-2 ms-2">
+                <span [innerHTML]="item.name"></span>&nbsp; | &nbsp;
+                <small>{{item.type}}</small>
+              </div>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="detailOffer">
+          <div class="row mb-3">
+            <img [src]="detailOffer.imageSafeUrl" class="text-center" style="width: 300px; height: 250px">
+          </div>
+          <div class="row mb-3">
+            <div class="col-8">
+              <div class="row">
+                <div class="input-group">
+                  <input readonly [(ngModel)]="detailOffer.name"
+                         class="form-control" type="text" placeholder="Nazwa"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="input-group">
+                  <input readonly [(ngModel)]="detailOffer.bikeOfferType" class="form-control" name="lastName" type="text"
+                         placeholder="Typ oferty"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3" *ngIf="detailOffer.bikeOfferType == 'Classic'">
+            <div class="col-12">
+              <div class="row">
+                <div class="input-group">
+                  <input readonly [(ngModel)]="detailOffer.bikeType" class="form-control" name="bikeType" type="text"
+                         placeholder="Rodzaj klasycznego roweru"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="row mb-2" *ngFor="let frame of detailOffer.frames">
+              <div class="col-8 h4">Ilość rowerów z ramą {{frame.frameSize}}</div>
+              <input disabled [(ngModel)]="frame.quantity" [ngModelOptions]="{standalone: true}" class="form-control col" name="frameQuantity" type="number" min="0"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12">
+              <div class="row">
+                <div class="input-group">
+                  <input readonly [value]="getActivityValue()" class="form-control" name="aktywność" type="text"
+                         placeholder="Aktywność"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mx-1" style="max-width: 15vmin" *ngIf="detailOffer">
+          <button *ngIf="bike?.active" class="col btn btn-primary" (click)="changeOfferActivity()">Usuń</button>
+          <button *ngIf="!bike?.active" class="col btn btn-danger" (click)="changeOfferActivity()">Aktywuj</button>
+        </div>
+        <div class="row" *ngIf="isErrorActive">
+          <small class="text-danger h5">
+            {{errorMsg}}
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

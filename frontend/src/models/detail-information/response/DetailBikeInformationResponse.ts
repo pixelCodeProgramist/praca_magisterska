@@ -8,12 +8,17 @@ export class DetailBikeInformationResponse {
   ratingNumber!: number;
   rating!: number;
   bikeType!: string;
-  offerType!: string;
   bikeOfferType!: string;
   timePriceDtoList!: TimePriceDto[];
   guidePrice!: number;
-  frames: string[] = [];
+  frames: Frame[] = [];
   safeUrl!: SafeResourceUrl;
+  imageSafeUrl!: SafeResourceUrl;
+}
+
+export interface Frame {
+  frameSize: string;
+  quantity: number;
 }
 
 export interface TimePriceDto {

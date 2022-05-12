@@ -21,7 +21,7 @@ public class BikeType {
     @Column(name = "id")
     private int bikeTypeId;
 
-    @OneToOne(mappedBy = "bikeType")
+    @OneToOne(mappedBy = "bikeType", cascade = CascadeType.ALL)
     private ClassicBikePrice classicBikePrice;
 
     @NotEmpty

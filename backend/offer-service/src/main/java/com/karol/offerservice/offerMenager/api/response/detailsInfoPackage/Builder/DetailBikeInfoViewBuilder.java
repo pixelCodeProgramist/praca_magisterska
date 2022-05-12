@@ -25,15 +25,13 @@ public class DetailBikeInfoViewBuilder {
 
     private List<TimePriceDto> timePriceDtoList;
 
-    private Set<String> frames;
+    private Set<FrameView> frames;
 
-    private int inUse;
 
-    private int availableNumber;
     public DetailBikeInfoViewBuilder() {
     }
 
-    public DetailBikeInfoViewBuilder frames(Set<String> frames) {
+    public DetailBikeInfoViewBuilder frames(Set<FrameView> frames) {
         this.frames = frames;
         return this;
     }
@@ -93,13 +91,5 @@ public class DetailBikeInfoViewBuilder {
         return this;
     }
 
-    public DetailBikeInfoViewBuilder inUse(int inUse) {
-        this.inUse = inUse;
-        return this;
-    }
 
-    public DetailBikeInfoViewBuilder availableNumber(int availableNumber) {
-        this.availableNumber = availableNumber;
-        return this;
-    }
 }

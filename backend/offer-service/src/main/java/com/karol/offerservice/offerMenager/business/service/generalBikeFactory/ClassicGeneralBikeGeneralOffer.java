@@ -28,7 +28,7 @@ public class ClassicGeneralBikeGeneralOffer implements IGeneralBikeGeneralOffer 
     public BikeGeneralOfferResponseView getGeneralOfferView(ImageService imageService, int pageNr, String section) {
         Pageable pageRequest = PageRequest.of(pageNr, MAX_PRODUCT_ON_PAGE, Sort.by(Sort.Direction.ASC, "product.name"));
 
-        Page<ClassicBike> page = classicBikeRepo.findAllByBikeType_Type(pageRequest, section);
+        Page<ClassicBike> page = classicBikeRepo.findAllByBikeType_TypeAndProduct_Active(pageRequest, section, true);
 
         List<BikeGeneralOfferView> bikeGeneralOfferViews = page.getContent().stream()
                 .map(product -> GeneralClassicOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))

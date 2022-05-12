@@ -43,7 +43,7 @@ import {MatListModule} from "@angular/material/list";
 import { SettingAccountComponent } from './web-content/for-logged-user/for-every-logged-user/setting-account/setting-account.component';
 import { RepairBikeComponent } from './web-content/for-logged-user/for-every-logged-user/repair-bike/repair-bike.component';
 import { OrderComponent } from './web-content/for-logged-user/for-every-logged-user/order/order.component';
-import { OfferManagementComponent } from './web-content/for-logged-user/for-employee/offer-management/offer-management.component';
+import { OfferManagementComponent } from './web-content/for-logged-user/for-employee/offer-management-package/offer-management/offer-management.component';
 import { EmployeeManagementComponent } from './web-content/for-logged-user/for-admin/employee-management/employee-management.component';
 import { ClientManagementComponent } from './web-content/for-logged-user/for-employee/client-management-package/client-management/client-management.component';
 import { StatisticManagementComponent } from './web-content/for-logged-user/for-employee/statistic-management/statistic-management.component';
@@ -52,6 +52,9 @@ import { RemoveEmployeeContentManagementComponent } from './web-content/for-logg
 import { UpdateEmployeeContentManagementComponent } from './web-content/for-logged-user/for-admin/update-employee-content-management/update-employee-content-management.component';
 import { UpdateClientContentManagementComponent } from './web-content/for-logged-user/for-employee/client-management-package/update-client-content-management/update-client-content-management.component';
 import { RemoveClientContentManagementComponent } from './web-content/for-logged-user/for-employee/client-management-package/remove-client-content-management/remove-client-content-management.component';
+import { AddOfferContentManagementComponent } from './web-content/for-logged-user/for-employee/offer-management-package/add-offer-content-management/add-offer-content-management.component';
+import { RemoveOfferContentManagementComponent } from './web-content/for-logged-user/for-employee/offer-management-package/remove-offer-content-management/remove-offer-content-management.component';
+import { UpdateOfferContentManagementComponent } from './web-content/for-logged-user/for-employee/offer-management-package/update-offer-content-management/update-offer-content-management.component';
 
 
 
@@ -92,7 +95,10 @@ import { RemoveClientContentManagementComponent } from './web-content/for-logged
     RemoveEmployeeContentManagementComponent,
     UpdateEmployeeContentManagementComponent,
     UpdateClientContentManagementComponent,
-    RemoveClientContentManagementComponent
+    RemoveClientContentManagementComponent,
+    AddOfferContentManagementComponent,
+    RemoveOfferContentManagementComponent,
+    UpdateOfferContentManagementComponent
   ],
   imports: [
     BrowserModule,

@@ -14,6 +14,7 @@ import {AvailableHoursResponse} from "../models/offers/pre-order/response/Availa
 import {AccessoryInOrder} from "../models/offers/pre-order/response/AccessoryInOrder";
 import {GradeRequest} from "../models/offers/pre-order/request/GradeRequest";
 import {BackendResponse} from "../models/BackendResponse";
+import {AddOfferRequest} from "../models/offers/request/AddOfferRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,13 @@ export class OfferService {
   private GENERAL_PRICE_LIST_INFORMATION_ELECTRIC_PRODUCTS_URL = `${GlobalService.BASE_URL}/offer/general-information/electric`;
   private GENERAL_OFFER_INFORMATION_CLASSIC_PRODUCTS_URL = `${GlobalService.BASE_URL}/offer/general-offer`;
   private GENERAL_SEARCH_BIKES_URL = `${GlobalService.BASE_URL}/offer/bikes`;
-  private DETAILS_BIKE_INFORMATION_URL = `${GlobalService.BASE_URL}/offer/detail-information`;
+  private DETAILS_BIKE_INFORMATION_URL = `${GlobalService.BASE_URL}/offer/detail-information/product`;
   private AVAILABLE_HOURS_BIKE_URL = `${GlobalService.BASE_URL}/offer/available-hours`;
   private ACCESSORY_DETAIL_OFFER_URL = `${GlobalService.BASE_URL}/offer/detail-information/accessories/all`;
   private CAN_GRADE_OFFER_URL = `${GlobalService.BASE_URL}/offer/grade/canGrade`;
   private GRADE_OFFER_URL = `${GlobalService.BASE_URL}/offer/grade`;
+  private ADD_OFFER_URL = `${GlobalService.BASE_URL}/offer/add`;
+  private CHANGE_OFFER_ACTIVITY_URL = `${GlobalService.BASE_URL}/offer/activity`;
 
   constructor(private http: HttpClient) {
   }
@@ -54,12 +57,12 @@ export class OfferService {
     return this.http.get<AccessoryGeneralOfferResponse>(this.GENERAL_OFFER_INFORMATION_CLASSIC_PRODUCTS_URL + '/' + section + '/' + page);
   }
 
-  getDetailBikeInformation(id: string) {
-    return this.http.get<DetailBikeInformationResponse>(this.DETAILS_BIKE_INFORMATION_URL + '/' + id);
+  getDetailBikeInformation(id: string, all: boolean = false) {
+    return this.http.get<DetailBikeInformationResponse>(this.DETAILS_BIKE_INFORMATION_URL + '/' + id + '/' + all);
   }
 
-  getSearchBikes() {
-    return this.http.get<SearchBikeResponse[]>(this.GENERAL_SEARCH_BIKES_URL);
+  getSearchBikes(all: boolean = false) {
+    return this.http.get<SearchBikeResponse[]>(this.GENERAL_SEARCH_BIKES_URL  + '/' + all);
   }
 
   getAvailableHours(dateAndHourOfReservationRequest: DateAndHourOfReservationRequest) {
@@ -78,5 +81,15 @@ export class OfferService {
   grade(gradeRequest: GradeRequest) {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
     return this.http.post<BackendResponse>(this.GRADE_OFFER_URL, gradeRequest, {headers});
+  }
+
+  addBike(addOfferRequest: AddOfferRequest) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.post<BackendResponse>(this.ADD_OFFER_URL, addOfferRequest, {headers});
+  }
+
+  changeOfferActivity(id: number) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.get<BackendResponse>(this.CHANGE_OFFER_ACTIVITY_URL+'/'+id, {headers});
   }
 }

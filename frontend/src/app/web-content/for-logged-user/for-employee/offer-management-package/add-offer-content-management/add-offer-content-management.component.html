@@ -1,0 +1,103 @@
+<div class="row justify-content-around align-content-center mb-3 mt-5">
+  <div class="row">
+    <div class="row justify-content-around align-content-center">
+      <div class="col-12 col-lg-10">
+        <form [formGroup]="addOfferFormGroup" (ngSubmit)="submit()">
+          <div class="row">
+            <div class="row justify-content-around align-content-center mb-5">
+              <strong class="h2 fw-bold pb-3 myHeader text-center">Dodaj nową ofertę</strong>
+            </div>
+            <div class="col-6">
+              <div class="m-3 p-3">
+                <div class="row mb-3">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label style="font-size: medium" for="productType">Wybierz typ produktu</label>
+                      <select id="productType" class="form-select col-8" aria-label="Default select example"
+                              [ngModelOptions]="{standalone: true}" [(ngModel)]="addOfferRequest.selectedProductTypeOption">
+                        <option value="Rower klasyczny">Rower klasyczny</option>
+                        <option value="Rower elektryczny">Rower elektryczny</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-8">
+                    <div class="row">
+                      <div class="input-group">
+                        <input [(ngModel)]="addOfferRequest.name" value="{{addOfferRequest.name}}"
+                               class="form-control" name="name" type="text" placeholder="Nazwa produktu"
+                               formControlName="name"
+                               [ngClass]="{activeRedBorder: hasError('name')}"/>
+                      </div>
+                      <div *ngIf="addOfferFormGroup.controls['name']?.touched" class="row">
+                        <small class="text-danger h5" *ngIf="checkError('name', 'required')">Pole nie może być
+                          puste</small>
+                        <small class="text-danger h5" *ngIf="checkError('name', 'minlength')">Pole powinno zawierać
+                          minimum 3 znaki</small>
+                        <small class="text-danger h5" *ngIf="checkError('name', 'maxlength')">Pole powinno zawierać
+                          maximum 100 znaków</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="h4 pt-4">Rozmiar ramy</div>
+                  <div class="row ms-1">
+                    <div class="row col-12 frame-checkboxes">
+                      <div class="col form-check form-check-inline h5 pt-4" *ngFor="let frame of frames; index as i">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox{{i}}" value="{{frame}}" [checked]="framesStates[i]"  (change)="changeStatusOfFrameCheckbox(i)"/>
+                        <label class="form-check-label" for="inlineCheckbox{{i}}">{{frame}}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="row mb-2" *ngFor="let frame of addOfferRequest.frames">
+                    <div class="col-8 h4">Ilość rowerów z ramą {{frame.frameSize}}</div>
+                    <input [(ngModel)]="frame.quantity" [ngModelOptions]="{standalone: true}" class="form-control col" name="frameQuantity" type="number" min="0"/>
+                  </div>
+                </div>
+
+
+                <div class="row mb-3" *ngIf="addOfferRequest.selectedProductTypeOption=='Rower klasyczny'">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label style="font-size: medium" for="selectedBikeOrAccessoryType">Wybierz rodzaj oferty dla
+                        produktu</label>
+                      <select id="selectedBikeOrAccessoryType" class="form-select col-8" aria-label="Default select example"
+                              [ngModelOptions]="{standalone: true}" [(ngModel)]="addOfferRequest.selectedBikeOrAccessoryTypeOption">
+                        <option value="Standard">Standard</option>
+                        <option value="Plus">Plus</option>
+                        <option value="Premium">Premium</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                <div class="row mx-1" style="max-width: 15vmin">
+                  <button class="btn btn-primary" type="submit">Dodaj</button>
+                </div>
+                <div class="row" *ngIf="isErrorActive">
+                  <small class="text-danger h5">
+                    {{errorMsg}}
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <input type='file' (change)="onSelectFile($event)" class="h5">
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

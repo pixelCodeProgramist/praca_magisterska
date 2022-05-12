@@ -23,10 +23,9 @@ public class DetailBikeInfoView {
     private String offerType;
     private String bikeOfferType;
     private List<TimePriceDto> timePriceDtoList;
-    private Set<String> frames;
+    private Set<FrameView> frames;
     private BigDecimal guidePrice;
-    private int inUse;
-    private int availableNumber;
+
 
     DetailBikeInfoView(DetailBikeInfoViewBuilder builder) {
         this.id = builder.getId();
@@ -39,8 +38,6 @@ public class DetailBikeInfoView {
         this.bikeOfferType = builder.getBikeOfferType();
         this.guidePrice = builder.getGuidePrice();
         this.frames = builder.getFrames();
-        this.availableNumber = builder.getAvailableNumber();
-        this.inUse = builder.getInUse();
         this.timePriceDtoList = builder.getTimePriceDtoList();
 
     }
