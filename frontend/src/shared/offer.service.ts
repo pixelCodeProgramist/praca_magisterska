@@ -34,6 +34,8 @@ export class OfferService {
   private ADD_OFFER_URL = `${GlobalService.BASE_URL}/offer/add`;
   private CHANGE_OFFER_ACTIVITY_URL = `${GlobalService.BASE_URL}/offer/activity`;
   private GENERAL_PRICE_LIST_CLASSIC_BIKES_URL = `${GlobalService.BASE_URL}/offer/general-information/classic/prices`;
+  private UPDATE_CLASSIC_PRICES_URL = `${GlobalService.BASE_URL}/offer/classicPrices`;
+  private UPDATE_ELECTRIC_PRICES_URL = `${GlobalService.BASE_URL}/offer/electricPrices`;
 
   constructor(private http: HttpClient) {
   }
@@ -96,5 +98,15 @@ export class OfferService {
   changeOfferActivity(id: number) {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
     return this.http.get<BackendResponse>(this.CHANGE_OFFER_ACTIVITY_URL+'/'+id, {headers});
+  }
+
+  modifyClassicPrices(classicPrices: GeneralInfoClassicPrice[]) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.put<BackendResponse>(this.UPDATE_CLASSIC_PRICES_URL, classicPrices,{headers});
+  }
+
+  modifyElectricPrices(electricPrices: GeneralInfoElectricProduct[]) {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token') });
+    return this.http.put<BackendResponse>(this.UPDATE_ELECTRIC_PRICES_URL, electricPrices,{headers});
   }
 }

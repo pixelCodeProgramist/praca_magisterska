@@ -15,6 +15,7 @@ import com.karol.offerservice.offerMenager.api.response.ClassicBikePriceView;
 import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
+import com.karol.offerservice.offerMenager.business.exception.bikePrice.BikePriceArraySizeException;
 import com.karol.offerservice.offerMenager.business.exception.offer.BikeWithFrameNotAvailableException;
 import com.karol.offerservice.offerMenager.business.exception.offer.OfferNotFoundException;
 import com.karol.offerservice.offerMenager.business.service.detailBikeFactory.DetailBikeFactory;
@@ -37,6 +38,7 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -447,4 +449,24 @@ public class OfferService {
                 .collect(Collectors.toList());
     }
 
+    public void updateClassicBikePrices(List<ClassicBikePriceRequest> classicBikePriceRequest) {
+        List<ClassicBikePrice> classicBikePrices = classicBikePriceRepo.findAll();
+        if(classicBikePrices.size() != classicBikePriceRequest.size()) throw new BikePriceArraySizeException();
+        for(int i=0;i<classicBikePrices.size();i++) {
+            classicBikePrices.get(i).setEveryBeginHourPrice(classicBikePriceRequest.get(i).getEveryBeginHourPrice());
+            classicBikePrices.get(i).setDayAndNightPrice(classicBikePriceRequest.get(i).getDayAndNightPrice());
+            classicBikePrices.get(i).setDayPrice(classicBikePriceRequest.get(i).getDayPrice());
+            classicBikePriceRepo.save(classicBikePrices.get(i));
+        }
+
+    }
+
+    public void updateElectricBikePrices(List<ElectricBikePriceRequest> electricBikePriceRequestList) {
+        List<ElectricBikePrice> electricBikePrices = electricBikePriceRepo.findAll();
+        if(electricBikePrices.size() != electricBikePriceRequestList.size()) throw new BikePriceArraySizeException();
+        for(int i=0;i<electricBikePrices.size();i++) {
+            electricBikePrices.get(i).setPrice(electricBikePriceRequestList.get(i).getPrice());
+            electricBikePriceRepo.save(electricBikePrices.get(i));
+        }
+    }
 }

@@ -114,6 +114,7 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
 
   fillBeginHours() {
     this.dateAndHourOfReservationRequest.reservationRange = this.selectedTimeOption;
+    this.dateAndHourOfReservationRequest.bikeId = Number(this.id);
     this.withAccessoryCheckbox = false;
 
     this.offerService.getAvailableHours(this.dateAndHourOfReservationRequest).subscribe(
@@ -207,9 +208,9 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
           this.selectedAccessoryOption?.id, this.getPrice(), this.withBikeTripCheckbox);
 
       this.orderService.makeOrder(orderRequest).subscribe(
-        data=>{
-           window.location.href = data.message;
-        },error => {
+        data => {
+          window.location.href = data.message;
+        }, error => {
           this.isErrorActive = true;
           this.errorMsg = error.error.order;
         }
