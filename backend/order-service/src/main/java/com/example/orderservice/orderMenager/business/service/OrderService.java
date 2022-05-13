@@ -122,6 +122,7 @@ public class OrderService {
             }
             claims.put("bikeId", orderRequest.getBikeId());
             claims.put("userId", user.getUserId());
+            claims.put("withBikeTrip", orderRequest.getWithBikeTrip());
             Integer frameId = offerServiceFeignClient.isFrameInBike(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
             if(frameId<0) throw new FrameNotFoundException(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
             claims.put("bikeFrameId", frameId);
@@ -297,6 +298,7 @@ public class OrderService {
         String userIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"userId");
         String bikeIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"bikeId");
         String accessoryIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"accessoryId");
+        Boolean withBikeTrip = new Boolean(jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"withBikeTrip"));
 
         Long userId = Long.parseLong(userIdStr);
 
@@ -342,7 +344,6 @@ public class OrderService {
         userOrder.setUrl("order/"+fileName+".png");
 
         if(qrMailRequestBuilder!=null) {
-
             QRMailRequest qrMailRequest = qrMailRequestBuilder
                     .orderId(orderId)
                     .beginOrder(userOrder.getBeginOrder())
@@ -350,6 +351,7 @@ public class OrderService {
                     .endOrder(userOrder.getEndOrder())
                     .price(userOrder.getPrice())
                     .mailTo(user.getEmail())
+                    .withBikeTrip(withBikeTrip)
                     .image(qrImage)
                     .token(jwtTokenNonUserProvider.generateToken())
                     .build();

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -33,4 +34,7 @@ public class OrderRequest {
     @NotBlank
     @Future
     private Date endDateOrder;
+
+    @NotNull
+    private Boolean withBikeTrip;
 }

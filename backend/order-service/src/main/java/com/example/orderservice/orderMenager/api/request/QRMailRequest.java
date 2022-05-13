@@ -35,4 +35,6 @@ public class QRMailRequest {
     private String token;
 
     private String service;
+
+    private Boolean withBikeTrip;
 }

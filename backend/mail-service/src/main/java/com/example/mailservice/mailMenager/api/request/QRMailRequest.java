@@ -35,5 +35,8 @@ public class QRMailRequest {
 
     @NotBlank
     private String token;
+
+    @NotNull
+    private Boolean withBikeTrip;
 }
 

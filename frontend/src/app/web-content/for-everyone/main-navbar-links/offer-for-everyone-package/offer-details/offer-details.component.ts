@@ -204,7 +204,7 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
 
       let orderRequest: OrderRequest =
         new OrderRequest(Number(this.id), this.selectedFrameOption, beginDate, endDate,
-          this.selectedAccessoryOption?.id, this.getPrice());
+          this.selectedAccessoryOption?.id, this.getPrice(), this.withBikeTripCheckbox);
 
       this.orderService.makeOrder(orderRequest).subscribe(
         data=>{

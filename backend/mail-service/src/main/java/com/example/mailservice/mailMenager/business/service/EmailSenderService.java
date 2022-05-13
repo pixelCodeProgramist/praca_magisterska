@@ -169,6 +169,7 @@ public class EmailSenderService {
             stringBuilder.append("Planowana data naprawy roweru: "+ sdf.format(qrMailRequest.getEndOrder()) + "</p>\n");
         }else {
             if(accessory == null) accessory = "BRAK";
+            stringBuilder.append("Usługa wycieczka z przewodnikiem: " + (qrMailRequest.getWithBikeTrip()?"Tak":"Nie") + "</p>");
             stringBuilder.append("Rower: " + qrMailRequest.getBikeName() + "\n" +
                     "</p>\n" +
                     "<p>\n" +
@@ -185,7 +186,7 @@ public class EmailSenderService {
                 "<p>\n" +
                 "Cena całkowita rezerwacji: " + qrMailRequest.getPrice().setScale(2, RoundingMode.CEILING) + "\n"+
                 "</p>\n" +
-                "<img src='cid:qrCode' alt=\"QR code\" width=\"400\" height=\"400\"/>\n" +
+                "<img src='cid:qrCode' alt=\"QR code\" width=\"350\" height=\"350\"/>\n" +
                 "</div>\n" +
                 "</div>\n" +
                 "</div>");
