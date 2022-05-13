@@ -11,6 +11,7 @@ import com.karol.offerservice.offerMenager.api.mapper.ElectricBikeInventoryMappe
 import com.karol.offerservice.offerMenager.api.mapper.generalOfferMapper.*;
 import com.karol.offerservice.offerMenager.api.request.*;
 import com.karol.offerservice.offerMenager.api.response.AccessoryInformationInOrderView;
+import com.karol.offerservice.offerMenager.api.response.ClassicBikePriceView;
 import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
@@ -439,4 +440,11 @@ public class OfferService {
         product.setActive(!product.getActive());
         productRepo.save(product);
     }
+
+    public List<ClassicBikePriceView> getClassicBikePrices() {
+        return classicBikePriceRepo.findAll().stream()
+                .map(ClassicBikePriceMapper::mapDataToResponse)
+                .collect(Collectors.toList());
+    }
+
 }

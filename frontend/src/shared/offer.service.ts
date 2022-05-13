@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {GlobalService} from "./global.service";
-import {GeneralInfoClassicProduct} from "../models/GeneralInfoClassicProduct";
+import {GeneralInfoClassicPrice, GeneralInfoClassicProduct} from "../models/GeneralInfoClassicProduct";
 import {GeneralInfoElectricProduct} from "../models/GeneralInfoElectricProduct";
 import {
   AccessoryGeneralOfferResponse,
@@ -33,6 +33,7 @@ export class OfferService {
   private GRADE_OFFER_URL = `${GlobalService.BASE_URL}/offer/grade`;
   private ADD_OFFER_URL = `${GlobalService.BASE_URL}/offer/add`;
   private CHANGE_OFFER_ACTIVITY_URL = `${GlobalService.BASE_URL}/offer/activity`;
+  private GENERAL_PRICE_LIST_CLASSIC_BIKES_URL = `${GlobalService.BASE_URL}/offer/general-information/classic/prices`;
 
   constructor(private http: HttpClient) {
   }
@@ -40,6 +41,10 @@ export class OfferService {
 
   getGeneralPriceListClassicInfo() {
     return this.http.get<GeneralInfoClassicProduct[]>(this.GENERAL_PRICE_LIST_INFORMATION_CLASSIC_PRODUCTS_URL);
+  }
+
+  getGeneralPriceListClassicBikes() {
+    return this.http.get<GeneralInfoClassicPrice[]>(this.GENERAL_PRICE_LIST_CLASSIC_BIKES_URL);
   }
 
   getGeneralPriceListElectricInfo() {

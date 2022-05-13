@@ -9,6 +9,7 @@ import lombok.experimental.UtilityClass;
 public class ElectricBikePriceMapper {
     public ElectricBikeGeneralInformationView mapDataToResponse(ElectricBikePrice electricBikePrice) {
         return new ElectricBikeGeneralInformationView().builder()
+                .id(electricBikePrice.getId())
                 .price(electricBikePrice.getPrice())
                 .currency(electricBikePrice.getCurrency())
                 .time(electricBikePrice.getTime())

@@ -1,5 +1,6 @@
 package com.karol.offerservice.offerMenager.api.mapper.generalOfferMapper;
 
+import com.karol.offerservice.offerMenager.api.response.ClassicBikePriceView;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.ClassicBikeGeneralInformationView;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.ElectricBikeGeneralInformationView;
 import com.karol.offerservice.offerMenager.data.entity.Accessory;
@@ -13,6 +14,17 @@ public class ClassicBikePriceMapper {
     public ClassicBikeGeneralInformationView mapDataToResponse(ClassicBikePrice classicBikePrice, String type) {
         return new ClassicBikeGeneralInformationView().builder()
                 .productName("Rower typu "+type)
+                .currency(classicBikePrice.getCurrency())
+                .dayAndNightPrice(classicBikePrice.getDayAndNightPrice())
+                .dayPrice(classicBikePrice.getDayPrice())
+                .everyBeginHourPrice(classicBikePrice.getEveryBeginHourPrice())
+                .build();
+    }
+
+    public ClassicBikePriceView mapDataToResponse(ClassicBikePrice classicBikePrice) {
+        return new ClassicBikePriceView().builder()
+                .id(classicBikePrice.getId())
+                .bikeType(classicBikePrice.getBikeType().getType())
                 .currency(classicBikePrice.getCurrency())
                 .dayAndNightPrice(classicBikePrice.getDayAndNightPrice())
                 .dayPrice(classicBikePrice.getDayPrice())

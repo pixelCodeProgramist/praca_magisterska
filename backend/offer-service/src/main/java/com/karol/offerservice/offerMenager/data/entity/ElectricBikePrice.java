@@ -17,7 +17,7 @@ public class ElectricBikePrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank
     private String time;

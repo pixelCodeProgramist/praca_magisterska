@@ -2,6 +2,7 @@ package com.karol.offerservice.offerMenager.api.controller;
 
 import com.karol.offerservice.offerMenager.api.request.OrderNameProductRequest;
 import com.karol.offerservice.offerMenager.api.request.ServiceRequest;
+import com.karol.offerservice.offerMenager.api.response.ClassicBikePriceView;
 import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
 import com.karol.offerservice.offerMenager.business.service.OfferService;
@@ -66,5 +67,12 @@ public class GeneralOfferController {
     ServiceGeneralInfoView getServiceNameInfo(@PathVariable(value = "id") Long id){
         return offerService.getServiceInfo(id);
     }
+
+    @GetMapping("/general-information/classic/prices")
+    public List<ClassicBikePriceView> getClassicBikePrices() {
+        return offerService.getClassicBikePrices();
+    }
+
+
 }
 
