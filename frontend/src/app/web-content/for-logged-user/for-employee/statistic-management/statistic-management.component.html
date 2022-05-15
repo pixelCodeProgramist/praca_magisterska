@@ -31,6 +31,132 @@
       </div>
     </div>
     <div class="col-9">
+      <form [formGroup]="aprioriRequestFormGroup" (ngSubmit)="submit()">
+        <div class="card m-3 p-3">
+          <div class="row justify-content-around align-content-center mb-5">
+            <strong class="h2 fw-bold pb-3 myHeader text-center">Dodaj dane do algorytmu apriori</strong>
+            <div class="line"></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 col-lg-3">
+              <div class="row">
+                <div class="input-group">
+                  <input [(ngModel)]="aprioriRequest.confidence"
+                         class="form-control" name="confidenceName" type="number"
+                         placeholder="Poziom ufności(confidence)"
+                         formControlName="confidenceName"
+                         [ngClass]="{activeRedBorder: hasError('confidenceName')}"/>
+                </div>
+                <div *ngIf="aprioriRequestFormGroup.controls['confidenceName']?.touched" class="row">
+                  <small class="text-danger h5" *ngIf="checkError('confidenceName', 'required')">Pole nie może być
+                    puste</small>
+                  <small class="text-danger h5" *ngIf="checkError('confidenceName', 'min')">Wartość nie może być
+                    mniejsza niż 0.01</small>
+                  <small class="text-danger h5" *ngIf="checkError('confidenceName', 'max')">Wartość nie może być
+                    większa niż 1</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+              <div class="row">
+                <div class="input-group">
+                  <input [(ngModel)]="aprioriRequest.support"
+                         class="form-control" name="supportName" type="number" placeholder="Poziom wsparcia(support)"
+                         formControlName="supportName"
+                         [ngClass]="{activeRedBorder: hasError('supportName')}"/>
+                </div>
+                <div *ngIf="aprioriRequestFormGroup.controls['supportName']?.touched" class="row">
+                  <small class="text-danger h5" *ngIf="checkError('supportName', 'required')">Pole nie może być
+                    puste</small>
+                  <small class="text-danger h5" *ngIf="checkError('supportName', 'min')">Wartość nie może być
+                    mniejsza niż 0.01</small>
+                  <small class="text-danger h5" *ngIf="checkError('supportName', 'max')">Wartość nie może być
+                    większa niż 1</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <form class="row row-cols-sm-auto">
+                <div class="col-12">
+                  <div class="dp-hidden position-absolute">
+                    <div class="input-group">
+                      <input name="datepicker"
+                             class="form-control"
+                             ngbDatepicker
+                             #datepicker="ngbDatepicker"
+                             [autoClose]="'outside'"
+                             (dateSelect)="onDateSelection($event)"
+                             [displayMonths]="2"
+                             [dayTemplate]="t"
+                             outsideDays="hidden"
+                             tabindex="-1">
+                      <ng-template #t let-date let-focused="focused">
+          <span class="custom-day"
+                [class.focused]="focused"
+                [class.range]="isRange(date)"
+                [class.faded]="isHovered(date) || isInside(date)"
+                (mouseenter)="hoveredDate = date"
+                (mouseleave)="hoveredDate = null">
+            {{ date.day }}
+          </span>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <input #dpFromDate
+                           class="form-control" placeholder="yyyy-mm-dd"
+                           name="dpFromDate"
+                           [value]="formatter.format(fromDate)"
+                           (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                    <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()"
+                            type="button"></button>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="input-group">
+                    <input #dpToDate
+                           class="form-control" placeholder="yyyy-mm-dd"
+                           name="dpToDate"
+                           [value]="formatter.format(toDate)"
+                           (input)="toDate = validateInput(toDate, dpToDate.value)">
+                    <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()"
+                            type="button"></button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+
+          <div class="row mx-1" style="max-width: 15vmin">
+            <button class="btn btn-primary" type="submit">Dodaj</button>
+          </div>
+          <div class="row" *ngIf="isErrorActive">
+            <small class="text-danger h5">
+              {{errorMsg}}
+            </small>
+          </div>
+        </div>
+      </form>
+
+      <table class="table h4" *ngIf="aprioriResponse.length>0">
+        <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Poprzednik</th>
+          <th scope="col">Następnik</th>
+          <th scope="col">Ufność</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let oneResponse of aprioriResponse; index as i">
+          <th scope="row">{{i+1}}</th>
+          <td>{{oneResponse.secondary}}</td>
+          <td>{{oneResponse.main}}</td>
+          <td>{{oneResponse.confidence}}</td>
+        </tr>
+        </tbody>
+      </table>
 
     </div>
   </div>

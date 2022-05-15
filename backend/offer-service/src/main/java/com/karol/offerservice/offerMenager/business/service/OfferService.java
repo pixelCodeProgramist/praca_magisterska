@@ -12,6 +12,7 @@ import com.karol.offerservice.offerMenager.api.mapper.generalOfferMapper.*;
 import com.karol.offerservice.offerMenager.api.request.*;
 import com.karol.offerservice.offerMenager.api.response.AccessoryInformationInOrderView;
 import com.karol.offerservice.offerMenager.api.response.ClassicBikePriceView;
+import com.karol.offerservice.offerMenager.api.response.OrderNameProductForStatisticResponse;
 import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.detailsInfoPackage.Builder.DetailBikeInfoView;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
@@ -468,5 +469,26 @@ public class OfferService {
             electricBikePrices.get(i).setPrice(electricBikePriceRequestList.get(i).getPrice());
             electricBikePriceRepo.save(electricBikePrices.get(i));
         }
+    }
+
+    public OrderNameProductForStatisticResponse getOrderNamesForStatistic(OrderNameProductForStatisticRequest orderNameProductRequest) {
+        ClassicBike classicBike =
+                classicBikeRepo.findById(orderNameProductRequest.getBikeId()).orElse(null);
+        ElectricBike electricBike =
+                electricBikeRepo.findById(orderNameProductRequest.getBikeId()).orElse(null);
+        OrderNameProductForStatisticResponse orderNameProductResponse = new OrderNameProductForStatisticResponse();
+
+        if (classicBike == null && electricBike == null) return null;
+
+        if (classicBike != null) {
+            orderNameProductResponse.setProductType("Klasyczny");
+            orderNameProductResponse.setBikeType(classicBike.getBikeType().getType());
+        }
+        if (electricBike != null) {
+            orderNameProductResponse.setProductType("Elektryczny");
+        }
+
+
+        return orderNameProductResponse;
     }
 }

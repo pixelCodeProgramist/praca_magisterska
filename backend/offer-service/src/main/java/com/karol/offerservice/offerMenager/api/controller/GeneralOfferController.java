@@ -1,8 +1,10 @@
 package com.karol.offerservice.offerMenager.api.controller;
 
+import com.karol.offerservice.offerMenager.api.request.OrderNameProductForStatisticRequest;
 import com.karol.offerservice.offerMenager.api.request.OrderNameProductRequest;
 import com.karol.offerservice.offerMenager.api.request.ServiceRequest;
 import com.karol.offerservice.offerMenager.api.response.ClassicBikePriceView;
+import com.karol.offerservice.offerMenager.api.response.OrderNameProductForStatisticResponse;
 import com.karol.offerservice.offerMenager.api.response.OrderNameProductResponse;
 import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.*;
 import com.karol.offerservice.offerMenager.business.service.OfferService;
@@ -57,6 +59,12 @@ public class GeneralOfferController {
     OrderNameProductResponse getOrderNames(@RequestBody @Valid OrderNameProductRequest orderNameProductRequest){
         return offerService.getOrderNames(orderNameProductRequest);
     }
+
+    @PostMapping("/offer-in-order/statistic")
+    OrderNameProductForStatisticResponse getOrderNamesForStatistic(@RequestBody @Valid OrderNameProductForStatisticRequest orderNameProductForStatisticRequest){
+       return offerService.getOrderNamesForStatistic(orderNameProductForStatisticRequest);
+    }
+
 
     @PostMapping("/service-info")
     public ServiceGeneralInfoView getService(@RequestBody @Valid ServiceRequest serviceRequest) {

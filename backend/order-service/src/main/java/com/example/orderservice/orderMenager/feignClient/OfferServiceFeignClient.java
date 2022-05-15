@@ -1,7 +1,9 @@
 package com.example.orderservice.orderMenager.feignClient;
 
+import com.example.orderservice.orderMenager.api.request.OrderNameProductForStatisticRequest;
 import com.example.orderservice.orderMenager.api.request.OrderNameProductRequest;
 import com.example.orderservice.orderMenager.api.request.ServiceRequest;
+import com.example.orderservice.orderMenager.api.response.OrderNameProductForStatisticResponse;
 import com.example.orderservice.orderMenager.api.response.OrderNameProductResponse;
 import com.example.orderservice.orderMenager.api.response.ServiceGeneralInfoView;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,6 +24,10 @@ public interface OfferServiceFeignClient {
 
     @PostMapping("offer/offer-in-order")
     OrderNameProductResponse getOrderNames(@RequestBody @Valid OrderNameProductRequest orderNameProductRequest);
+
+    @PostMapping("offer/offer-in-order/statistic")
+    OrderNameProductForStatisticResponse getOrderNamesForStatistic(@RequestBody @Valid OrderNameProductForStatisticRequest orderNameProductForStatisticRequest);
+
     @PostMapping("offer/service-info")
     ServiceGeneralInfoView getRepairBikeServiceInfo(@RequestBody @Valid ServiceRequest serviceRequest);
 
