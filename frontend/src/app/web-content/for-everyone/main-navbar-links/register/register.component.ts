@@ -4,6 +4,7 @@ import {UserService} from "../../../../../shared/user.service";
 import {RegisterModel} from "../../../../../models/user/RegisterModel";
 import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PopupInformationViewComponent} from "../popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-register',
@@ -16,6 +17,10 @@ export class RegisterComponent implements OnInit {
   birthDay!: NgbDateStruct;
   today:NgbDate = this.calendar.getToday();
   houseNr: string = '';
+  loading: boolean = false;
+  isErrorActive: boolean = false;
+  errorMsg: string = '';
+
   constructor(private userService: UserService, private ngbModal: NgbModal, private calendar: NgbCalendar) { }
 
   ngOnInit(): void {
@@ -83,7 +88,7 @@ export class RegisterComponent implements OnInit {
 
   submit() {
     if(this.registerFormGroup.valid&&this.isRulesAcceptedCheckbox) {
-
+      this.loading = true;
       let registerModel: RegisterModel = new RegisterModel(
         this.registerFormGroup.controls['firstName']?.value,
         this.registerFormGroup.controls['lastName']?.value,
@@ -99,12 +104,16 @@ export class RegisterComponent implements OnInit {
 
       this.userService.register(registerModel).subscribe(
         data=>{
+          this.loading = false;
           const modalRef = this.ngbModal.open(PopupInformationViewComponent);
           modalRef.componentInstance.message = 'Zarejestrowano pomyślnie';
           this.isRulesAcceptedCheckbox = false;
           this.registerFormGroup.reset();
         },error => {
-          console.log(error)
+          this.loading = false;
+          this.isErrorActive = true;
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
         }
       )
     } else {

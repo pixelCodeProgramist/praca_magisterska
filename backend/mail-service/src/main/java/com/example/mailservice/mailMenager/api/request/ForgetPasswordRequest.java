@@ -14,5 +14,6 @@ import javax.validation.constraints.Size;
 public class ForgetPasswordRequest {
     @NotBlank
     @Size(min = 5, max = 100)
+    @Email
     private String mail;
 }

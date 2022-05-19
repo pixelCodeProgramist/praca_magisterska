@@ -8,6 +8,7 @@ import {DetailUserMoreResponse} from "../../../../../models/detail-user/DetailUs
 import {
   PopupInformationViewComponent
 } from "../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-add-employee-content-management',
@@ -28,7 +29,7 @@ export class AddEmployeeContentManagementComponent implements OnInit {
 
   isErrorActive: boolean = false;
   errorMsg: string = '';
-
+  loading: boolean = false;
 
   constructor(private userService: UserService, private ngbModal: NgbModal, private calendar: NgbCalendar, private generalInformationService: GeneralInformationService) { }
 
@@ -111,6 +112,7 @@ export class AddEmployeeContentManagementComponent implements OnInit {
 
   submit() {
     if(this.addEmployeeFormGroup.valid) {
+      this.loading = true;
       this.detailUserResponse.password = this.password;
       this.detailUserResponse.phone = this.phone;
       this.detailUserResponse.birthDay =  new Date(this.birthDay?.year,this.birthDay?.month-1, this.birthDay?.day)
@@ -118,12 +120,15 @@ export class AddEmployeeContentManagementComponent implements OnInit {
       this.detailUserResponse.branchId = Number(this.selectedBranchOption)
       this.userService.addEmployee(this.detailUserResponse).subscribe(
         data=>{
+          this.loading = false;
           const modalRef = this.ngbModal.open(PopupInformationViewComponent);
           modalRef.componentInstance.message = data.message;
           this.addEmployeeFormGroup.reset();
         },error => {
+          this.loading = false;
           this.isErrorActive = true;
-          this.errorMsg = error.error;
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
         }
       )
     }

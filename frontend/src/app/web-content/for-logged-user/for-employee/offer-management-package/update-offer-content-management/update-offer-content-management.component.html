@@ -7,7 +7,9 @@
           <div class="h4 pt-4">Ceny klasycznych rowerów</div>
 
           <div class="row ms-1">
+            <ngx-loading [show]="classicPriceLoading"></ngx-loading>
             <div class="row col-12" *ngFor="let classicPrice of classicPrices; index as i">
+
               <div class="col form-check form-check-inline h5 pt-4">
                 <label class="form-check-label" for="inline{{i}}">{{classicPrice.bikeType}} 1h</label>
                 <input class="form-control" type="text" [(ngModel)]="classicPrice.everyBeginHourPrice"/>
@@ -33,6 +35,7 @@
 
         </div>
         <div class="row">
+          <ngx-loading [show]="electricPriceLoading"></ngx-loading>
           <div class="h4 pt-4">Ceny elektrycznych rowerów</div>
           <div class="row ms-1">
             <div class="row col-12 frame-checkboxes" *ngFor="let electricPrice of electricPrices; index as i">

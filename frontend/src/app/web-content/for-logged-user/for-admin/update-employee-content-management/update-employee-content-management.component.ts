@@ -9,6 +9,7 @@ import {GeneralInformationService} from "../../../../../shared/general-informati
 import {
   PopupInformationViewComponent
 } from "../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-update-employee-content-management',
@@ -44,6 +45,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
 
   branches: Branch[] = [];
   selectedBranchOption!: string;
+  loading: boolean = false;
 
 
   constructor(private userService: UserService, private ngbModal: NgbModal, private router: Router,
@@ -53,6 +55,8 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loading = true;
+
     this.generalInformationService.getBranches().subscribe(
       data => {
         this.branches = data;
@@ -64,6 +68,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
 
     this.userService.getAllEmployee().subscribe(
       data => {
+        this.loading = false;
         this.detailEmployeeResponses = data;
         this.detailEmployeeResponse = this.detailEmployeeResponses[0];
         this.selectedBranchOption = this.detailEmployeeResponse?.branchView?.street + ' ' + this.detailEmployeeResponse?.branchView?.city
@@ -86,6 +91,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
 
         this.branchInfo = this.detailEmployeeResponse.branchView.street + ' ' + this.detailEmployeeResponse.branchView.city
       }, error => {
+        this.loading = false;
         localStorage.clear()
         this.router.navigate(['/', 'login']);
       }
@@ -173,6 +179,7 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
   submit() {
 
     if (this.updateEmployeeFormGroup.valid) {
+
       this.detailEmployeeResponse.birthDay = new Date(this.birthdayDate?.year, this.birthdayDate?.month - 1, this.birthdayDate?.day)
       this.detailEmployeeResponse.employeeDate = new Date(this.employmentDate?.year, this.employmentDate?.month - 1, this.employmentDate?.day)
       let branch = this.branches.filter(branch => (branch.street + ' ' + branch.city) == this.selectedBranchOption)[0];
@@ -182,16 +189,21 @@ export class UpdateEmployeeContentManagementComponent implements OnInit {
       else this.detailEmployeeResponse.roleView.role = 'EMPLOYEE'
       let isEqual = DetailUserMoreResponse.isEqualsDeep(this.detailEmployeeResponse, this.detailEmployeeResponseOrginal)
       if (!isEqual) {
+        this.loading = true;
         this.isErrorActive = false;
         this.errorMsg = ''
         this.userService.updateEmployee(this.detailEmployeeResponse).subscribe(
           data=>{
+            this.loading = false;
             const modalRef = this.ngbModal.open(PopupInformationViewComponent);
             modalRef.componentInstance.message = data.message;
             this.router.navigate(['/', 'user-panel']);
           },error => {
+
+            this.loading = false;
             this.isErrorActive = true;
-            this.errorMsg = error.error;
+            let errorHandler: ErrorHandler = new ErrorHandler();
+            this.errorMsg = errorHandler.handle(error,this.errorMsg)
           }
         )
       } else {

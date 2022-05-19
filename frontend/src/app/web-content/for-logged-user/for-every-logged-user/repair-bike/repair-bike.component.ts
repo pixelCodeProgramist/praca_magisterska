@@ -4,6 +4,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BikeRepairRequest} from "../../../../../models/order/request/BikeRepairRequest";
 import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {OrderService} from "../../../../../shared/order.service";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-repair-bike',
@@ -17,6 +18,7 @@ export class RepairBikeComponent implements OnInit {
   today:NgbDate = this.calendar.getNext(this.calendar.getToday());
   beginDate!: NgbDateStruct;
   public addRepairBikeFormGroup!: FormGroup;
+  loading: boolean = false;
 
 
 
@@ -42,14 +44,18 @@ export class RepairBikeComponent implements OnInit {
   }
 
   submit() {
+
     if(this.addRepairBikeFormGroup.valid) {
+      this.loading = true;
       this.repairBike.beginDate = new Date(this.beginDate.year, this.beginDate.month-1, this.beginDate.day);
       this.orderService.makeOrderBikeRepair(this.repairBike).subscribe(
         data=>{
           window.location.href = data.message;
         },error => {
-          this.isErrorActive = true;
-          this.errorMsg = error.error.order;
+          this.loading = false;
+          this.isErrorActive = true
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
         }
       )
     }

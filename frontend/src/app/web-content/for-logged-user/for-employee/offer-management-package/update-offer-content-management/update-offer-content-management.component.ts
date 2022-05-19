@@ -6,6 +6,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {
   PopupInformationViewComponent
 } from "../../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-update-offer-content-management',
@@ -24,32 +25,42 @@ export class UpdateOfferContentManagementComponent implements OnInit {
 
   isErrorElectricActive: boolean = false;
   errorElectricMsg: string = '';
+  classicPriceLoading: boolean = false;
+  electricPriceLoading: boolean = false;
+
 
   constructor(private offerService: OfferService, private ngbModal: NgbModal) { }
 
   ngOnInit(): void {
-
+    this.classicPriceLoading = true;
+    this.electricPriceLoading = true;
     this.offerService.getGeneralPriceListClassicBikes().subscribe(
       data=>{
+        this.classicPriceLoading = false;
         this.classicPrices = data;
         this.classicPrices.forEach(classic=>{
           this.classicPricesCopy.push(GeneralInfoClassicPrice.clone(classic));
         });
 
       },error => {
-
+        this.classicPriceLoading = false;
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorClassicMsg = errorHandler.handle(error,this.errorClassicMsg)
       }
     )
 
     this.offerService.getGeneralPriceListElectricInfo().subscribe(
       data=>{
+        this.electricPriceLoading = false;
         this.electricPrices = data;
         this.electricPrices.forEach(electric=>{
           this.electricPricesCopy.push(GeneralInfoElectricProduct.clone(electric));
         });
 
       },error => {
-
+        this.electricPriceLoading = false;
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorElectricMsg = errorHandler.handle(error,this.errorElectricMsg)
       }
     )
   }
@@ -73,18 +84,23 @@ export class UpdateOfferContentManagementComponent implements OnInit {
               }
             )
           },error => {
-
+            let errorHandler: ErrorHandler = new ErrorHandler();
+            this.errorElectricMsg = errorHandler.handle(error,this.errorElectricMsg)
+            this.isErrorClassicActive= false;
           }
         )
       }
     }
 
     if(type == 'electric') {
+      this.electricPriceLoading = true;
+
       if(this.verifyElectric()) {
         this.isErrorElectricActive = false;
         this.errorElectricMsg = '';
         this.offerService.modifyElectricPrices(this.electricPrices).subscribe(
           data=>{
+            this.electricPriceLoading = false;
             const modalRef = this.ngbModal.open(PopupInformationViewComponent);
             modalRef.componentInstance.message = data.message;
             modalRef.closed.subscribe(
@@ -97,7 +113,10 @@ export class UpdateOfferContentManagementComponent implements OnInit {
               }
             )
           },error => {
-
+            this.electricPriceLoading = false;
+            this.isErrorElectricActive= true;
+            let errorHandler: ErrorHandler = new ErrorHandler();
+            this.errorElectricMsg = errorHandler.handle(error,this.errorElectricMsg)
           }
         )
       }

@@ -26,7 +26,7 @@ public interface TokenProvider {
         }
     }
 
-    default  boolean isTokenExpire(String token) {
+    default boolean isTokenExpire(String token) {
         return extractExpireDate(token).before(new Date());
     }
 

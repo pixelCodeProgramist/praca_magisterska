@@ -34,6 +34,7 @@
     <div class="col-9">
       <nav style="margin-top: 25px">Historia twoich zamówień</nav>
       <div style="margin-top: 50px;" class="h4">
+        <ngx-loading [show]="myHistoryLoading"></ngx-loading>
         <table class="table">
           <thead class="thead-dark">
           <tr>
@@ -89,6 +90,7 @@
         </div>
 
         <nav style="margin-top: 25px">Historia zamówień innych osób</nav>
+        <ngx-loading [show]="otherHistoryLoading"></ngx-loading>
         <div style="margin-top: 50px;" class="h4" *ngIf="otherHistory.orderHistoryList.length>0">
           <table class="table">
             <thead class="thead-dark">
@@ -108,7 +110,7 @@
               <td>{{order.beginDate | date: 'dd/MM/yyyy hh:mm'}}</td>
               <td>{{order.endDate | date: 'dd/MM/yyyy hh:mm'}}</td>
               <td>{{order.price}} {{order.currency}}</td>
-              <td (click)="open(i, myHistoryAlbums)" class="link-secondary" style="cursor: pointer">
+              <td (click)="open(i, otherHistoryAlbums)" class="link-secondary" style="cursor: pointer">
                 Pokaż kod
               </td>
             </tr>
@@ -118,7 +120,13 @@
             <app-paging [CURRENT_PAGE]="currentOtherHistoryPage" [MAX_PAGINATION]="otherHistory.maxPages"
                         (currentPageEmitter)="clickOnOtherHistoryPage($event)"></app-paging>
           </div>
+
         </div>
+      </div>
+      <div class="row" *ngIf="isErrorActive">
+        <small class="text-danger h5">
+          {{errorMsg}}
+        </small>
       </div>
     </div>
 

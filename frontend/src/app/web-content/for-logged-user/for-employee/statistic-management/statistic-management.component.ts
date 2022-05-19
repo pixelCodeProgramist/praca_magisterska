@@ -5,6 +5,7 @@ import {AprioriResponse} from "../../../../../models/statistic/apripri/response/
 import {AprioriRequest} from "../../../../../models/statistic/apripri/request/AprioriRequest";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-statistic-management',
@@ -22,6 +23,8 @@ export class StatisticManagementComponent implements OnInit {
   fromDate!: NgbDate | null;
   toDate!: NgbDate | null;
 
+  loading: boolean = false;
+
   constructor(public userService: UserService, private orderService: OrderService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
@@ -36,16 +39,22 @@ export class StatisticManagementComponent implements OnInit {
   }
 
   submit() {
+
     if(this.aprioriRequestFormGroup.valid) {
+      this.loading = true;
       this.aprioriRequest.from = new Date(<number>this.fromDate?.year, <number>this.fromDate?.month-1, this.fromDate?.day);
       this.aprioriRequest.to = new Date(<number>this.toDate?.year, <number>this.toDate?.month-1, this.toDate?.day);
 
       this.orderService.getAprioriStatistic(this.aprioriRequest).subscribe(
         data=>{
+          this.loading = false;
           this.aprioriResponse = data;
-          console.log(this.aprioriResponse)
+          this.errorMsg = ''
         },error => {
-
+          this.loading = false;
+          this.isErrorActive = true
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
         }
       )
     }

@@ -5,6 +5,7 @@ import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, 
 import {UserService} from "../../../../../../shared/user.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PopupInformationViewComponent} from "../../popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-forget-password-response',
@@ -16,6 +17,7 @@ export class ForgetPasswordResponseComponent implements OnInit {
   errorMsg: any;
   passwordChangerRequest: PasswordChangerRequest = new PasswordChangerRequest();
   public passwordChangerFormGroup!: FormGroup;
+  loading: boolean = false;
   constructor(private userService: UserService,  private ngbModal: NgbModal, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -30,13 +32,18 @@ export class ForgetPasswordResponseComponent implements OnInit {
 
   submit() {
     if(this.passwordChangerFormGroup.valid) {
+      this.loading = true;
       this.userService.changePassword(this.passwordChangerRequest).subscribe(
         data=>{
+          this.loading = false;
           const modalRef = this.ngbModal.open(PopupInformationViewComponent);
           modalRef.componentInstance.message = 'Hasło zmieniono pomyślnie';
           this.passwordChangerFormGroup.reset();
         },error => {
-
+          this.loading = false;
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
+          this.isErrorActive = true;
         }
       )
     }
@@ -86,4 +93,5 @@ export class ForgetPasswordResponseComponent implements OnInit {
   public checkError = (controlName: string, errorName: string) => {
     return this.passwordChangerFormGroup.controls[controlName].hasError(errorName);
   }
+
 }

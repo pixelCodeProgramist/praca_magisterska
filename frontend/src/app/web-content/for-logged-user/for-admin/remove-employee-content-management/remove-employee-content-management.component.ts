@@ -7,6 +7,7 @@ import {
 } from "../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
 import {Router} from "@angular/router";
 import {Role} from "../../../../../shared/enum/Role";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-remove-employee-content-management',
@@ -26,15 +27,17 @@ export class RemoveEmployeeContentManagementComponent implements OnInit {
   isErrorActive: boolean = false;
   errorMsg: string = '';
   branchInfo!: string;
-
+  loading: boolean = false;
 
   constructor(private userService: UserService, private ngbModal: NgbModal, private router: Router) { }
 
 
 
   ngOnInit(): void {
+    this.loading = true;
     this.userService.getAllEmployee().subscribe(
       data=>{
+        this.loading = false;
         this.detailUserResponses = data;
         this.detailUserResponse = this.detailUserResponses[0];
         this.setRoleCheckBox();
@@ -42,6 +45,7 @@ export class RemoveEmployeeContentManagementComponent implements OnInit {
         this.detailUserResponse.employeeDate = new Date(this.detailUserResponse.employeeDate);
         this.branchInfo = this.detailUserResponse.branchView.street + ' ' + this.detailUserResponse.branchView.city
       },error => {
+        this.loading = false;
         localStorage.clear()
         this.router.navigate(['/', 'login']);
       }
@@ -58,15 +62,18 @@ export class RemoveEmployeeContentManagementComponent implements OnInit {
 
 
   submit() {
-
+    this.loading = true;
     this.userService.removeUser(this.detailUserResponse.userId, Role.EMPLOYEE)?.subscribe(
       data=>{
+        this.loading = false;
         const modalRef = this.ngbModal.open(PopupInformationViewComponent);
         modalRef.componentInstance.message = data.message;
         this.router.navigate(['/', 'user-panel']);
       },error => {
+        this.loading = false;
         this.isErrorActive = true;
-        this.errorMsg = error.error;
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorMsg = errorHandler.handle(error,this.errorMsg)
       }
     )
   }

@@ -49,6 +49,7 @@
     </nav>
 
     <div class="row justify-content-around">
+      <ngx-loading [show]="loading"></ngx-loading>
       <div *ngIf="currentNav!= 'accessories'" class="text-center mt-3">
         <div class="btn text-white p-3" [ngClass]="{'my-dark-bg-blue': isBikeActive, 'my-gray': !isBikeActive}" (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
                                                                                                                                                  aria-hidden="true"></i>Rowery</div>

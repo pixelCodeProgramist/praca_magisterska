@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FlipCard} from "../../../../../models/FlipCardSectionInfo";
 import {MapForContact} from "../../../../../business/MapForContact";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {SafeResourceUrl} from "@angular/platform-browser";
 import {GeneralInformationService} from "../../../../../shared/general-information.service";
 import {ImageFromByteSanitizerService} from "../../../../../shared/ImageFromByteSanitizer.service";
 import {ImageForSectionResponse} from "../../../../../models/general-information/response/ImageForSectionResponse";
@@ -11,6 +10,7 @@ import {
 } from "../../../../../models/general-information/response/GeneralInformationResponse";
 import {ContactRequest} from "../../../../../models/contact/ContactRequest";
 import {ContactService} from "../../../../../shared/contact.service";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 
 @Component({
@@ -24,17 +24,21 @@ export class ContactComponent implements OnInit {
   maps: MapForContact[] = [];
   contactFormGroup!: FormGroup;
   imagesForSectionResponse: ImageForSectionResponse[] = [];
-
+  loadingMainPhoto: boolean = false;
+  loadingSendMail: boolean = false;
   generalInfo!: GeneralInformationResponse;
+  isErrorActive: boolean = false;
+  errorMsg: string = '';
 
   constructor(private generalInformationService: GeneralInformationService, private imageFromByteSanitizer: ImageFromByteSanitizerService, private contactService: ContactService) {
   }
 
   ngOnInit(): void {
+    this.loadingMainPhoto = true;
     this.generalInformationService.getPhotosForSection('contact-section').subscribe(
       data => {
         this.imagesForSectionResponse = data;
-
+        this.loadingMainPhoto = false;
         for (let placeSection of this.imagesForSectionResponse) {
           let objectURL = 'data:image/png;base64,' + placeSection.image;
           let safeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
@@ -44,12 +48,11 @@ export class ContactComponent implements OnInit {
           this.generalInfo = generalInfo
           this.setMapInfo();
           this.setFlipCards();
-        }, error => {
-
         });
 
 
       }, error => {
+        this.loadingMainPhoto = false;
       }
     );
 
@@ -106,6 +109,7 @@ export class ContactComponent implements OnInit {
     return this.contactFormGroup!.controls[controlName].errors != null && this.contactFormGroup!.controls[controlName].touched;
   }
 
+
   displayPlaceName(fileName: string) {
     return fileName.replace('place', 'Punkt ');
   }
@@ -128,6 +132,7 @@ export class ContactComponent implements OnInit {
 
   sendMail() {
     if (this.contactFormGroup.valid) {
+      this.loadingSendMail = true;
       let contact: ContactRequest = new ContactRequest(
         this.contactFormGroup.controls['subject']?.value, this.contactFormGroup.controls['message']?.value,
         this.contactFormGroup.controls['email']?.value, this.contactFormGroup.controls['firstLastName']?.value
@@ -135,8 +140,12 @@ export class ContactComponent implements OnInit {
       this.contactService.sendMailForContact(contact).subscribe(
         data=>{
           this.contactFormGroup.reset();
+          this.loadingSendMail = false;
         },error => {
-
+          this.loadingSendMail = false;
+          this.isErrorActive = true
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
         }
       )
 

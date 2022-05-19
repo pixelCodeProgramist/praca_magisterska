@@ -7,6 +7,7 @@ import {
   PopupInformationViewComponent
 } from "../../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
 import {Role} from "../../../../../../shared/enum/Role";
+import {ErrorHandler} from "../../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-remove-client-content-management',
@@ -25,6 +26,7 @@ export class RemoveClientContentManagementComponent implements OnInit {
 
   isErrorActive: boolean = false;
   errorMsg: string = '';
+  loading: boolean = false;
 
 
   constructor(private userService: UserService, private ngbModal: NgbModal, private router: Router) {
@@ -32,18 +34,22 @@ export class RemoveClientContentManagementComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loading = true;
     this.userService.getAllClients(true).subscribe(
       data => {
+        this.loading = false;
         this.detailUserResponses = data;
         this.detailUserResponse = this.detailUserResponses[0];
         if(this.detailUserResponse!=undefined) {
           this.setRoleCheckBox();
           this.detailUserResponse.birthDay = new Date(this.detailUserResponse.birthDay);
         }else {
+          this.loading = false;
           const modalRef = this.ngbModal.open(PopupInformationViewComponent);
           modalRef.componentInstance.message = 'W systemie brak aktywnych klientów';
         }
       }, error => {
+        this.loading = false;
         localStorage.clear()
         this.router.navigate(['/', 'login']);
       }
@@ -60,15 +66,17 @@ export class RemoveClientContentManagementComponent implements OnInit {
 
 
   submit() {
-
+    this.loading = true;
     this.userService.removeUser(this.detailUserResponse.userId, Role.CLIENT)?.subscribe(
       data => {
         const modalRef = this.ngbModal.open(PopupInformationViewComponent);
         modalRef.componentInstance.message = data.message;
         this.router.navigate(['/', 'user-panel']);
       }, error => {
+        this.loading = false;
         this.isErrorActive = true;
-        this.errorMsg = error.error;
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorMsg = errorHandler.handle(error,this.errorMsg)
       }
     )
   }

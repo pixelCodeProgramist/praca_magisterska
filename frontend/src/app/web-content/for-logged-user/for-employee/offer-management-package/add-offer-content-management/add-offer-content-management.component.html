@@ -2,6 +2,7 @@
   <div class="row">
     <div class="row justify-content-around align-content-center">
       <div class="col-12 col-lg-10">
+        <ngx-loading [show]="loading"></ngx-loading>
         <form [formGroup]="addOfferFormGroup" (ngSubmit)="submit()">
           <div class="row">
             <div class="row justify-content-around align-content-center mb-5">

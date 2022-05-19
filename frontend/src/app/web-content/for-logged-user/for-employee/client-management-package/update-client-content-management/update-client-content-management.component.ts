@@ -9,6 +9,7 @@ import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, 
 import {
   PopupInformationViewComponent
 } from "../../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-update-client-content-management',
@@ -39,9 +40,10 @@ export class UpdateClientContentManagementComponent implements OnInit {
 
   birthdayDate!: NgbDateStruct;
 
-  employmentDate!: NgbDateStruct;
 
   branches: Branch[] = [];
+
+  loading: boolean = false;
 
 
 
@@ -52,6 +54,7 @@ export class UpdateClientContentManagementComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loading = true;
     this.generalInformationService.getBranches().subscribe(
       data => {
         this.branches = data;
@@ -63,6 +66,7 @@ export class UpdateClientContentManagementComponent implements OnInit {
 
     this.userService.getAllClients().subscribe(
       data => {
+        this.loading = false;
         this.detailClientResponses = data;
         this.detailClientResponse = this.detailClientResponses[0];
 
@@ -79,6 +83,7 @@ export class UpdateClientContentManagementComponent implements OnInit {
 
 
       }, error => {
+        this.loading = false;
         localStorage.clear()
         this.router.navigate(['/', 'login']);
       }
@@ -161,6 +166,7 @@ export class UpdateClientContentManagementComponent implements OnInit {
 
 
   submit() {
+
     if (this.updateClientFormGroup.valid) {
       this.detailClientResponse.birthDay = new Date(this.birthdayDate?.year, this.birthdayDate?.month - 1, this.birthdayDate?.day)
       if (this.detailClientResponse.isAdmin) this.detailClientResponse.roleView.role = 'ADMIN'
@@ -168,16 +174,20 @@ export class UpdateClientContentManagementComponent implements OnInit {
       let isEqual = DetailUserMoreResponse.isEqualsDeep(this.detailClientResponse, this.detailClientResponseOrginal)
 
       if (!isEqual) {
+        this.loading = true;
         this.isErrorActive = false;
         this.errorMsg = ''
         this.userService.updateClient(this.detailClientResponse).subscribe(
           data=>{
+            this.loading = false;
             const modalRef = this.ngbModal.open(PopupInformationViewComponent);
             modalRef.componentInstance.message = data.message;
             this.router.navigate(['/', 'user-panel']);
           },error => {
+            this.loading = false;
             this.isErrorActive = true;
-            this.errorMsg = error.error;
+            let errorHandler: ErrorHandler = new ErrorHandler();
+            this.errorMsg = errorHandler.handle(error,this.errorMsg)
           }
         )
       } else {

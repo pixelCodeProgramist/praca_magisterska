@@ -55,6 +55,7 @@ import { RemoveClientContentManagementComponent } from './web-content/for-logged
 import { AddOfferContentManagementComponent } from './web-content/for-logged-user/for-employee/offer-management-package/add-offer-content-management/add-offer-content-management.component';
 import { RemoveOfferContentManagementComponent } from './web-content/for-logged-user/for-employee/offer-management-package/remove-offer-content-management/remove-offer-content-management.component';
 import { UpdateOfferContentManagementComponent } from './web-content/for-logged-user/for-employee/offer-management-package/update-offer-content-management/update-offer-content-management.component';
+import {NgxLoadingModule} from "ngx-loading";
 
 
 
@@ -118,6 +119,7 @@ import { UpdateOfferContentManagementComponent } from './web-content/for-logged-
     MatIconModule,
     MatToolbarModule,
     MatListModule,
+    NgxLoadingModule.forRoot({})
   ],
   providers: [],
   bootstrap: [AppComponent]

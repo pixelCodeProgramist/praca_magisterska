@@ -23,6 +23,7 @@ export class OfferComponent implements OnInit {
   accessoryGeneralOfferResponse: AccessoryGeneralOfferResponse = new AccessoryGeneralOfferResponse();
   bikes: SearchBikeResponse[] = [];
   keyword = 'name';
+  loading: boolean = false;
 
   constructor(private offerService: OfferService, private imageFromByteSanitizer: ImageFromByteSanitizerService, private viewportScroller: ViewportScroller, private router: Router) {
   }
@@ -32,29 +33,32 @@ export class OfferComponent implements OnInit {
 
 
   loadProducts() {
+    this.loading = true;
     if (this.isBikeActive && this.currentNav == 'bike') this.currentNav = 'standard';
     if (this.currentNav != 'accessories') {
       this.offerService.getBikeGeneralOfferInformation(this.currentNav, this.currentPage - 1, this.isBikeActive ? 'classic' : 'electric')!.subscribe(
         data => {
+          this.loading = false;
           this.productGeneralOfferResponse = data;
           for (let i = 0; i < this.productGeneralOfferResponse.products.length; i++) {
             let objectURL = 'data:image/png;base64,' + this.productGeneralOfferResponse.products[i].image;
             this.productGeneralOfferResponse.products[i].imageSafeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
           }
         }, error => {
-          console.log(error.error.error)
+          this.loading = false;
         }
       )
     } else {
       this.offerService.getAccessoryGeneralOfferResponse(this.currentNav, this.currentPage - 1).subscribe(
         data=>{
+          this.loading = false;
           this.accessoryGeneralOfferResponse = data;
           for (let i = 0; i < this.accessoryGeneralOfferResponse.products.length; i++) {
             let objectURL = 'data:image/png;base64,' + this.accessoryGeneralOfferResponse.products[i].image;
             this.accessoryGeneralOfferResponse.products[i].imageSafeUrl = this.imageFromByteSanitizer.convertToSaveUrlFromString(objectURL);
           }
         },error => {
-
+          this.loading = false;
         }
       )
     }

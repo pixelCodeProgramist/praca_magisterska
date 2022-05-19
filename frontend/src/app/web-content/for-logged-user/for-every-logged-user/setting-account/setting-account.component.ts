@@ -6,6 +6,7 @@ import {NgbDate, NgbDateStruct, NgbInputDatepicker, NgbModal} from "@ng-bootstra
 import {
   PopupInformationViewComponent
 } from "../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-setting-account',
@@ -24,6 +25,8 @@ export class SettingAccountComponent implements OnInit {
   errorMsg: string = '';
 
   date!: NgbDateStruct;
+
+  loading: boolean = false;
 
   constructor(public userService: UserService,  private ngbModal: NgbModal) {
   }
@@ -60,6 +63,7 @@ export class SettingAccountComponent implements OnInit {
   }
 
   submit() {
+
     this.updateInputValues()
     this.detailUserResponse.password = this.settingFormGroup.get('password').value;
     this.detailUserResponse.birthDay = new Date(this.date.year,this.date.month-1, this.date.day)
@@ -71,13 +75,18 @@ export class SettingAccountComponent implements OnInit {
 
 
     if ((!equalsFields || passwordCorrect) && validForm) {
+      this.loading = true
       this.userService.updateUser(this.detailUserResponse).subscribe(
         data=>{
+          this.loading = false;
           localStorage.setItem('type','updateAccount')
           location.reload()
           console.log(data)
         },error => {
-          console.log(error)
+          this.loading = false;
+          this.isErrorActive = true
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
         }
       )
     }

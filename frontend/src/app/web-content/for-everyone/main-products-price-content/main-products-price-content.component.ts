@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {GeneralInfoElectricProduct} from "../../../../models/GeneralInfoElectricProduct";
 import {GeneralInfoClassicProduct} from "../../../../models/GeneralInfoClassicProduct";
 import {OfferService} from "../../../../shared/offer.service";
@@ -14,23 +14,35 @@ export class MainProductsPriceContentComponent implements OnInit {
   isClassicOfferButtonActive: boolean = true;
   generalInfoElectricProducts: GeneralInfoElectricProduct[] = []
   generalInfoClassicProducts: GeneralInfoClassicProduct[] = [];
+  loadingClassic: boolean = false;
+  loadingElectric: boolean = false;
 
-  constructor(private offerService: OfferService) { }
+
+  constructor(private offerService: OfferService) {
+  }
+
+
 
   ngOnInit(): void {
-    this.isClassicOfferButtonActive = true;
-    this.offerService.getGeneralPriceListClassicInfo().subscribe(data=>{
-      this.generalInfoClassicProducts = data;
-    },error => {
 
+    this.isClassicOfferButtonActive = true;
+    this.loadingClassic = true;
+    this.loadingElectric = true;
+    this.offerService.getGeneralPriceListClassicInfo().subscribe(data => {
+      this.generalInfoClassicProducts = data;
+      this.loadingClassic = false;
+    }, error => {
+      this.loadingClassic = false;
     });
 
-    this.offerService.getGeneralPriceListElectricInfo().subscribe(data=>{
+    this.offerService.getGeneralPriceListElectricInfo().subscribe(data => {
       this.generalInfoElectricProducts = data;
-    },error => {
-
+      this.loadingElectric = false;
+    }, error => {
+      this.loadingElectric = false;
     });
   }
+
 
   changeStateButton() {
     this.isClassicOfferButtonActive = !this.isClassicOfferButtonActive;

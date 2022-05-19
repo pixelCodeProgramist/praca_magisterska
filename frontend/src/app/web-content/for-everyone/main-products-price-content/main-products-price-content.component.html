@@ -2,12 +2,23 @@
 <p class="my-second-blue large-size fw-bold">WYPOŻYCZALNI</p>
 <p class="my-second-blue large-size fw-bold">ROWERÓW</p>
 <div class="text-center">
-  <div class="btn text-white p-3" [ngClass]="{'my-dark-bg-blue': isClassicOfferButtonActive, 'my-gray': !isClassicOfferButtonActive}" (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
-                                                                                                                                                                       aria-hidden="true"></i>Klasyczne</div>
-  <div class="btn text-white p-3" [ngClass]="{'my-gray': isClassicOfferButtonActive, 'my-dark-bg-blue': !isClassicOfferButtonActive}" (click)="changeStateButton()"><i class="fa fa-plug text-white me-2"
-                                                                                                                                                                       aria-hidden="true"></i>Elektryczne</div>
+  <div class="btn text-white p-3"
+       [ngClass]="{'my-dark-bg-blue': isClassicOfferButtonActive, 'my-gray': !isClassicOfferButtonActive}"
+       (click)="changeStateButton()"><i class="fa fa-bicycle text-white me-2"
+                                        aria-hidden="true"></i>Klasyczne
+  </div>
+  <div class="btn text-white p-3"
+       [ngClass]="{'my-gray': isClassicOfferButtonActive, 'my-dark-bg-blue': !isClassicOfferButtonActive}"
+       (click)="changeStateButton()"><i class="fa fa-plug text-white me-2"
+                                        aria-hidden="true"></i>Elektryczne
+  </div>
 </div>
+
+
 <table class="table table-striped" *ngIf="isClassicOfferButtonActive">
+  <div class="position-absolute w-50 my-table-rem" style="height: 30%; min-width: 100px; min-height: 50px; opacity: 0.3">
+    <ngx-loading class="position-relative" style="top: 50%; min-width: 100px; min-height: 50px" [show]="loadingClassic"></ngx-loading>
+  </div>
   <thead class="my-dark-bg-blue-not-button text-white">
   <tr>
     <th></th>
@@ -26,14 +37,20 @@
     <td class="text-center">{{mainProduct.dayAndNightPrice}} {{mainProduct.currency}}</td>
   </tr>
   </tbody>
+
 </table>
+
 <table class="table table-striped" *ngIf="!isClassicOfferButtonActive">
+  <div class="position-absolute w-50 my-table-rem" style="height: 30%; min-width: 100px; min-height: 50px; opacity: 0.3">
+    <ngx-loading class="position-relative" style="top: 50%; min-width: 100px; min-height: 50px" [show]="loadingElectric"></ngx-loading>
+  </div>
   <thead class="my-dark-bg-blue-not-button text-white">
   <tr>
     <th></th>
     <th class="p-4">CZAS</th>
     <th class="p-4">CENA</th>
   </tr>
+
   </thead>
   <tbody>
   <tr *ngFor="let generalInfoElectricProduct of generalInfoElectricProducts; index as i">
@@ -42,6 +59,7 @@
     <td>{{generalInfoElectricProduct.price}} {{generalInfoElectricProduct.currency}}</td>
   </tr>
   </tbody>
+
 </table>
 <div class="text-center fw-bold display-5">GRATIS:</div>
 <div class="container">

@@ -18,6 +18,7 @@ import {NgxStarsComponent} from "ngx-stars";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {OrderRequest} from "../../../../../../models/order/request/OrderRequest";
 import {OrderService} from "../../../../../../shared/order.service";
+import {ErrorHandler} from "../../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-offer-details',
@@ -51,6 +52,7 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
   starsComponent!: NgxStarsComponent;
   isErrorActive: boolean = false;
   errorMsg: string = '';
+  loading: boolean = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private offerService: OfferService,
               private imageFromByteSanitizer: ImageFromByteSanitizerService, public userService: UserService,
@@ -62,12 +64,13 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
     if (this.id == undefined) this.router.navigate(['offer']);
 
     if (this.userService.isLoggedIn()) {
-
+      this.loading = true;
       this.offerService.canGrade(Number(this.id)).subscribe(
         data => {
+          this.loading = false;
           this.canGrade = data;
         }, error => {
-
+          this.loading = false;
         }
       )
     }
@@ -79,14 +82,11 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
   }
 
   onRatingSet($event: number) {
-    //console.log(this.id)
     if (this.canGrade) {
       this.offerService.grade(new GradeRequest(Number(this.id), $event)).subscribe(
         data => {
           this.canGrade = false;
           this.ngAfterViewInit()
-        }, error => {
-
         }
       )
     }
@@ -116,12 +116,16 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
     this.dateAndHourOfReservationRequest.reservationRange = this.selectedTimeOption;
     this.dateAndHourOfReservationRequest.bikeId = Number(this.id);
     this.withAccessoryCheckbox = false;
-
+    this.loading = true;
     this.offerService.getAvailableHours(this.dateAndHourOfReservationRequest).subscribe(
       data => {
         this.productTimeDetails = data;
+        this.loading = false;
       }, error => {
-
+        this.loading = false;
+        this.isErrorActive = true
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorMsg = errorHandler.handle(error,this.errorMsg)
       }
     )
 
@@ -152,14 +156,25 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
 
   changeAccessoryState() {
     this.withAccessoryCheckbox = !this.withAccessoryCheckbox;
-    if (this.withAccessoryCheckbox) {
 
+    if (this.withAccessoryCheckbox) {
+      this.loading = true;
       let rangeInt = this.convertRangeToNumber('5');
 
       this.offerService.getAccessoryDetailOfferResponse(rangeInt).subscribe(
         data => {
           this.accessoriesInOrder = data;
+          this.loading = false;
+          if(this.accessoriesInOrder.length==0) {
+            this.isErrorActive = true
+            this.errorMsg = 'Brak akcesorium'
+          }
+
         }, error => {
+          this.loading = false;
+          this.isErrorActive = true
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
 
         }
       )
@@ -168,6 +183,7 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.loading = true;
     this.offerService.getDetailBikeInformation(this.id).subscribe(
       data => {
         this.bikeDetail = data;
@@ -178,14 +194,15 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
         this.dateAndHourOfReservationRequest.bikeId = this.bikeDetail.id;
         this.dateAndHourOfReservationRequest.frame = this.selectedFrameOption;
         this.starsComponent.setRating(this.bikeDetail.rating)
+        this.loading = false;
       }, error => {
         if (error.error.offer) {
           if (error.error.offer.includes('does not exists')) this.router.navigate(["404"]);
-          this.isErrorActive = true;
-          this.errorMsg = error.error.offer;
         }
-        this.isErrorActive = true;
-        this.errorMsg = error.error.status;
+        this.loading = false;
+        this.isErrorActive = true
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorMsg = errorHandler.handle(error,this.errorMsg)
 
       }
     )
@@ -206,13 +223,16 @@ export class OfferDetailsComponent implements OnInit, AfterViewInit {
       let orderRequest: OrderRequest =
         new OrderRequest(Number(this.id), this.selectedFrameOption, beginDate, endDate,
           this.selectedAccessoryOption?.id, this.getPrice(), this.withBikeTripCheckbox);
-
+      this.loading = true;
       this.orderService.makeOrder(orderRequest).subscribe(
         data => {
           window.location.href = data.message;
+          this.loading = false;
         }, error => {
-          this.isErrorActive = true;
-          this.errorMsg = error.error.order;
+          this.loading = false;
+          this.isErrorActive = true
+          let errorHandler: ErrorHandler = new ErrorHandler();
+          this.errorMsg = errorHandler.handle(error,this.errorMsg)
         }
       )
     }

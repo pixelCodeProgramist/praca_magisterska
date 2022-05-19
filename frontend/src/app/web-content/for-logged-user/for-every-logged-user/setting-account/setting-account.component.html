@@ -34,6 +34,7 @@
       <div class="col-xl-9">
         <h3 class="text-center mt-5">Zaktualizuj swoje dane</h3>
         <div class="mt-5">
+          <ngx-loading [show]="loading"></ngx-loading>
           <form [formGroup]="settingFormGroup" (ngSubmit)="submit()">
             <div class="card m-3 p-3">
               <div class="row justify-content-around align-content-center" style="min-height: 30vmin">

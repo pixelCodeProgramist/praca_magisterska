@@ -1,14 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {NgbCalendar, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {UserService} from "../../../../../../shared/user.service";
-import {GeneralInformationService} from "../../../../../../shared/general-information.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AddOfferRequest, Frame} from "../../../../../../models/offers/request/AddOfferRequest";
 import {OfferService} from "../../../../../../shared/offer.service";
 import {Byte} from "@angular/compiler/src/util";
 import {
   PopupInformationViewComponent
 } from "../../../../for-everyone/main-navbar-links/popup-information-view/popup-information-view.component";
+import {ErrorHandler} from "../../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-add-offer-content-management',
@@ -24,7 +23,7 @@ export class AddOfferContentManagementComponent implements OnInit {
 
   isErrorActive: boolean = false;
   errorMsg: string = '';
-
+  loading: boolean = false;
 
   constructor(private offerService: OfferService, private ngbModal: NgbModal) {
   }
@@ -50,6 +49,7 @@ export class AddOfferContentManagementComponent implements OnInit {
 
   submit() {
     if (this.addOfferFormGroup.valid) {
+      this.loading = true;
       if (this.addOfferRequest.image.length == 0) {
         this.isErrorActive = true;
         this.errorMsg = 'Brak zdjęcia';
@@ -69,17 +69,19 @@ export class AddOfferContentManagementComponent implements OnInit {
         if (zeroInstance == 0) {
           this.offerService.addBike(this.addOfferRequest).subscribe(
             data => {
+              this.loading = false;
               const modalRef = this.ngbModal.open(PopupInformationViewComponent);
               modalRef.componentInstance.message = data.message;
               this.addOfferFormGroup.reset();
             }, error => {
+              this.loading = false;
               this.isErrorActive = true;
-              this.errorMsg = error.error.offer;
+              let errorHandler: ErrorHandler = new ErrorHandler();
+              this.errorMsg = errorHandler.handle(error,this.errorMsg)
             }
           )
         }
       }
-      console.log(this.addOfferRequest)
     } else {
       this.isErrorActive = true;
       this.errorMsg = 'Formularz zawiera błędy';

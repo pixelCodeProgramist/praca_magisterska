@@ -3,6 +3,7 @@ package com.example.mailservice.mailMenager.business.service;
 import com.example.mailservice.MailServiceApplication;
 import com.example.mailservice.mailMenager.api.dto.TokenForUserNonLoginResponse;
 import com.example.mailservice.mailMenager.api.request.*;
+import com.example.mailservice.mailMenager.business.exception.UserNotFoundException;
 import com.example.mailservice.mailMenager.feignClient.AuthServiceFeignClient;
 import com.example.mailservice.mailMenager.feignClient.UserServiceFeignClient;
 import com.example.mailservice.tokenMenager.request.JwtTokenNonUserProvider;
@@ -51,6 +52,7 @@ public class EmailSenderService {
 
     public boolean sendMail(ForgetPasswordRequest forgetPasswordRequest) throws MessagingException {
         User user = userServiceFeignClient.getUserByMail(new UserByMailRequest(forgetPasswordRequest.getMail(), tokenNonUserProvider.generateToken()));
+        if(user == null) throw new UserNotFoundException(forgetPasswordRequest.getMail());
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(forgetPasswordRequest.getMail());

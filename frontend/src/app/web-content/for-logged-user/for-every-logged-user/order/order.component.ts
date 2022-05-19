@@ -7,6 +7,7 @@ import {ImageFromByteSanitizerService} from "../../../../../shared/ImageFromByte
 import {PhotoMainSiteSecondSection} from "../../../../../models/PhotoMainSiteSecondSection";
 import {SafeResourceUrl} from "@angular/platform-browser";
 import {DetailUserMoreResponse} from "../../../../../models/detail-user/DetailUserMoreResponse";
+import {ErrorHandler} from "../../../../../shared/ErrorHandler";
 
 @Component({
   selector: 'app-order',
@@ -23,17 +24,23 @@ export class OrderComponent implements OnInit {
 
   currentMyHistoryPage: number = 1;
   currentOtherHistoryPage: number = 1;
-
+  isErrorActive: boolean = false;
+  errorMsg: string = '';
 
 
   constructor(public userService: UserService, private orderService: OrderService, private lightbox: Lightbox,  private imageFromByteSanitizer: ImageFromByteSanitizerService) { }
 
   myHistory: HistoryTransactionResponse = new HistoryTransactionResponse();
   otherHistory: HistoryTransactionResponse = new HistoryTransactionResponse();
+  myHistoryLoading: boolean = false;
+  otherHistoryLoading: boolean = false;
+
 
   ngOnInit(): void {
+    this.myHistoryLoading = true;
     this.orderService.getOrderHistory(this.currentMyHistoryPage-1).subscribe(
       data=>{
+        this.myHistoryLoading = false;
         this.myHistory = data;
         this.myHistory.orderHistoryList.forEach(history=>{
           history.beginDate = new Date(history.beginDate)
@@ -50,7 +57,10 @@ export class OrderComponent implements OnInit {
           this.myHistoryAlbums.push(album);
         })
       },error => {
-
+        this.myHistoryLoading = false;
+        this.isErrorActive = true
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorMsg = errorHandler.handle(error,this.errorMsg)
       }
     )
 
@@ -59,13 +69,15 @@ export class OrderComponent implements OnInit {
         this.detailClientResponses = data;
         this.detailClientResponse = this.detailClientResponses[0];
       }, error => {
-
+        this.isErrorActive = true
+        let errorHandler: ErrorHandler = new ErrorHandler();
+        this.errorMsg = errorHandler.handle(error,this.errorMsg)
       });
   }
 
   open(i: number, albums: PhotoMainSiteSecondSection[]) {
     // @ts-ignore
-    this.lightbox.open(this.myHistoryAlbums, i);
+    this.lightbox.open(albums, i);
   }
 
   clickOnMyHistoryPage($event: number) {
@@ -85,11 +97,15 @@ export class OrderComponent implements OnInit {
   }
 
   searchOtherUserOffer() {
+
+    this.otherHistoryLoading = true;
     this.orderService.getOrderHistory(this.currentOtherHistoryPage-1, this.detailClientResponse.userId).subscribe(
       data=>{
+        this.otherHistoryLoading = false;
         this.otherHistoryAlbums = [];
         this.otherHistory = data;
-        this.myHistory.orderHistoryList.forEach(history=> {
+        this.otherHistory.orderHistoryList.forEach(history=> {
+
           history.beginDate = new Date(history.beginDate)
           history.endDate = new Date(history.endDate)
           let objectURL = 'data:image/png;base64,' + history?.qrCodeImage;
@@ -101,9 +117,11 @@ export class OrderComponent implements OnInit {
             thumb: string = '';
           }
 
+
           this.otherHistoryAlbums.push(album);
         });
       },error => {
+        this.otherHistoryLoading = false;
 
       });
   }
