@@ -114,5 +114,22 @@ public class User implements Serializable, UserDetails {
         return active;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        boolean equalsRole = role != null && user.role != null && Objects.equals(role.getRoleId(), user.role.getRoleId());
+        boolean equalsAddress = address != null && user.address != null && Objects.equals(address.getAddressId(), user.address.getAddressId());
+        return active == user.active && Objects.equals(userId, user.userId) && Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(phone, user.phone) && 
+                Objects.equals(birthday, user.birthday) && Objects.equals(password, user.password) && equalsRole &&
+                Objects.equals(token, user.token) && Objects.equals(branch, user.branch) && Objects.equals(employee, user.employee) &&
+                equalsAddress;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, firstName, lastName, email, phone, birthday, password, role, token, branch, employee, active, address, expiredJwts);
+    }
 }

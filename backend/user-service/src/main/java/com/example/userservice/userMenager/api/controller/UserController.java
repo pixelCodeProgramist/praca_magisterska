@@ -8,7 +8,6 @@ import com.example.userservice.userMenager.business.service.RegisterService;
 import com.example.userservice.userMenager.business.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +27,7 @@ public class UserController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseView register(@Valid @RequestBody RegisterRequest registerRequest) {
-        registerService.register(registerRequest);
+        registerService.register(registerRequest, false);
         return new ResponseView("Użytkownik zarejestrowany poprawnie");
     }
 

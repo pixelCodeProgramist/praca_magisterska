@@ -35,6 +35,7 @@ public interface TokenProvider {
     default String generateToken(User user) {
         return "";
     }
+
     default String generateToken() {
         return "";
     }

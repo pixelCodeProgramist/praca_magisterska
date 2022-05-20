@@ -86,7 +86,6 @@ public class UserService {
         } else {
             throw new TokenExpiredException(forgetAndChangerPasswordRequest.getToken());
         }
-
     }
 
     public DetailUserView getUser(Long id, HttpServletRequest httpServletRequest) {
@@ -97,7 +96,8 @@ public class UserService {
             Long userId = tokenProvider.extractUserId(token);
             User userFromToken = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("with id: " + userId));
             if (user.equals(userFromToken)) {
-                return UserMapper.mapDataToDetailedResponse(user);
+                DetailUserView detailUserView = UserMapper.mapDataToDetailedResponse(user);
+                return detailUserView;
             }
         }
 

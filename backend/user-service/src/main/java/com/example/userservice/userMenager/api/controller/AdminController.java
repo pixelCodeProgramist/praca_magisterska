@@ -25,7 +25,7 @@ public class AdminController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseView register(@Valid @RequestBody EmployeeRequest employeeRequest) {
-        adminService.addEmployee(employeeRequest);
+        adminService.addEmployee(employeeRequest, false);
         return new ResponseView("Pracownik zarejestrowany poprawnie");
     }
 

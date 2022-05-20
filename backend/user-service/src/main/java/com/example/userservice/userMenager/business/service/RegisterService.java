@@ -36,7 +36,7 @@ public class RegisterService {
     private MailServiceFeignClient mailServiceFeignClient;
 
     @Transactional
-    public void register(RegisterRequest registerRequest) {
+    public void register(RegisterRequest registerRequest, boolean isTest) {
         isEmailValid(registerRequest.getEmail());
         Token token = tokenService.generateToken();
         String password = registerRequest.getPassword();
@@ -56,7 +56,7 @@ public class RegisterService {
 
         addressRepo.save(address);
         RegisterDataRequest registerDataRequest = RegisterMapper.mapDataToResponse(registerRequest, token.getToken());
-        mailServiceFeignClient.sendMail(registerDataRequest);
+        if(!isTest) mailServiceFeignClient.sendMail(registerDataRequest);
     }
 
     private void isEmailValid(String email) {

@@ -47,11 +47,22 @@ public class AdminService {
     private GeneralInformationServiceFeignClient generalInformationServiceFeignClient;
 
     @Transactional
-    public boolean addEmployee(EmployeeRequest employeeRequest) {
+    public boolean addEmployee(EmployeeRequest employeeRequest, boolean isTest) {
 
         isEmailValid(employeeRequest.getEmail());
+        BranchView branchView = null;
+        if(!isTest)
+            branchView = generalInformationServiceFeignClient.getBranch(employeeRequest.getBranchId());
+        else
+            branchView = BranchView.builder()
+                    .latitude(1)
+                    .longitude(1)
+                    .phone("")
+                    .city("")
+                    .street("")
+                    .zipCode("")
+                    .build();
 
-        BranchView branchView = generalInformationServiceFeignClient.getBranch(employeeRequest.getBranchId());
         if (branchView == null) throw new BranchNotFoundException(employeeRequest.getBranchId());
 
         Employee employee = Employee.builder()
@@ -126,7 +137,7 @@ public class AdminService {
             User user = userRepo.findById(userId).orElseThrow(() ->
                     new UserNotFoundException("with id: " + userId));
             allAdminEmployee = allAdminEmployee.stream()
-                    .filter(u->!u.equals(user))
+                    .filter(u->u.getUserId().longValue()!=userId.longValue())
                     .collect(Collectors.toList());
 
         }
