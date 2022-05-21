@@ -24,8 +24,7 @@ public class SecurityController {
     @GetMapping("/logout")
     public void logoutUser(HttpServletRequest httpServletRequest)
     {
-
-        securityService.logOut(httpServletRequest);
+        securityService.logOut(httpServletRequest, false);
     }
 
     @PostMapping("/login")
@@ -37,7 +36,7 @@ public class SecurityController {
     @PostMapping("/forgetPassword")
     public TokenForUserNonLoginResponse forgetPassword(@Valid @RequestBody ForgetPasswordRequest forgetPasswordRequest)
     {
-        return securityService.generateTokenNonLoginForUser(forgetPasswordRequest);
+        return securityService.generateTokenNonLoginForUser(forgetPasswordRequest, false);
     }
 
     @PostMapping("/expiredJwt")

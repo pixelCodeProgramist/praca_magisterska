@@ -55,14 +55,21 @@ public class SecurityService {
             throw new UserNotFoundException(authenticationRequest.getLogin());
     }
 
-    public void logOut(HttpServletRequest httpServletRequest) {
+    public void logOut(HttpServletRequest httpServletRequest, boolean isTest) {
         String jwt = null;
         String header = httpServletRequest.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer "))
             jwt = header.substring(7);
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            User user = userServiceFeignClient.getUserById(new UserByIdRequest(tokenProvider.extractUserId(jwt),tokenNonUserProvider.generateToken()));
+        if (SecurityContextHolder.getContext().getAuthentication() != null || isTest) {
+            User user = null;
+
+            if(!isTest)
+                user = userServiceFeignClient.getUserById(new UserByIdRequest(tokenProvider.extractUserId(jwt),tokenNonUserProvider.generateToken()));
+            else {
+                user = new User();
+                user.setUserId(1L);
+            }
             if (user == null) throw new UserNotFoundException(" with id: " + tokenProvider.extractUserId(jwt));
             ExpiredJwt expiredJwt = new ExpiredJwt().builder()
                     .userId(user.getUserId())
@@ -72,8 +79,15 @@ public class SecurityService {
         }
     }
 
-    public TokenForUserNonLoginResponse generateTokenNonLoginForUser(ForgetPasswordRequest forgetPasswordRequest) {
-        User user = userServiceFeignClient.getUserByMail(new UserByMailRequest(forgetPasswordRequest.getMail(), tokenNonUserProvider.generateToken()));
+    public TokenForUserNonLoginResponse generateTokenNonLoginForUser(ForgetPasswordRequest forgetPasswordRequest, boolean isTest) {
+        User user = null;
+        if(!isTest)
+            user = userServiceFeignClient.getUserByMail(new UserByMailRequest(forgetPasswordRequest.getMail(), tokenNonUserProvider.generateToken()));
+        else
+            user = User.builder()
+                    .userId(1L)
+                    .build();
+        String s = tokenNonUserProvider.extractUserIdString(forgetPasswordRequest.getToken());
         if("COMPUTER".equalsIgnoreCase(tokenNonUserProvider.extractUserIdString(forgetPasswordRequest.getToken()))) {
             if (user != null) {
                 String token = tokenForUserNonLoginProvider.generateToken(user,"type", "forgetPassword");
