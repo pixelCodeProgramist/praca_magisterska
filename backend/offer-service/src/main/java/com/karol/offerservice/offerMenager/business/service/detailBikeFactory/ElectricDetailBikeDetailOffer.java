@@ -35,6 +35,6 @@ public class ElectricDetailBikeDetailOffer implements IDetailBikeDetailOffer {
                 .map(electricBikePrice -> new TimePriceDto(electricBikePrice.getTime(), electricBikePrice.getPrice()))
                 .collect(Collectors.toList());
 
-        return DetailOfferMapper.mapDataToResponse(electricBike,imageService.getImagesForUrls(electricBike.getUrl()),guide.getPrice(), timePriceDtoList);
+        return DetailOfferMapper.mapDataToResponse(electricBike,imageService.getImagesForUrls(electricBike.getUrl(), false),guide.getPrice(), timePriceDtoList);
     }
 }

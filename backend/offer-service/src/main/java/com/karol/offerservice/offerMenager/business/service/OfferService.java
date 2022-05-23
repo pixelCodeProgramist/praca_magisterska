@@ -39,7 +39,6 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -124,7 +123,7 @@ public class OfferService {
         Page<Accessory> page = accessoryRepo.findAllByProduct_Active(pageRequest, true);
 
         List<AccessoryGeneralOfferView> productGeneralOfferViews = page.getContent().stream()
-                .map(product -> GeneralAccessoryOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))
+                .map(product -> GeneralAccessoryOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl(), false)))
                 .collect(Collectors.toList());
 
         productGeneralOfferViews.sort(Comparator.comparingLong(AccessoryGeneralOfferView::getId));
@@ -134,6 +133,7 @@ public class OfferService {
 
     }
 
+    @Transactional
     public DetailBikeInfoView getBikeInformation(Long id, boolean all) {
         Product product = all ? productRepo.findByProductId(id).orElseThrow(OfferNotFoundException::new) :
                 productRepo.findByProductIdAndActive(id, true).orElseThrow(OfferNotFoundException::new);
@@ -161,14 +161,14 @@ public class OfferService {
         return null;
     }
 
-    public List<BikeForSearchView> getAllBikes(boolean all) {
+    public List<BikeForSearchView> getAllBikes(boolean all, boolean isTest) {
         List<ClassicBike> classicBikes = all ? classicBikeRepo.findAll() : classicBikeRepo.findByProduct_Active(true);
         List<ElectricBike> electricBikes = all ? electricBikeRepo.findAll() : electricBikeRepo.findByProduct_Active(true);
         List<BikeForSearchView> classicBikesView = classicBikes.stream()
-                .map(product -> SearchBikeMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))
+                .map(product -> SearchBikeMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl(), isTest)))
                 .collect(Collectors.toList());
         List<BikeForSearchView> electricBikesView = electricBikes.stream()
-                .map(product -> SearchBikeMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))
+                .map(product -> SearchBikeMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl(), isTest)))
                 .collect(Collectors.toList());
 
         return Stream.concat(classicBikesView.stream(), electricBikesView.stream()).distinct().collect(Collectors.toList());
@@ -212,12 +212,14 @@ public class OfferService {
     }
 
     @Transactional
-    public void grade(GradeRequest gradeRequest, HttpServletRequest httpServletRequest) {
+    public void grade(GradeRequest gradeRequest, HttpServletRequest httpServletRequest, boolean isTest) {
         String token = httpServletRequest.getHeader("Authorization");
         if (token != null) {
             token = token.substring(7);
             Long userId = jwtTokenProvider.extractUserId(token);
-            User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, tokenNonUserProvider.generateToken()));
+            User user = null;
+            if(!isTest) user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, tokenNonUserProvider.generateToken()));
+            else user = User.builder().userId(1L).build();
             if (user == null) throw new UsernameNotFoundException(" with id: " + userId);
             Product product = productRepo.findByProductIdAndActive(gradeRequest.getProductId(), true).orElseThrow(OfferNotFoundException::new);
             UserGrade userGrade = userGradeRepo.findByUserId(userId).orElse(null);
@@ -245,12 +247,15 @@ public class OfferService {
         }
     }
 
-    public boolean canGrade(Long productId, HttpServletRequest httpServletRequest) {
+    @Transactional
+    public boolean canGrade(Long productId, HttpServletRequest httpServletRequest, boolean isTest) {
         String token = httpServletRequest.getHeader("Authorization");
         if (token != null) {
             token = token.substring(7);
             Long userId = jwtTokenProvider.extractUserId(token);
-            User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, tokenNonUserProvider.generateToken()));
+            User user =null;
+            if(!isTest) user= userServiceFeignClient.getUserById(new UserByIdRequest(userId, tokenNonUserProvider.generateToken()));
+            else user = User.builder().userId(1L).build();
             if (user == null) throw new UsernameNotFoundException(" with id: " + userId);
             Product product = productRepo.findByProductIdAndActive(productId, true).orElseThrow(OfferNotFoundException::new);
             UserGradeProduct userGradeProduct = userGradeProductRepo.findByProductAndUserGrade_UserId(product, userId).orElse(null);
@@ -326,7 +331,7 @@ public class OfferService {
     }
 
     @Transactional
-    public void addOffer(AddBikeRequest addBikeRequest) throws IOException {
+    public void addOffer(AddBikeRequest addBikeRequest, boolean isTest) throws IOException {
         if (addBikeRequest.getSelectedProductTypeOption().toLowerCase().contains("rower")) {
             ProductType productType = productTypeRepo.findByTypeIgnoreCase("bike").orElseThrow(() ->
                     new OfferNotFoundException("with type option " + addBikeRequest.getSelectedProductTypeOption()));
@@ -362,7 +367,7 @@ public class OfferService {
                 ElectricBike electricBike = ElectricBike.builder()
                         .electricBikeFrameInventories(electricBikeFrameInventories)
                         .product(product)
-                        .url(saveImage(addBikeRequest))
+                        .url(saveImage(addBikeRequest, isTest))
                         .build();
 
                 product.setElectricBike(electricBike);
@@ -392,7 +397,7 @@ public class OfferService {
                 ClassicBike classicBike = ClassicBike.builder()
                         .classicBikeFrameInventories(classicBikeFrameInventories)
                         .product(product)
-                        .url(saveImage(addBikeRequest))
+                        .url(saveImage(addBikeRequest, isTest))
                         .build();
 
                 product.setClassicBike(classicBike);
@@ -408,34 +413,37 @@ public class OfferService {
         }
     }
 
-    public String saveImage(AddBikeRequest addBikeRequest) throws IOException {
-        Byte[] qrImage = addBikeRequest.getImage();
-        ByteArrayInputStream bis = new ByteArrayInputStream(ArrayUtils.toPrimitive(qrImage));
-        BufferedImage bImage2 = ImageIO.read(bis);
-        String fileName = UUID.randomUUID().toString();
-        String userDirectory = System.getProperty("user.dir");
-        String[] parts = userDirectory.split("/");
-        userDirectory = "";
-        for (int i = 0; i < parts.length - 1; i++)
-            userDirectory += parts[i] + "/";
+    public String saveImage(AddBikeRequest addBikeRequest, boolean isTest) throws IOException {
+        if(!isTest) {
+            Byte[] qrImage = addBikeRequest.getImage();
+            ByteArrayInputStream bis = new ByteArrayInputStream(ArrayUtils.toPrimitive(qrImage));
+            BufferedImage bImage2 = ImageIO.read(bis);
+            String fileName = UUID.randomUUID().toString();
+            String userDirectory = System.getProperty("user.dir");
+            String[] parts = userDirectory.split("/");
+            userDirectory = "";
+            for (int i = 0; i < parts.length - 1; i++)
+                userDirectory += parts[i] + "/";
 
-        userDirectory += "offer-service/src/main/resources/static/offer/";
-        boolean isElectric = "Rower elektryczny".equalsIgnoreCase(addBikeRequest.getSelectedProductTypeOption());
-        boolean isClassic = "Rower klasyczny".equalsIgnoreCase(addBikeRequest.getSelectedProductTypeOption());
-        if (isElectric) {
-            userDirectory += "electric/";
+            userDirectory += "offer-service/src/main/resources/static/offer/";
+            boolean isElectric = "Rower elektryczny".equalsIgnoreCase(addBikeRequest.getSelectedProductTypeOption());
+            boolean isClassic = "Rower klasyczny".equalsIgnoreCase(addBikeRequest.getSelectedProductTypeOption());
+            if (isElectric) {
+                userDirectory += "electric/";
+            }
+
+            if (isClassic) {
+                userDirectory += addBikeRequest.getSelectedBikeOrAccessoryTypeOption().toLowerCase() + "/";
+            }
+
+            File file = new File(userDirectory + fileName + ".png");
+
+            ImageIO.write(bImage2, "png", file);
+            if (isElectric)
+                return "offer/electric" + "/" + fileName + ".png";
+            return "offer/" + addBikeRequest.getSelectedBikeOrAccessoryTypeOption().toLowerCase() + "/" + fileName + ".png";
         }
-
-        if (isClassic) {
-            userDirectory += addBikeRequest.getSelectedBikeOrAccessoryTypeOption().toLowerCase() + "/";
-        }
-
-        File file = new File(userDirectory + fileName + ".png");
-
-        ImageIO.write(bImage2, "png", file);
-        if (isElectric)
-            return "offer/electric" + "/" + fileName + ".png";
-        return "offer/" + addBikeRequest.getSelectedBikeOrAccessoryTypeOption().toLowerCase() + "/" + fileName + ".png";
+        return "url test";
     }
 
     public void changeOfferActivity(Long id) {

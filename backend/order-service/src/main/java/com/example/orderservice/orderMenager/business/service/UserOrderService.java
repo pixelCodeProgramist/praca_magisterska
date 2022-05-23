@@ -23,7 +23,6 @@ import com.example.orderservice.userMenager.api.request.User;
 import com.example.orderservice.userMenager.business.exception.user.UserNotFoundException;
 import com.example.orderservice.userMenager.feignClient.UserServiceFeignClient;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Service;
 

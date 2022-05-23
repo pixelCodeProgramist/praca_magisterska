@@ -33,10 +33,32 @@ public class LessThanDayHourStrategy implements HoursStrategy {
 
         while (itr.hasNext()) {
             Map.Entry<String, Integer> entry = itr.next();
+            if(entry.getValue()==0) {
+                int hourInt = Integer.parseInt(entry.getKey().split(":")[0]);
+                int endInt = hourInt + rangeInt;
+                int endMinus1Int = hourInt + rangeInt - 1;
+                String endStr = endInt+":00";
+                String endMinus1Str = endMinus1Int+":00";
+                if(instanceOfHourMap.containsKey(endStr)){
+                    if(instanceOfHourMap.get(endStr) == 1) {
+                        if(!instanceOfHourMap.containsKey(endMinus1Str))
+                            entry.setValue(1);
+                        else {
+                            if(instanceOfHourMap.get(endMinus1Str) != 0) entry.setValue(1);
+                        }
+                    }
+                }
+
+            }
+
+
             for (int i = 0; i < entry.getValue(); i++) {
+
                 hours.removeIf(hour->hour.equalsIgnoreCase(entry.getKey()));
             }
         }
+
+
 
         return hours.stream()
                 .distinct().collect(Collectors.toList());

@@ -36,7 +36,7 @@ public class ClassicDetailBikeDetailOffer implements IDetailBikeDetailOffer {
                 .findByProduct_Name("Wycieczka z przewodnikiem")
                 .orElseThrow(OfferNotFoundException::new);
 
-        return DetailOfferMapper.mapDataToResponse(classicBike,imageService.getImagesForUrls(classicBike.getUrl()),
+        return DetailOfferMapper.mapDataToResponse(classicBike,imageService.getImagesForUrls(classicBike.getUrl(), false),
                 timePriceDtoList, guide.getPrice());
     }
 }

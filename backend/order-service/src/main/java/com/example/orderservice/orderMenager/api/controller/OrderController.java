@@ -4,7 +4,6 @@ import com.example.orderservice.OrderServiceApplication;
 import com.example.orderservice.orderMenager.api.request.OrderRepairBikeRequest;
 import com.example.orderservice.orderMenager.api.request.OrderRequest;
 import com.example.orderservice.orderMenager.api.response.AvailableHoursResponse;
-import com.example.orderservice.orderMenager.api.response.OrderHistory;
 import com.example.orderservice.orderMenager.api.response.OrderHistoryResponse;
 import com.example.orderservice.orderMenager.api.response.ResponseView;
 import com.example.orderservice.orderMenager.business.service.OrderService;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -39,7 +37,7 @@ public class OrderController {
     @PostMapping("/makeOrder")
     public ResponseView makeOrder(@Valid @RequestBody OrderRequest orderRequest, HttpServletRequest httpServletRequest)
     {
-        return new ResponseView(orderService.makeOrder(orderRequest, httpServletRequest).getPayLink());
+        return new ResponseView(orderService.makeOrder(orderRequest, httpServletRequest, false).getPayLink());
     }
 
     @PostMapping("/makeOrder/repairBike")
@@ -70,7 +68,7 @@ public class OrderController {
         try {
             Payment payment = orderService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                orderService.changeStatusOfOrder(orderId);
+                orderService.changeStatusOfOrder(orderId, false);
                 httpServletResponse.setHeader("Location", OrderServiceApplication.FRONT_SITE);
                 httpServletResponse.setStatus(302);
                 return "redirect:localhost:4200/";

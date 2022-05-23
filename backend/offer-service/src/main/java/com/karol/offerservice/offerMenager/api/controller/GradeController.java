@@ -19,12 +19,12 @@ public class GradeController {
 
     @PostMapping("/grade")
     public ResponseView getDetailUserById(@RequestBody @Valid GradeRequest gradeRequest, HttpServletRequest httpServletRequest) {
-        offerService.grade(gradeRequest, httpServletRequest);
+        offerService.grade(gradeRequest, httpServletRequest, false);
         return new ResponseView("Ocena została wysłana");
     }
 
     @GetMapping("/grade/canGrade/{productId}")
     public Boolean canGrade(@PathVariable("productId") Long productId, HttpServletRequest httpServletRequest) {
-        return offerService.canGrade(productId, httpServletRequest);
+        return offerService.canGrade(productId, httpServletRequest, false);
     }
 }

@@ -1,0 +1,15 @@
+delete from accessory;
+delete from service;
+delete from classic_bike_frame_inventory;
+delete from classic_bike;
+delete from classic_bike_price;
+delete from electric_bike_frame_inventory;
+delete from electric_bike_price;
+delete from electric_bike;
+delete from bike_type;
+delete from frame;
+delete from user_grade_product;
+delete from user_grade;
+delete from service;
+delete from product;
+delete from product_type;

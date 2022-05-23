@@ -21,7 +21,5 @@ public class ClassicBikeGeneralInformationView {
 
     private String currency;
 
-    private int inUse;
-
     private int availableNumber;
 }

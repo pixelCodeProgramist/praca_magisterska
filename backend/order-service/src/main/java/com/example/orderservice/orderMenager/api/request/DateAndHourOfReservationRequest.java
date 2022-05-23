@@ -1,8 +1,6 @@
 package com.example.orderservice.orderMenager.api.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +9,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
+@Builder
 public class DateAndHourOfReservationRequest {
 
     @NotBlank

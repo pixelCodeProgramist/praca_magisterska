@@ -3,9 +3,7 @@ package com.karol.offerservice.offerMenager.api.controller;
 import com.karol.offerservice.business.request.AddBikeRequest;
 import com.karol.offerservice.offerMenager.api.request.ClassicBikePriceRequest;
 import com.karol.offerservice.offerMenager.api.request.ElectricBikePriceRequest;
-import com.karol.offerservice.offerMenager.api.response.ClassicBikePriceView;
 import com.karol.offerservice.offerMenager.api.response.ResponseView;
-import com.karol.offerservice.offerMenager.api.response.generalInfoPackage.ElectricBikeGeneralInformationView;
 import com.karol.offerservice.offerMenager.business.service.OfferService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +22,7 @@ public class OfferController {
     private OfferService offerService;
     @PostMapping("/add")
     public ResponseView addBike(@Valid @RequestBody AddBikeRequest addBikeRequest) throws IOException {
-        offerService.addOffer(addBikeRequest);
+        offerService.addOffer(addBikeRequest, false);
         return new ResponseView("Rower dodano poprawnie");
     }
 

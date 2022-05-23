@@ -52,7 +52,7 @@ public class GeneralOfferController {
 
     @GetMapping("/bikes/{all}")
     public List<BikeForSearchView> getBikes(@PathVariable(value = "all", required = false) boolean all) {
-        return offerService.getAllBikes(all);
+        return offerService.getAllBikes(all, false);
     }
 
     @PostMapping("/offer-in-order")

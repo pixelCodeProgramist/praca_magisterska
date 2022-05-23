@@ -31,7 +31,7 @@ public class ClassicGeneralBikeGeneralOffer implements IGeneralBikeGeneralOffer 
         Page<ClassicBike> page = classicBikeRepo.findAllByBikeType_TypeAndProduct_Active(pageRequest, section, true);
 
         List<BikeGeneralOfferView> bikeGeneralOfferViews = page.getContent().stream()
-                .map(product -> GeneralClassicOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))
+                .map(product -> GeneralClassicOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl(), false)))
                 .collect(Collectors.toList());
 
         BigDecimal minimalPrice = bikeTypeRepo.findLowestPriceBySection(section);

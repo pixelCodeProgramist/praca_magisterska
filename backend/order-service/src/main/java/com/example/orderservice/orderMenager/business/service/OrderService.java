@@ -62,6 +62,7 @@ public class OrderService {
     private APIContext apiContext;
 
     private UserServiceFeignClient userServiceFeignClient;
+
     public List<String> getAvailableHours(DateAndHourOfReservationRequest dateAndHourOfReservationRequest) {
         if (jwtTokenNonUserOrderProvider.validateToken(dateAndHourOfReservationRequest.getToken())) {
             if (!jwtTokenNonUserOrderProvider.isTokenExpire(dateAndHourOfReservationRequest.getToken()) &&
@@ -72,17 +73,17 @@ public class OrderService {
                 Date to = new Date(dateAndHourOfReservationRequest.getReservationTime().getTime());
                 to.setHours(23);
                 to.setMinutes(59);
-                List<UserOrder> userOrdersFromToday = userOrderRepo.findByBeginOrderBetween(from,to);
+                List<UserOrder> userOrdersFromToday = userOrderRepo.findByBeginOrderBetween(from, to);
 
                 userOrdersFromToday = userOrdersFromToday.stream().filter(userOrder -> {
                             String bikeId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeId");
                             String bikeFrameId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeFrameId");
-                            if(bikeId == null) bikeId = "";
-                            if(bikeFrameId == null) bikeFrameId = "";
-                            return  bikeId.equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeId())) &&
+                            if (bikeId == null) bikeId = "";
+                            if (bikeFrameId == null) bikeFrameId = "";
+                            return bikeId.equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeId())) &&
                                     bikeFrameId.equalsIgnoreCase(String.valueOf(dateAndHourOfReservationRequest.getBikeFrameId()));
 
-                })
+                        })
                         .collect(Collectors.toList());
 
                 HoursStrategy hoursStrategy = null;
@@ -100,7 +101,7 @@ public class OrderService {
 
     }
 
-    public Link makeOrder(OrderRequest orderRequest, HttpServletRequest httpServletRequest) {
+    public Link makeOrder(OrderRequest orderRequest, HttpServletRequest httpServletRequest, boolean isTest) {
         isDateValid(orderRequest.getBeginDateOrder(), orderRequest.getEndDateOrder());
 
         String token = httpServletRequest.getHeader("Authorization");
@@ -108,23 +109,24 @@ public class OrderService {
         if (token != null) {
             token = token.substring(7);
             Long userId = jwtTokenProvider.extractUserId(token);
-            User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
+            User user = isTest ? User.builder().userId(1L).build() : userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
             if (user == null) throw new UserNotFoundException(" with id: " + userId);
-            Boolean isBike = offerServiceFeignClient.isProductWithIdAndType("bike", orderRequest.getBikeId());
-            if(!isBike) throw new OfferNotFoundException();
+            Boolean isBike = isTest ? true : offerServiceFeignClient.isProductWithIdAndType("bike", orderRequest.getBikeId());
+            if (!isBike) throw new OfferNotFoundException();
             Map<String, Object> claims = new HashMap<>();
             Boolean accessory = null;
-            if(orderRequest.getAccessoryId()==null) claims.put("accessoryId", "");
+            if (orderRequest.getAccessoryId() == null) claims.put("accessoryId", "");
             else {
-                accessory = offerServiceFeignClient.isProductWithIdAndType("accessory", orderRequest.getAccessoryId());
-                if(accessory == null) throw new OfferNotFoundException();
+                accessory = isTest ? true: offerServiceFeignClient.isProductWithIdAndType("accessory", orderRequest.getAccessoryId());
+                if (accessory == null) throw new OfferNotFoundException();
                 claims.put("accessoryId", orderRequest.getAccessoryId());
             }
             claims.put("bikeId", orderRequest.getBikeId());
             claims.put("userId", user.getUserId());
             claims.put("withBikeTrip", orderRequest.getWithBikeTrip());
-            Integer frameId = offerServiceFeignClient.isFrameInBike(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
-            if(frameId<0) throw new FrameNotFoundException(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
+            Integer frameId = isTest ? 1 : offerServiceFeignClient.isFrameInBike(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
+            if (frameId < 0)
+                throw new FrameNotFoundException(orderRequest.getSelectedFrameOption(), orderRequest.getBikeId());
             claims.put("bikeFrameId", frameId);
             String orderToken = jwtTokenNonUserOrderProvider.generateToken(claims);
             LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(PAYMENT_TIME);
@@ -183,7 +185,7 @@ public class OrderService {
         throw new AuthorizationException();
     }
 
-    private Link buyService(OrderRepairBikeRequest orderRequest,ServiceGeneralInfoView service, Long orderId) {
+    private Link buyService(OrderRepairBikeRequest orderRequest, ServiceGeneralInfoView service, Long orderId) {
         try {
             Payment payment = createPayment(orderRequest, service, orderId);
             for (Links link : payment.getLinks()) {
@@ -191,15 +193,15 @@ public class OrderService {
                     return new Link(link.getHref());
                 }
             }
-            mailServiceFeignClient.sendEmailForContact(new ContactRequest("Naprawa roweru/numer zamówienia "+ orderId+" \n"+orderRequest.getDefect(),
-                    "", "nxbike.suppor1t@gmail.com",orderRequest.getDescription()));
+            mailServiceFeignClient.sendEmailForContact(new ContactRequest("Naprawa roweru/numer zamówienia " + orderId + " \n" + orderRequest.getDefect(),
+                    "", "nxbike.suppor1t@gmail.com", orderRequest.getDescription()));
         } catch (PayPalRESTException ex) {
             throw new PaypalErrorException(ex.getMessage());
         }
         return new Link("");
     }
 
-    private Payment createPayment(OrderRepairBikeRequest orderRequest,ServiceGeneralInfoView service, Long orderId) throws PayPalRESTException {
+    private Payment createPayment(OrderRepairBikeRequest orderRequest, ServiceGeneralInfoView service, Long orderId) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency("PLN");
         amount.setTotal(String.valueOf(service.getPrice()));
@@ -226,7 +228,7 @@ public class OrderService {
     }
 
     private String getPaymentDescription(OrderRepairBikeRequest orderRequest, ServiceGeneralInfoView service) {
-        return "Zarezerwowano usługe: "+service.getName()+ " i zobowiązano się dostarczyć go od: "+
+        return "Zarezerwowano usługe: " + service.getName() + " i zobowiązano się dostarczyć go od: " +
                 orderRequest.getBeginDate();
     }
 
@@ -274,12 +276,12 @@ public class OrderService {
 
 
     private String getPaymentDescription(OrderRequest orderRequest) {
-        return "Zarezerwowano rower o id: "+orderRequest.getBikeId()+ " i rezerwacja trwa od: "+
-                orderRequest.getBeginDateOrder()+" do "+orderRequest.getEndDateOrder();
+        return "Zarezerwowano rower o id: " + orderRequest.getBikeId() + " i rezerwacja trwa od: " +
+                orderRequest.getBeginDateOrder() + " do " + orderRequest.getEndDateOrder();
     }
 
     private void isDateValid(Date beginDateOrder, Date endDateOrder) {
-        if(beginDateOrder.after(endDateOrder)) throw new DateIncorrectException(beginDateOrder, endDateOrder);
+        if (beginDateOrder.after(endDateOrder)) throw new DateIncorrectException(beginDateOrder, endDateOrder);
     }
 
     public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
@@ -290,27 +292,27 @@ public class OrderService {
         return payment.execute(apiContext, paymentExecute);
     }
 
-    public void changeStatusOfOrder(Long orderId) throws IOException {
+    public void changeStatusOfOrder(Long orderId, boolean isTest) throws IOException {
 
         UserOrder userOrder = userOrderRepo.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
 
-        String serviceId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"serviceId");
-        String userIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"userId");
-        String bikeIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"bikeId");
-        String accessoryIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"accessoryId");
-        Boolean withBikeTrip = new Boolean(jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(),"withBikeTrip"));
+        String serviceId = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "serviceId");
+        String userIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "userId");
+        String bikeIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "bikeId");
+        String accessoryIdStr = jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "accessoryId");
+        Boolean withBikeTrip = new Boolean(jwtTokenNonUserOrderProvider.extractValueFromClaims(userOrder.getTransactionToken(), "withBikeTrip"));
 
         Long userId = Long.parseLong(userIdStr);
 
-        User user = userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
+        User user = isTest? User.builder().userId(userId).build() : userServiceFeignClient.getUserById(new UserByIdRequest(userId, jwtTokenNonUserProvider.generateToken()));
 
         QRMailRequest.QRMailRequestBuilder qrMailRequestBuilder = null;
 
 
-        if(serviceId=="null") {
+        if (serviceId == "null") {
             Long accessoryIdLong = null;
-            if(!StringUtils.isBlank(accessoryIdStr)) accessoryIdLong = Long.parseLong(accessoryIdStr);
-            OrderNameProductResponse orderNameProductResponse = offerServiceFeignClient.getOrderNames(
+            if (!StringUtils.isBlank(accessoryIdStr)) accessoryIdLong = Long.parseLong(accessoryIdStr);
+            OrderNameProductResponse orderNameProductResponse = isTest? OrderNameProductResponse.builder().accessory("").bike("").frame("").build() : offerServiceFeignClient.getOrderNames(
                     new OrderNameProductRequest(Long.parseLong(bikeIdStr), accessoryIdLong));
 
 
@@ -319,31 +321,34 @@ public class OrderService {
                     .frameName(orderNameProductResponse.getFrame())
                     .accessoryName(orderNameProductResponse.getAccessory());
         } else {
-            ServiceGeneralInfoView serviceGeneralInfoView = offerServiceFeignClient.getRepairBikeServiceInfo(new ServiceRequest("Naprawianie rowerów"));
-            if(!String.valueOf(serviceGeneralInfoView.getId()).equals(serviceId)) throw new OfferNotFoundException();
+            ServiceGeneralInfoView serviceGeneralInfoView = isTest? ServiceGeneralInfoView.builder().id(Long.valueOf(serviceId)).build(): offerServiceFeignClient.getRepairBikeServiceInfo(new ServiceRequest("Naprawianie rowerów"));
+            if (!String.valueOf(serviceGeneralInfoView.getId()).equals(serviceId)) throw new OfferNotFoundException();
             qrMailRequestBuilder = QRMailRequest.builder()
                     .service(serviceGeneralInfoView.getName());
-            mailServiceFeignClient.sendEmailForContact(new ContactRequest("Naprawa roweru/numer zamówienia "+ orderId,
-                    user.getFirstName()+" "+user.getLastName(), user.getEmail(),"Opłacono przez usera o id: "+userIdStr+" zamówienie o id: "+orderId));
+            if(!isTest) mailServiceFeignClient.sendEmailForContact(new ContactRequest("Naprawa roweru/numer zamówienia " + orderId,
+                    user.getFirstName() + " " + user.getLastName(), user.getEmail(), "Opłacono przez usera o id: " + userIdStr + " zamówienie o id: " + orderId));
 
         }
 
-        byte[] qrImage = qrImageService.createQrImage(userOrder, user);
-        ByteArrayInputStream bis = new ByteArrayInputStream(qrImage);
-        BufferedImage bImage2 = ImageIO.read(bis);
-        String fileName = UUID.randomUUID().toString();
-        String userDirectory = System.getProperty("user.dir");
-        String [] parts = userDirectory.split("/");
-        userDirectory = "";
-        for(int i=0;i<parts.length-1;i++)
-            userDirectory+=parts[i]+"/";
+        byte[] qrImage = isTest? new byte[20]: qrImageService.createQrImage(userOrder, user);
+        if(!isTest) {
+            ByteArrayInputStream bis = new ByteArrayInputStream(qrImage);
+            BufferedImage bImage2 = ImageIO.read(bis);
+            String fileName = UUID.randomUUID().toString();
+            String userDirectory = System.getProperty("user.dir");
+            String[] parts = userDirectory.split("/");
+            userDirectory = "";
+            for (int i = 0; i < parts.length - 1; i++)
+                userDirectory += parts[i] + "/";
 
 
-        File file = new File(userDirectory+"order-service/src/main/resources/static/order/"+fileName+".png");
-        ImageIO.write(bImage2, "png", file);
-        userOrder.setUrl("order/"+fileName+".png");
+            File file = new File(userDirectory + "order-service/src/main/resources/static/order/" + fileName + ".png");
+            ImageIO.write(bImage2, "png", file);
+            userOrder.setUrl("order/" + fileName + ".png");
+        }
 
-        if(qrMailRequestBuilder!=null) {
+
+        if (qrMailRequestBuilder != null) {
             QRMailRequest qrMailRequest = qrMailRequestBuilder
                     .orderId(orderId)
                     .beginOrder(userOrder.getBeginOrder())
@@ -356,7 +361,7 @@ public class OrderService {
                     .token(jwtTokenNonUserProvider.generateToken())
                     .build();
 
-            mailServiceFeignClient.sendQrCode(qrMailRequest);
+            if(!isTest) mailServiceFeignClient.sendQrCode(qrMailRequest);
         }
         userOrder.setPaid(true);
         userOrderRepo.save(userOrder);

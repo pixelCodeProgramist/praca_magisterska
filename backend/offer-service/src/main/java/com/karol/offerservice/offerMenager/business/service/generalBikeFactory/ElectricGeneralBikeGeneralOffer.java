@@ -31,7 +31,7 @@ public class ElectricGeneralBikeGeneralOffer implements IGeneralBikeGeneralOffer
         Page<ElectricBike> page = electricBikeRepo.findAllByProduct_Active(pageRequest, true);
 
         List<BikeGeneralOfferView> bikeGeneralOfferViews = page.getContent().stream()
-                .map(product-> GeneralElectricOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl())))
+                .map(product-> GeneralElectricOfferMapper.mapDataToResponse(product, imageService.getImagesForUrls(product.getUrl(), false)))
                 .collect(Collectors.toList());
 
         bikeGeneralOfferViews.sort(Comparator.comparingLong(BikeGeneralOfferView::getId));
