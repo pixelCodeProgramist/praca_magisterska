@@ -76,6 +76,7 @@ export class SettingAccountComponent implements OnInit {
 
     if ((!equalsFields || passwordCorrect) && validForm) {
       this.loading = true
+      this.detailUserResponse.prevEmail = this.detailUserResponseOrginal.email;
       this.userService.updateUser(this.detailUserResponse).subscribe(
         data=>{
           this.loading = false;

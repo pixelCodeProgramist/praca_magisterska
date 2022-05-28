@@ -26,6 +26,11 @@ public class DetailUserRequest {
     @Size(min = 5, max = 50)
     private String email;
 
+    @NotBlank
+    @Email
+    @Size(min = 5, max = 50)
+    private String prevEmail;
+
     private String password;
 
     @NotBlank

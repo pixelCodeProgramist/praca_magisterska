@@ -3,6 +3,7 @@ export class DetailUserResponse {
   email: string = '';
   firstName: string = '';
   lastName: string = '';
+  prevEmail: string = '';
   phone: number = 0;
   birthDay: Date = new Date();
   password: string = '';

@@ -11,7 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableEncryptableProperties
 @EnableFeignClients
 public class MailServiceApplication {
-	public final static String MAIN_SITE = "http://localhost:9000/";
+	public final static String MAIN_SITE = "https://localhost:9000/";
 	public final static String FRONT_SITE = "http://localhost:4200/";
 	public static void main(String[] args) {
 		SpringApplication.run(MailServiceApplication.class, args);

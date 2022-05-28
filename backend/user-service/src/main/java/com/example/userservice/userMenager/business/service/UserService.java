@@ -105,8 +105,8 @@ public class UserService {
     }
 
     public boolean updateUser(DetailUserRequest detailUserView, HttpServletRequest httpServletRequest) {
-        User user = userRepo.findByEmail(detailUserView.getEmail()).orElseThrow(() ->
-                new UserNotFoundException("with email: " + detailUserView.getEmail()));
+        User user = userRepo.findByEmail(detailUserView.getPrevEmail()).orElseThrow(() ->
+                new UserNotFoundException("with email: " + detailUserView.getPrevEmail()));
         String token = httpServletRequest.getHeader("Authorization");
         if (token != null) {
             token = token.substring(7);

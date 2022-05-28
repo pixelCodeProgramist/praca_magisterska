@@ -33,8 +33,6 @@ import java.util.Optional;
 public class JwtFilter extends OncePerRequestFilter {
     private UserRepo userRepo;
     private JwtTokenProvider tokenProvider;
-
-    private JwtTokenNonUserProvider tokenNonUserProvider;
     private ExpiredJwtServiceFeignClient expiredJwtServiceFeignClient;
 
     @Override
